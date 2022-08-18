@@ -268,6 +268,7 @@
   justify-content: space-between;
 
   padding: 1rem;
+  width: 100%;
 
   .orderCard {
     box-shadow: base.$shadow;
@@ -278,7 +279,7 @@
     width: 19%;
     margin-bottom: 2rem;
 
-    transition: all ease .5s;
+    transition: all ease 0.5s;
 
     header {
       display: flex;
@@ -319,10 +320,6 @@
           color: base.$color-orange;
         }
       }
-    }
-
-    @media(max-width: 860px) {
-      width: 100%;
     }
   }
 }
