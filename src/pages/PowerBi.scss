@@ -335,14 +335,12 @@
 
 .restaurantCardsContainer {
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
   justify-content: space-around;
 
-  width: 100%;
-  height: auto;
-
   padding: 1rem;
+  width: 100%;
+
   margin-top: -1.5rem;
 
   .restaurantCard {
@@ -405,6 +403,13 @@
       button:first-child {
         color: green;
       }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .restaurantCard {
+      width: 100%;
+      min-width: auto;
     }
   }
 }
