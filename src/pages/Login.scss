@@ -1,0 +1,72 @@
+@use "../base.scss";
+
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  height: 100vh;
+  width: 100vw;
+
+  a {
+    margin-top: 3rem;
+    color: base.$color-orange;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: base.$font-small;
+  }
+
+  img {
+    width: 17rem;
+    position: absolute;
+    top: 5vh;
+  }
+
+  form {
+    width: 90%;
+
+    label {
+      margin-top: 2rem;
+      margin-left: 1rem;
+    }
+
+    input {
+      padding: 0.8rem;
+    }
+
+    button {
+      margin-top: 5rem;
+
+      width: 90%;
+      padding: 0.9rem;
+      font-weight: bold;
+      font-size: base.$font-small;
+      background-color: base.$color-orange;
+      border: none;
+      outline: none;
+      transition: all ease 0.7s;
+      position: absolute;
+      bottom: 5vh;
+      margin: auto;
+    }
+
+    button:hover {
+      background-color: adjust-hue($color: base.$color-orange, $degrees: -10);
+    }
+
+    button:focus {
+      background-color: adjust-hue($color: base.$color-orange, $degrees: -10);
+    }
+  }
+
+  @media (min-width: 768px) {
+    form {
+      width: 30rem;
+
+      button {
+        width: 30rem;
+      }
+    }
+  }
+}

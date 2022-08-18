@@ -1,0 +1,147 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap");
+@import url("https://db.onlinewebfonts.com/c/6f6329b9e45fded07b61b159efbeebcf?family=DIN+Pro+Cond");
+
+@font-face {
+  font-family: "DIN Pro Cond";
+  src: url("https://db.onlinewebfonts.com/t/6f6329b9e45fded07b61b159efbeebcf.eot");
+  src: url("https://db.onlinewebfonts.com/t/6f6329b9e45fded07b61b159efbeebcf.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/6f6329b9e45fded07b61b159efbeebcf.woff2")
+      format("woff2"),
+    url("https://db.onlinewebfonts.com/t/6f6329b9e45fded07b61b159efbeebcf.woff")
+      format("woff"),
+    url("https://db.onlinewebfonts.com/t/6f6329b9e45fded07b61b159efbeebcf.ttf")
+      format("truetype"),
+    url("https://db.onlinewebfonts.com/t/6f6329b9e45fded07b61b159efbeebcf.svg#DIN Pro Cond")
+      format("svg");
+}
+
+// VARIABLES
+
+$color-orange: #f18a33;
+$color-green: #52e899;
+$color-grey: #717171;
+$color-light-grey: #717171;
+
+$shadow: 5px 5px 15px #00000029;
+
+// FONT
+
+$font-small: 1rem;
+$font-medium: 1.3rem;
+$font-large: 3rem;
+
+$font-family: "DIN Pro Cond";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+
+  font-family: $font-family;
+}
+
+body {
+  scroll-behavior: smooth;
+
+  font-size: 88%;
+}
+
+// STYLES
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: normal;
+  margin: 0;
+  padding: 0;
+}
+
+.pageContainer {
+  max-width: 100%;
+  min-height: 100vh;
+  height: auto;
+  margin: 2rem;
+  transition: all ease 0.5s;
+}
+
+.pageHeader {
+  width: 100vw;
+  height: 10vh;
+  box-shadow: $shadow;
+  position: absolute;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+
+  .pageTitle {
+    display: flex;
+    align-items: center;
+
+    h1 {
+      font-weight: bold;
+      color: $color-orange;
+      margin: 0 1rem 0 0;
+    }
+
+    span {
+      color: $color-orange;
+      font-size: 3rem;
+      padding: 0.3rem;
+    }
+  }
+
+  .menuToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 10%;
+    padding: 0.5rem;
+
+    border-radius: 2rem;
+    box-shadow: $shadow;
+
+    cursor: pointer;
+
+    span {
+      overflow: hidden;
+      font-size: 1.7rem;
+      color: $color-orange;
+    }
+  }
+}
+
+.loading {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+
+  display: none;
+
+  backdrop-filter: blur(7px);
+  transition: all ease 0.7s;
+}
+
+.spinner {
+  color: $color-orange;
+  font-size: 1.7rem;
+  width: 3rem;
+  height: 3rem;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+label {
+  font-size: $font-small;
+}

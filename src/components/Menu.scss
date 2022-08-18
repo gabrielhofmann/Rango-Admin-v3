@@ -1,0 +1,84 @@
+@use "../base.scss";
+
+.menu {
+  width: 0;
+  height: 100vh;
+
+  z-index: 999;
+
+  position: fixed;
+
+  box-shadow: base.$shadow;
+  background-color: white;
+
+  overflow: hidden;
+
+  transition: all ease 0.5s;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 10vh;
+    overflow: hidden;
+
+    border-bottom: 1px solid base.$color-grey;
+
+    img {
+      width: 4rem;
+      height: 4rem;
+    }
+
+    span {
+      color: base.$color-light-grey;
+      font-size: base.$font-medium;
+      border-left: 1px solid base.$color-grey;
+      padding: 0 1rem;
+      margin-left: 2rem;
+    }
+  }
+
+  nav {
+    display: flex;
+    align-items: flex-start;
+
+    height: 70%;
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      height: 100%;
+
+      margin: 0;
+      padding: 2rem;
+
+      li {
+        overflow: hidden;
+
+        a {
+          display: flex;
+          align-items: center;
+          margin-bottom: 1.5rem;
+          text-decoration: none;
+          color: base.$color-grey;
+
+          span {
+            font-size: 2rem;
+            padding: 0.3rem;
+          }
+
+          p {
+            margin: 0 0 0 1.5rem;
+            font-size: base.$font-medium;
+          }
+        }
+      }
+
+      .logout {
+        color: red;
+      }
+    }
+  }
+}
