@@ -51,6 +51,7 @@ export default class PowerBi extends Component {
       const users = await services.getUsers(0);
       const orders = await services.getOrders(0);
       const restaurants = await services.getRestaurants(0);
+      console.log(restaurants.restaurants);
 
       $(".loading").hide();
 
@@ -356,8 +357,61 @@ export default class PowerBi extends Component {
           </div>
         </section>
 
-        <section style={{ display: "none" }} className="restaurantsContainer">
-          teste
+        <section
+          style={{ display: "none" }}
+          className="pageContainer restaurantsContainer"
+        >
+          <div className="restaurantCardsContainer">
+            {this.state.restaurants.map((element) => {
+              return (
+                <div className="restaurantCard">
+                  <header>
+                    <strong>{`#ID${element.id}`}</strong>
+                  </header>
+
+                  <ul>
+                    <li>
+                      <p>Nome</p> <span>{element.name}</span>
+                    </li>
+
+                    <li>
+                      <p>Status</p> <span>{element.status}</span>
+                    </li>
+
+                    <li>
+                      <p>Categoria</p> <span>{element.category}</span>
+                    </li>
+
+                    <li>
+                      <p>Telefone</p> <span>{element.phoneNumber}</span>
+                    </li>
+
+                    <li>
+                      <p>Avaliação</p> <span>{element.rating}</span>
+                    </li>
+
+                    <li>
+                      <p>Aceita agendamento</p>{" "}
+                      <span>{element.scheduleAvailable ? "SIM" : "NÃO"}</span>
+                    </li>
+
+                    <li>
+                      <p>Tempo de entrega</p>{" "}
+                      <span>{element.estimatedDeliveryTime}</span>
+                    </li>
+                  </ul>
+
+                  {element.status == "pendente" ? (
+                    <footer>
+                      <button>Confirmar</button>
+
+                      <button>Recusar</button>
+                    </footer>
+                  ) : null}
+                </div>
+              );
+            })}
+          </div>
         </section>
       </main>
     );
