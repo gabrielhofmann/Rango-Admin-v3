@@ -328,6 +328,7 @@
   @media (max-width: 1024px) {
     .orderCard {
       width: 100%;
+      min-width: auto;
     }
   }
 }
