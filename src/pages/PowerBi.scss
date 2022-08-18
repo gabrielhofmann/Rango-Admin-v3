@@ -265,10 +265,12 @@
 .orderCardsContainer {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
 
   padding: 1rem;
   width: 100%;
+
+  margin-top: -1.5rem;
 
   .orderCard {
     box-shadow: base.$shadow;
@@ -277,7 +279,7 @@
     min-width: 25rem;
 
     width: 19%;
-    margin-bottom: 2rem;
+    margin: 1rem 0;
 
     transition: all ease 0.5s;
 
@@ -320,6 +322,12 @@
           color: base.$color-orange;
         }
       }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .orderCard {
+      width: 100%;
     }
   }
 }
