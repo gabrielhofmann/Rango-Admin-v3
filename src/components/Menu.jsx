@@ -1,7 +1,10 @@
 import React from "react";
 
 import logo from "../assets/logo.svg";
+import { Services } from "../services";
 import "./Menu.scss";
+
+const services = new Services();
 
 export default function Menu() {
   return (
@@ -10,6 +13,13 @@ export default function Menu() {
         <img src={logo} alt="Logo" />
 
         <span>Admin</span>
+
+        <span
+          onClick={services.handleMenuToggle}
+          className="material-symbols-rounded"
+        >
+          close
+        </span>
       </section>
 
       <nav className="menuNav">

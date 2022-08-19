@@ -37,6 +37,13 @@
       padding: 0 1rem;
       margin-left: 2rem;
     }
+
+    span:last-child {
+      border: none;
+      padding: .3rem;
+      margin-left: 5rem;
+      cursor: pointer;
+    }
   }
 
   nav {

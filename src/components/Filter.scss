@@ -1,0 +1,88 @@
+@use "../base.scss";
+
+.filterContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  width: 100%;
+
+  .filter {
+    display: flex;
+    width: 50rem;
+    padding: 1rem;
+    margin: auto;
+    width: auto;
+    max-width: 90rem;
+
+    box-shadow: base.$shadow;
+    border-radius: 1rem;
+
+    form {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 1rem;
+      height: auto;
+
+      input,
+      select {
+        min-width: 12rem;
+        padding: 0.7rem 1rem;
+        margin: 0 1rem;
+        border: 1px solid base.$color-light-grey;
+        border-radius: 0.3rem;
+        background-color: white;
+      }
+
+      ::placeholder {
+        font-size: base.$font-medium;
+      }
+
+      button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        outline: none;
+        border-radius: 3rem;
+        box-shadow: base.$shadow;
+        background-color: white;
+        margin-right: 2rem;
+        padding: 0.5rem;
+
+        span {
+          color: base.$color-orange;
+          padding: 0.3rem;
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+    @media (max-width: 786px) {
+      width: 100%;
+      form {
+        input,
+        select {
+          width: 100%;
+          margin: 1rem 0;
+        }
+
+        button {
+          margin: 1rem auto auto auto;
+          width: 100%;
+        }
+      }
+    }
+
+    @media (max-width: 1460px) {
+      form {
+        input,
+        select {
+          margin: 1rem;
+        }
+      }
+    }
+  }
+}

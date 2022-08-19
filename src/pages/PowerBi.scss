@@ -218,7 +218,7 @@
 
     input {
       box-shadow: base.$shadow;
-      border: none;
+      border: 1px solid base.$color-light-grey;
       outline: none;
       border-radius: 1rem;
       padding: 0.3rem 1rem;

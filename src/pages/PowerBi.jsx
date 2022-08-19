@@ -5,6 +5,7 @@ import { Button, Spinner } from "react-bootstrap";
 import { Services } from "../services";
 
 import "./PowerBi.scss";
+import Filter from "../components/Filter";
 
 const services = new Services();
 
@@ -69,8 +70,18 @@ export default class PowerBi extends Component {
       });
 
       this.handleNavigation = this.handleNavigation.bind(this);
+      this.setOrders = this.setOrders.bind(this);
+      this.setRestaurants = this.setRestaurants.bind(this);
     }
   }
+
+  setOrders = (results) => {
+    this.setState({ orders: results });
+  };
+
+  setRestaurants = (results) => {
+    this.setState({ restaurants: results });
+  };
 
   handleNavigation(page, element, selector) {
     let currentNav = sessionStorage.getItem(page);
@@ -83,7 +94,6 @@ export default class PowerBi extends Component {
     $(selector).addClass("active");
 
     if (page == "powerbi" && selector == document.getElementById("infoNav")) {
-      console.log("aqui");
       $(".noCardDisplay").show();
       $(".powerBiNav").css("marginTop", "0");
     } else {
@@ -146,6 +156,7 @@ export default class PowerBi extends Component {
               onClick={(e) => {
                 this.handleNavigation("powerbi", ".powerBiContainer", e.target);
               }}
+              key="infoNavKey"
             >
               Informações
             </li>
@@ -157,6 +168,7 @@ export default class PowerBi extends Component {
               onClick={(e) => {
                 this.handleNavigation("powerbi", ".ordersContainer", e.target);
               }}
+              key="ordersNavKey"
             >
               Pedidos
             </li>
@@ -171,6 +183,7 @@ export default class PowerBi extends Component {
                   e.target
                 );
               }}
+              key="restaurantsNavKey"
             >
               Restaurantes
             </li>
@@ -188,20 +201,20 @@ export default class PowerBi extends Component {
               <h1>Novos Usuários</h1>
               <div className="listRow">
                 <ul>
-                  <li>
+                  <li key="todayUsers">
                     <p>
                       Hoje: <span>{this.state.powerBiData.newUsers.today}</span>
                     </p>
                   </li>
 
-                  <li>
+                  <li key="weekUsers">
                     <p>
                       Semana:{" "}
                       <span>{this.state.powerBiData.newUsers.week}</span>
                     </p>
                   </li>
 
-                  <li>
+                  <li key="monthUsers">
                     <p>
                       Mês: <span>{this.state.powerBiData.newUsers.month}</span>
                     </p>
@@ -214,21 +227,21 @@ export default class PowerBi extends Component {
               <h1>Receita</h1>
               <div className="listRow">
                 <ul>
-                  <li>
+                  <li key="todayRevenue">
                     <p>
                       Hoje:{" "}
                       <span>R${this.state.powerBiData.revenue.today}</span>
                     </p>
                   </li>
 
-                  <li>
+                  <li key="weekRevenue">
                     <p>
                       Semana:{" "}
                       <span>R${this.state.powerBiData.revenue.week}</span>
                     </p>
                   </li>
 
-                  <li>
+                  <li key="monthRevenue">
                     <p>
                       Mês: <span>R${this.state.powerBiData.revenue.month}</span>
                     </p>
@@ -247,7 +260,7 @@ export default class PowerBi extends Component {
               <ul>
                 {this.state.powerBiData.ordersPerRestaurant.map((element) => {
                   return (
-                    <li>
+                    <li key={element.restaurant.name}>
                       <span>{element.restaurant.name}</span>
                       <span>{element.orders}</span>
                     </li>
@@ -264,7 +277,7 @@ export default class PowerBi extends Component {
               <ul>
                 {this.state.powerBiData.usersPerRestaurant.map((element) => {
                   return (
-                    <li>
+                    <li key={element.restaurant.name}>
                       <span>{element.restaurant.name}</span>
                       <span>{element.users}</span>
                     </li>
@@ -282,7 +295,7 @@ export default class PowerBi extends Component {
                 {this.state.powerBiData.deliveryTimePerRestaurant.map(
                   (element) => {
                     return (
-                      <li>
+                      <li key={element.restaurant}>
                         <span>{element.restaurant}</span>
                         <span>{element.deliveryTime}</span>
                       </li>
@@ -298,9 +311,10 @@ export default class PowerBi extends Component {
           style={{ display: "none" }}
           className="pageContainer ordersContainer"
         >
+          <Filter target="orders" callback={this.setOrders} />
+
           <div className="orderCardsContainer">
             {this.state.orders.map((element) => {
-              console.log(element);
               return (
                 <div className="orderCard">
                   <header>
@@ -312,41 +326,41 @@ export default class PowerBi extends Component {
                   </header>
 
                   <ul>
-                    <li>
+                    <li key={element.user.username}>
                       <p>Usuário</p>
                       <span>{element.user.username}</span>
                     </li>
 
-                    <li>
+                    <li key={element.restaurant.name}>
                       <p>Restaurante</p>
                       <span>{element.restaurant.name}</span>
                     </li>
 
-                    <li>
+                    <li key={element.createdAt}>
                       <p>Criado em</p>
                       <span>
                         {new Date(element.createdAt).toLocaleDateString()}
                       </span>
                     </li>
 
-                    <li>
+                    <li key={element.updatedAt}>
                       <p>Atualizado em</p>
                       <span>
                         {new Date(element.updatedAt).toLocaleDateString()}
                       </span>
                     </li>
 
-                    <li>
+                    <li key={element.status}>
                       <p>Status</p>
                       <span>{element.status}</span>
                     </li>
 
-                    <li>
+                    <li key={element.toGo}>
                       <p>Viagem</p>
                       <span>{element.toGo ? "SIM" : "NÃO"}</span>
                     </li>
 
-                    <li>
+                    <li key={element.note}>
                       <p>Observações</p>
                       <span>{element.note ? element.note : "N/A"}</span>
                     </li>
@@ -361,6 +375,8 @@ export default class PowerBi extends Component {
           style={{ display: "none" }}
           className="pageContainer restaurantsContainer"
         >
+          <Filter target="restaurants" callback={this.setRestaurants} />
+
           <div className="restaurantCardsContainer">
             {this.state.restaurants.map((element) => {
               return (
@@ -370,32 +386,32 @@ export default class PowerBi extends Component {
                   </header>
 
                   <ul>
-                    <li>
+                    <li key="restaurantNameKey">
                       <p>Nome</p> <span>{element.name}</span>
                     </li>
 
-                    <li>
+                    <li key="restaurantStatusKey">
                       <p>Status</p> <span>{element.status}</span>
                     </li>
 
-                    <li>
+                    <li key="restaurantCategoryKey">
                       <p>Categoria</p> <span>{element.category}</span>
                     </li>
 
-                    <li>
+                    <li key="restaurantPhoneNumberKey">
                       <p>Telefone</p> <span>{element.phoneNumber}</span>
                     </li>
 
-                    <li>
+                    <li key="restaurantRatingKey">
                       <p>Avaliação</p> <span>{element.rating}</span>
                     </li>
 
-                    <li>
+                    <li key="restaurantScheduleKey">
                       <p>Aceita agendamento</p>{" "}
                       <span>{element.scheduleAvailable ? "SIM" : "NÃO"}</span>
                     </li>
 
-                    <li>
+                    <li key="restaurantdeliveryTimeKey">
                       <p>Tempo de entrega</p>{" "}
                       <span>{element.estimatedDeliveryTime}</span>
                     </li>
