@@ -139,31 +139,29 @@ export default class Filter extends Component {
     });
 
     if (inputData.length == 0) {
-      this.props.target == "orders"
-        ? async () => {
-            results = await axios.get(
-              `https://staging.rangosemfila.com.br/v2/findOrders`,
-              {
-                headers: {
-                  Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-                },
-              }
-            );
-
-            this.props.callback(results.data);
+      if (this.props.target == "orders") {
+        results = await axios.get(
+          `https://staging.rangosemfila.com.br/v2/allOrders/0`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
           }
-        : async () => {
-            results = await axios.get(
-              `https://staging.rangosemfila.com.br/v2/restaurants`,
-              {
-                headers: {
-                  Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-                },
-              }
-            );
+        );
 
-            this.props.callback(results.data);
-          };
+        this.props.callback(results.data[0]);
+      } else {
+        results = await axios.get(
+          `https://staging.rangosemfila.com.br/v2/allRestaurants/0`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        this.props.callback(results.data[0]);
+      }
     }
 
     if (inputData.length == 1) {
