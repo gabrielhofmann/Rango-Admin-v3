@@ -13,6 +13,7 @@ class Services {
   handleMenuToggle() {
     let width;
     let screenWidth = window.innerWidth;
+    let currentState = sessionStorage.getItem("isMenuActive")
 
     screenWidth <= 1024
       ? (width = "70")
@@ -20,19 +21,20 @@ class Services {
       ? (width = "30")
       : (width = "20");
 
-    if (
-      sessionStorage.getItem("isMenuActive") == "false" ||
-      !sessionStorage.getItem("isMenuActive")
-    ) {
+    if (currentState == "false") {
+      sessionStorage.setItem("isMenuActive", true);
+      
       setTimeout(() => $("nav").show(), 200);
       $(".menu").css("width", `${width}vw`);
 
-      sessionStorage.setItem("isMenuActive", true);
+      return;
     } else {
+      sessionStorage.setItem("isMenuActive", false);
+
       $(".menuNav").hide();
       $(".menu").css("width", 0);
 
-      sessionStorage.setItem("isMenuActive", false);
+      return;
     }
   }
 

@@ -51,12 +51,17 @@
         background-color: white;
         margin-right: 2rem;
         padding: 0.5rem;
+        transition: all ease 0.5s;
 
         span {
           color: base.$color-orange;
           padding: 0.3rem;
           font-size: 1.5rem;
         }
+      }
+
+      button:hover {
+        background-color: rgba($color: base.$color-orange, $alpha: 0.3);
       }
     }
 

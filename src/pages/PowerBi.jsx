@@ -39,6 +39,7 @@ export default class PowerBi extends Component {
   }
 
   async componentDidMount() {
+    sessionStorage.setItem("isMenuActive", false);
     const token = sessionStorage.getItem("token");
     $(".loading").show();
 
@@ -52,12 +53,20 @@ export default class PowerBi extends Component {
       const users = await services.getUsers(0);
       const orders = await services.getOrders(0);
       const restaurants = await services.getRestaurants(0);
-      console.log(restaurants.restaurants);
 
       $(".loading").hide();
 
       $("#infoNav").addClass("active");
       sessionStorage.setItem("powerbi", ".powerBiContainer");
+
+      $(".powerBi").on("click", () => {
+        let active = sessionStorage.getItem("isMenuActive");
+
+        if (active == "true") {
+          console.log("aqui");
+          services.handleMenuToggle();
+        }
+      });
 
       this.setState({
         powerBiData: data,
@@ -314,57 +323,34 @@ export default class PowerBi extends Component {
           <Filter target="orders" callback={this.setOrders} />
 
           <div className="orderCardsContainer">
+            <div className="orderCardsContainerNameplates">
+              <strong>ID</strong>
+              <strong>Usuário</strong>
+              <strong>Restaurante</strong>
+              <strong>Criado em</strong>
+              <strong>Atualizado em</strong>
+              <strong>Status</strong>
+              <strong>Valor total</strong>
+            </div>
+
             {this.state.orders.map((element) => {
+              console.log(element);
               return (
                 <div className="orderCard">
-                  <header>
-                    <strong>{`#ID${element.id}`}</strong>
-
-                    <button>Ver user</button>
-
+                  <div className="orderCardInfo">
+                    <p>{element.id}</p>
+                    <p>{element.user.username}</p>
+                    <p>{element.restaurant.name}</p>
+                    <p>{new Date(element.createdAt).toLocaleDateString()}</p>
+                    <p>{new Date(element.updatedAt).toLocaleDateString()}</p>
+                    <p>{element.status}</p>
+                    <p>R${element.history.payment.total}</p>
+                  </div>
+                  <div className="orderCardButtons">
+                    <button>Ver usuário</button>
                     <button>Ver restaurante</button>
-                  </header>
-
-                  <ul>
-                    <li key={element.user.username}>
-                      <p>Usuário</p>
-                      <span>{element.user.username}</span>
-                    </li>
-
-                    <li key={element.restaurant.name}>
-                      <p>Restaurante</p>
-                      <span>{element.restaurant.name}</span>
-                    </li>
-
-                    <li key={element.createdAt}>
-                      <p>Criado em</p>
-                      <span>
-                        {new Date(element.createdAt).toLocaleDateString()}
-                      </span>
-                    </li>
-
-                    <li key={element.updatedAt}>
-                      <p>Atualizado em</p>
-                      <span>
-                        {new Date(element.updatedAt).toLocaleDateString()}
-                      </span>
-                    </li>
-
-                    <li key={element.status}>
-                      <p>Status</p>
-                      <span>{element.status}</span>
-                    </li>
-
-                    <li key={element.toGo}>
-                      <p>Viagem</p>
-                      <span>{element.toGo ? "SIM" : "NÃO"}</span>
-                    </li>
-
-                    <li key={element.note}>
-                      <p>Observações</p>
-                      <span>{element.note ? element.note : "N/A"}</span>
-                    </li>
-                  </ul>
+                    <button>Mais</button>
+                  </div>
                 </div>
               );
             })}
@@ -378,52 +364,28 @@ export default class PowerBi extends Component {
           <Filter target="restaurants" callback={this.setRestaurants} />
 
           <div className="restaurantCardsContainer">
+            <div className="restaurantCardsContainerNameplates">
+              <strong>Nome/ID</strong>
+              <strong>Status</strong>
+              <strong>Categoria</strong>
+              <strong>Email</strong>
+              <strong>Telefone</strong>
+              <strong>Rating</strong>
+            </div>
             {this.state.restaurants.map((element) => {
               return (
                 <div className="restaurantCard">
-                  <header>
-                    <strong>{`#ID${element.id}`}</strong>
-                  </header>
-
-                  <ul>
-                    <li key="restaurantNameKey">
-                      <p>Nome</p> <span>{element.name}</span>
-                    </li>
-
-                    <li key="restaurantStatusKey">
-                      <p>Status</p> <span>{element.status}</span>
-                    </li>
-
-                    <li key="restaurantCategoryKey">
-                      <p>Categoria</p> <span>{element.category}</span>
-                    </li>
-
-                    <li key="restaurantPhoneNumberKey">
-                      <p>Telefone</p> <span>{element.phoneNumber}</span>
-                    </li>
-
-                    <li key="restaurantRatingKey">
-                      <p>Avaliação</p> <span>{element.rating}</span>
-                    </li>
-
-                    <li key="restaurantScheduleKey">
-                      <p>Aceita agendamento</p>{" "}
-                      <span>{element.scheduleAvailable ? "SIM" : "NÃO"}</span>
-                    </li>
-
-                    <li key="restaurantdeliveryTimeKey">
-                      <p>Tempo de entrega</p>{" "}
-                      <span>{element.estimatedDeliveryTime}</span>
-                    </li>
-                  </ul>
-
-                  {element.status == "pendente" ? (
-                    <footer>
-                      <button>Confirmar</button>
-
-                      <button>Recusar</button>
-                    </footer>
-                  ) : null}
+                  <div className="restaurantImage"></div>
+                  <p>
+                    {element.name}
+                    <br />
+                    {`#ID${element.id}`}
+                  </p>
+                  <p>{element.status}</p>
+                  <p>{element.category}</p>
+                  <p>{element.email}</p>
+                  <p>{element.phoneNumber}</p>
+                  <p>{element.rating}</p>
                 </div>
               );
             })}

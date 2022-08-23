@@ -1,4 +1,5 @@
 import React from "react";
+import $ from "jquery";
 
 import logo from "../assets/logo.svg";
 import { Services } from "../services";
@@ -7,6 +8,14 @@ import "./Menu.scss";
 const services = new Services();
 
 export default function Menu() {
+  $("#menuClose").on("click", () => {
+    let active = sessionStorage.getItem("isMenuActive");
+
+    if (active == "true") {
+      services.handleMenuToggle();
+    }
+  });
+
   return (
     <main className="menu">
       <section className="header">
@@ -14,10 +23,7 @@ export default function Menu() {
 
         <span>Admin</span>
 
-        <span
-          onClick={services.handleMenuToggle}
-          className="material-symbols-rounded"
-        >
+        <span id="menuClose" className="material-symbols-rounded">
           close
         </span>
       </section>
@@ -25,7 +31,7 @@ export default function Menu() {
       <nav className="menuNav">
         <ul>
           <li>
-            <a href="">
+            <a href="/#/powerBi">
               <span className="material-symbols-rounded">monitoring</span>
 
               <p>Power BI</p>

@@ -1,20 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap");
-@import url("https://db.onlinewebfonts.com/c/6f6329b9e45fded07b61b159efbeebcf?family=DIN+Pro+Cond");
-
-@font-face {
-  font-family: "DIN Pro Cond";
-  src: url("https://db.onlinewebfonts.com/t/6f6329b9e45fded07b61b159efbeebcf.eot");
-  src: url("https://db.onlinewebfonts.com/t/6f6329b9e45fded07b61b159efbeebcf.eot?#iefix")
-      format("embedded-opentype"),
-    url("https://db.onlinewebfonts.com/t/6f6329b9e45fded07b61b159efbeebcf.woff2")
-      format("woff2"),
-    url("https://db.onlinewebfonts.com/t/6f6329b9e45fded07b61b159efbeebcf.woff")
-      format("woff"),
-    url("https://db.onlinewebfonts.com/t/6f6329b9e45fded07b61b159efbeebcf.ttf")
-      format("truetype"),
-    url("https://db.onlinewebfonts.com/t/6f6329b9e45fded07b61b159efbeebcf.svg#DIN Pro Cond")
-      format("svg");
-}
+@use "./fonts/stylesheet.scss";
 
 // VARIABLES
 
@@ -23,8 +7,8 @@ $color-green: #52e899;
 $color-grey: #717171;
 $color-light-grey: #717171;
 
-$shadow: 5px 5px 15px #00000029;
-
+// $shadow: 5px 5px 15px #00000029;
+$shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 // FONT
 
 $font-small: 1rem;
@@ -59,6 +43,7 @@ h6 {
   line-height: normal;
   margin: 0;
   padding: 0;
+  font-weight: bold;
 }
 
 .pageContainer {
@@ -85,7 +70,7 @@ h6 {
     align-items: center;
 
     h1 {
-      font-weight: bold;
+      font-weight: bolder;
       color: $color-orange;
       margin: 0 1rem 0 0;
     }
@@ -94,6 +79,12 @@ h6 {
       color: $color-orange;
       font-size: 3rem;
       padding: 0.3rem;
+    }
+
+    @media (max-width: 1024px) {
+      span {
+        font-size: 2rem;
+      }
     }
   }
 
@@ -109,12 +100,17 @@ h6 {
     box-shadow: $shadow;
 
     cursor: pointer;
+    transition: all ease 0.5s;
 
     span {
       overflow: hidden;
       font-size: 1.7rem;
       color: $color-orange;
     }
+  }
+
+  .menuToggle:hover {
+    background-color: rgba($color: $color-orange, $alpha: 0.3);
   }
 }
 

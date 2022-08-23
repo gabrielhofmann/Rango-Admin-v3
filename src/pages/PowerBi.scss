@@ -19,7 +19,7 @@
   width: 40rem;
   margin: 17vh auto auto auto;
 
-  border-bottom: 2px solid base.$color-light-grey;
+  border-bottom: 2px solid rgba($color: base.$color-light-grey, $alpha: 0.3);
   color: base.$color-orange;
 
   div {
@@ -72,7 +72,7 @@
 
     .navLink {
       cursor: pointer;
-      font-size: base.$font-medium;
+      font-size: 1.7rem;
       color: base.$color-grey;
     }
 
@@ -168,6 +168,16 @@
     }
   }
 
+  .smallListCard:last-child {
+    .listRow {
+      ul {
+        span {
+          color: base.$color-green;
+        }
+      }
+    }
+  }
+
   @media (max-width: 1400px) {
     justify-content: center;
 
@@ -189,7 +199,7 @@
 .bigCardsContainer {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 
   padding: 0.3rem;
@@ -201,7 +211,6 @@
     flex-direction: column;
     align-items: center;
 
-    min-height: 40rem;
     box-shadow: base.$shadow;
     width: 30%;
     padding: 1rem;
@@ -234,6 +243,7 @@
 
       li {
         width: 100%;
+        padding: 0.25rem 0;
 
         display: flex;
         align-items: center;
@@ -241,8 +251,11 @@
 
         font-size: base.$font-medium;
         font-weight: bold;
-        color: black;
-        border-bottom: 1px solid base.$color-grey;
+        color: base.$color-orange;
+
+        span:first-child {
+          color: black;
+        }
       }
     }
   }
@@ -263,153 +276,125 @@
 }
 
 .orderCardsContainer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-
+  width: calc(100% - 2rem);
+  margin: 1rem auto;
   padding: 1rem;
-  width: 100%;
 
-  margin-top: -1.5rem;
+  font-size: base.$font-medium;
 
-  .orderCard {
-    box-shadow: base.$shadow;
-    border-radius: 1rem;
-    padding: 1rem;
-    min-width: 25rem;
+  border-radius: 1rem;
+  box-shadow: base.$shadow;
 
-    width: 19%;
-    margin: 1rem 0;
+  .orderCardsContainerNameplates {
+    width: 65%;
+    padding: 1.5rem 1.5rem 1.5rem 2rem;
 
-    transition: all ease 0.5s;
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: base.$font-small;
-      padding: 1rem;
-
-      button {
-        border: none;
-        outline: none;
-        box-shadow: base.$shadow;
-        border-radius: 1rem;
-        width: fit-content;
-        padding: 0 1rem;
-        color: base.$color-orange;
-        background-color: white;
-      }
-    }
-
-    ul {
-      margin: 0;
-      padding: 1rem;
-
-      li {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid base.$color-grey;
-        margin-bottom: 1rem;
-        font-size: 1.2rem;
-
-        p {
-          margin: 0;
-        }
-
-        span {
-          color: base.$color-orange;
-        }
-      }
-    }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
-  @media (max-width: 1024px) {
-    .orderCard {
-      width: 100%;
-      min-width: auto;
+  .orderCard {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: base.$font-medium;
+
+    box-shadow: base.$shadow;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    margin: 1rem 0;
+
+    .orderCardInfo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      width: 60%;
+
+      p {
+        text-align: start;
+        color: base.$color-orange;
+        font-weight: bold;
+        margin: 0;
+      }
+    }
+
+    button {
+      padding: .5rem 2rem;
+      margin: 1rem;
+      border: none;
+      outline: none;
+      border-radius: 2rem;
+      box-shadow: base.$shadow;
+      background-color: white;
+      font-size: base.$font-small;
+      color: base.$color-grey;
+
+      transition: all ease .5s;
+    }
+
+    button:hover {
+      background-color: rgba($color: base.$color-orange, $alpha: .3);
     }
   }
 }
 
 .restaurantCardsContainer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-
+  width: calc(100% - 2rem);
+  margin: 1rem auto;
   padding: 1rem;
-  width: 100%;
 
-  margin-top: -1.5rem;
+  border-radius: 1rem;
+  box-shadow: base.$shadow;
+  font-size: base.$font-medium;
 
-  .restaurantCard {
-    box-shadow: base.$shadow;
-    border-radius: 1rem;
-    padding: 1rem;
-    width: 19%;
-    min-width: 25rem;
-    margin: 1rem 0;
+  .restaurantCardsContainerNameplates {
+    padding: 1rem 2rem 1rem 17%;
+    width: 100%;
 
-    transition: all ease 0.5s;
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: base.$font-small;
-      padding: 1rem;
-    }
-
-    ul {
-      margin: 0;
-      padding: 1rem;
-
-      li {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid base.$color-grey;
-        margin-bottom: 1rem;
-        font-size: 1.2rem;
-
-        p {
-          margin: 0;
-        }
-
-        span {
-          color: base.$color-orange;
-        }
-      }
-    }
-
-    footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem;
-
-      button {
-        width: 40%;
-        padding: 0.5rem 0;
-        border: none;
-        outline: none;
-        box-shadow: base.$shadow;
-        border-radius: 1rem;
-        color: red;
-        background-color: white;
-      }
-
-      button:first-child {
-        color: green;
-      }
-    }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
-  @media (max-width: 1024px) {
-    .restaurantCard {
-      width: 100%;
-      min-width: auto;
+  @media (min-width: 1024px) {
+  }
+
+  .restaurantCard {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: base.$font-medium;
+
+    box-shadow: base.$shadow;
+    border-radius: 0.5rem;
+    padding: 1rem 2rem;
+    margin: 1rem 0;
+
+    p {
+      width: 15%;
+      text-align: end;
+      color: base.$color-orange;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    p:last-child {
+      color: base.$color-green;
+    }
+
+    .restaurantImage {
+      border-radius: 50%;
+      width: 4rem;
+      height: 4rem;
+      background-color: rgba($color: base.$color-light-grey, $alpha: 0.5);
     }
   }
 }
