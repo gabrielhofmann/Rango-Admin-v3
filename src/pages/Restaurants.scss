@@ -1,0 +1,169 @@
+@use "../base.scss";
+
+.restaurants {
+  padding-bottom: 8rem;
+
+  .filter {
+    margin-top: 7rem;
+  }
+
+  .restaurantsContainer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    box-shadow: base.$shadow;
+    border-radius: 0.5rem;
+    margin: 2rem auto auto auto;
+
+    width: 95%;
+    min-height: 0;
+    padding: 1rem;
+
+    ul {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-around;
+      flex-wrap: wrap;
+
+      margin: 0;
+      padding: 1rem;
+      width: 100%;
+      height: auto;
+
+      li {
+        min-width: 25rem;
+        height: auto;
+        margin: 0;
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        margin: 1rem .2rem;
+        box-shadow: base.$shadow;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .restaurantCardHeader {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: base.$font-medium;
+
+          strong {
+            color: base.$color-orange;
+            font-size: 1.9rem;
+          }
+
+          span {
+            display: flex;
+            font-size: 1.2rem;
+            color: base.$color-grey;
+            margin-top: -0.2rem;
+          }
+        }
+
+        .restaurantCardImage {
+          width: 4rem;
+          height: 4rem;
+          background-color: rgba($color: base.$color-light-grey, $alpha: 0.5);
+          border-radius: 50%;
+          margin-left: 2rem;
+        }
+
+        .restaurantCardBody {
+          ul {
+            flex-direction: column;
+            height: auto;
+            padding: 0;
+            margin: 2rem 0;
+            align-items: flex-start;
+            justify-content: center;
+
+            li {
+              box-shadow: none;
+              width: auto;
+              height: auto;
+              margin: 0;
+              padding: 0;
+
+              strong {
+                font-size: 1.8rem;
+                margin-top: 1rem;
+              }
+
+              p {
+                color: base.$color-orange;
+                font-size: base.$font-small;
+                font-weight: bold;
+                margin: 0;
+              }
+            }
+          }
+        }
+
+        .restaurantCardFooter {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 0.7rem;
+          min-height: 10rem;
+
+          a {
+            color: base.$color-orange;
+            text-decoration: none;
+            font-weight: 700;
+          }
+
+          button {
+            background-color: white;
+            border: none;
+            border-radius: 2rem;
+            outline: none;
+            padding: 0.5rem 2rem;
+            margin-top: 1rem;
+
+            box-shadow: base.$shadow;
+            color: base.$color-orange;
+            font-weight: 600;
+            transition: all ease 0.5s;
+          }
+
+          button:hover {
+            background-color: rgba($color: base.$color-orange, $alpha: 0.3);
+          }
+
+          .restaurantCardButtonsRow {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.7rem;
+            max-width: 20rem;
+
+            button {
+              color: green;
+              font-weight: 600;
+            }
+
+            button:hover {
+              background-color: rgba($color: green, $alpha: 0.3);
+            }
+
+            button:last-child {
+              color: red;
+            }
+
+            button:last-child:hover {
+              background-color: rgba($color: red, $alpha: 0.3);
+            }
+          }
+        }
+
+        @media(max-width: 1024px) {
+            width: 100%;
+        }
+      }
+    }
+  }
+}

@@ -39,7 +39,7 @@ export default function Menu() {
           </li>
 
           <li>
-            <a href="">
+            <a href="/#/restaurantes">
               <span className="material-symbols-rounded">store</span>
 
               <p>Restaurantes</p>

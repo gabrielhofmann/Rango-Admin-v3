@@ -4,6 +4,7 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import PowerBi from "./pages/PowerBi";
 import Register from "./pages/Register";
+import Restaurants from "./pages/Restaurants";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <HashRouter>
@@ -11,6 +12,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/powerBi" element={<PowerBi />} />
+      <Route path="/restaurantes" element={<Restaurants />} />
     </Routes>
   </HashRouter>
 );
