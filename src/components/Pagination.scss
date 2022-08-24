@@ -1,0 +1,42 @@
+@use "../base.scss";
+
+.pagination {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 0;
+  left: 0;
+  margin: auto;
+  padding: 0.5rem;
+
+  display: flex;
+  align-self: center;
+  justify-content: center;
+
+  width: 100vw;
+  z-index: 999;
+
+  .paginationContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 0.5rem;
+    box-shadow: base.$shadow;
+
+    padding: 1rem;
+
+    background-color: whitesmoke;
+
+    span {
+      font-size: 2rem;
+      color: base.$color-orange;
+      margin: 0;
+      padding: 0.3rem;
+      cursor: pointer;
+    }
+
+    strong {
+        font-size: 1.7rem;
+        padding: 0 1rem;
+    }
+  }
+}

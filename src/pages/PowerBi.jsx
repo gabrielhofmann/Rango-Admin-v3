@@ -6,6 +6,7 @@ import { Services } from "../services";
 
 import "./PowerBi.scss";
 import Filter from "../components/Filter";
+import Pagination from "../components/Pagination";
 
 const services = new Services();
 
@@ -63,7 +64,6 @@ export default class PowerBi extends Component {
         let active = sessionStorage.getItem("isMenuActive");
 
         if (active == "true") {
-          console.log("aqui");
           services.handleMenuToggle();
         }
       });
@@ -76,6 +76,7 @@ export default class PowerBi extends Component {
         numberOfOrders: orders.count,
         restaurants: restaurants.restaurants,
         numberOfRestaurants: restaurants.count,
+        paginationResults: [],
       });
 
       this.handleNavigation = this.handleNavigation.bind(this);
@@ -322,6 +323,8 @@ export default class PowerBi extends Component {
         >
           <Filter target="orders" callback={this.setOrders} />
 
+          <Pagination target="orders" callback={this.setOrders} />
+
           <div className="orderCardsContainer">
             <div className="orderCardsContainerNameplates">
               <strong>ID</strong>
@@ -334,7 +337,6 @@ export default class PowerBi extends Component {
             </div>
 
             {this.state.orders.map((element) => {
-              console.log(element);
               return (
                 <div className="orderCard">
                   <div className="orderCardInfo">
@@ -362,6 +364,8 @@ export default class PowerBi extends Component {
           className="pageContainer restaurantsContainer"
         >
           <Filter target="restaurants" callback={this.setRestaurants} />
+
+          <Pagination target="restaurants" callback={this.setRestaurants} />
 
           <div className="restaurantCardsContainer">
             <div className="restaurantCardsContainerNameplates">
