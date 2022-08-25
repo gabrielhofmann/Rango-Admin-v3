@@ -208,6 +208,7 @@
 
     box-shadow: base.$shadow;
     width: 30%;
+    min-width: 25rem;
     height: 35rem;
     padding: 1rem;
     border-radius: 1rem;
@@ -266,9 +267,7 @@
   @media (max-width: 1600px) {
     justify-content: center;
 
-    .bigCard {
-      width: 40vw;
-    }
+    
   }
 
   @media (max-width: 1024px) {
