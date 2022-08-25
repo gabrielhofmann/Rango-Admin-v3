@@ -23,13 +23,29 @@ export default class Restaurants extends Component {
   }
 
   async componentDidMount() {
-    $(".loading").show();
+    sessionStorage.setItem("isMenuActive", false);
+    const token = sessionStorage.getItem("token");
 
-    const restaurants = await services.getRestaurants(0);
+    if (!token) {
+      $(".loading").hide();
+      $(".restaurants").html("Not Authorized!!");
+    } else {
+      $(".loading").show();
 
-    this.setState({ restaurants: restaurants.restaurants });
+      $(".restaurants").on("click", () => {
+        let active = sessionStorage.getItem("isMenuActive");
 
-    $(".loading").hide();
+        if (active == "true") {
+          services.handleMenuToggle();
+        }
+      });
+
+      const restaurants = await services.getRestaurants(0);
+
+      this.setState({ restaurants: restaurants.restaurants });
+
+      $(".loading").hide();
+    }
   }
 
   setRestaurants = (results) => {
