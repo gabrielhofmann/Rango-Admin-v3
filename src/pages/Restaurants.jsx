@@ -4,6 +4,7 @@ import Menu from "../components/Menu";
 import { Services } from "../services";
 import $ from "jquery";
 import Pagination from "../components/Pagination";
+import logo from "../assets/logo.svg";
 
 import "./Restaurants.scss";
 import Filter from "../components/Filter";
@@ -75,7 +76,14 @@ export default class Restaurants extends Component {
                       <span>{`#ID ${restaurant.id}`}</span>
                     </strong>
 
-                    <div className="restaurantCardImage"></div>
+                    <div
+                      className="restaurantCardImage"
+                      style={{
+                        backgroundImage: restaurant.thumbnailImageUrl
+                          ? `url(${restaurant.thumbnailImageUrl})`
+                          : `url(${logo})`,
+                      }}
+                    ></div>
                   </div>
 
                   <div className="restaurantCardBody">
