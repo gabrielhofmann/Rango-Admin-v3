@@ -425,11 +425,11 @@ export default class PowerBi extends Component {
                     }}
                   ></div>
 
-                  <strong style={{ color: "#717171", fontSize: "1.6rem" }}>
+                  <strong style={{ color: "#717171", fontSize: "1.3rem", textAlign: "start" }}>
                     {restaurant.name} <br />
                     <span
                       style={{
-                        fontSize: "1.3rem",
+                        fontSize: "1.1rem",
                         display: "flex",
                         marginTop: "-.3rem",
                       }}

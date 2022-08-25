@@ -72,7 +72,7 @@
 
     .navLink {
       cursor: pointer;
-      font-size: 1.7rem;
+      font-size: 1.5rem;
       color: base.$color-grey;
     }
 
@@ -86,8 +86,9 @@
     }
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1600px) {
     width: 90vw;
+    margin-bottom: 3rem;
   }
 }
 
@@ -110,7 +111,7 @@
     height: auto;
     min-height: 8rem;
     width: 30%;
-    min-width: 30rem;
+    min-width: 24rem;
     padding: 1rem 2rem;
     margin: 1rem;
 
@@ -294,16 +295,19 @@
   box-shadow: base.$shadow;
 
   display: grid;
-  grid-template-columns: 0.5fr repeat(6, 0.9fr) 2fr;
+  grid-template-columns: 0.7fr repeat(6, 0.9fr) 2fr;
   row-gap: 1.5rem;
+  justify-items: center;
 
   .orderCard {
     width: 100%;
     grid-column: span 8;
+    font-size: base.$font-small;
 
     display: grid;
-    grid-template-columns: 0.45fr repeat(6, 0.9fr) 2fr;
+    grid-template-columns: 0.65fr repeat(6, 0.9fr) 2fr;
     align-items: center;
+    justify-items: center;
     color: base.$color-orange;
     box-shadow: base.$shadow;
     border-radius: 0.5rem;
@@ -313,6 +317,10 @@
 
     .cardButtons {
       padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
 
       button {
         background-color: white;
@@ -320,9 +328,9 @@
         outline: none;
         border-radius: 2rem;
         box-shadow: base.$shadow;
-        font-size: base.$font-small;
-        padding: 0.5rem 2rem;
-        margin: 0 1rem;
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+        margin: 0.5rem;
         color: base.$color-orange;
         font-weight: bold;
 
@@ -372,21 +380,27 @@
     padding: 2rem 1rem;
     text-align: start;
     height: auto;
-
- 
+    font-size: base.$font-small;
 
     .restaurantCardImage {
       width: 6rem;
       height: 6rem;
 
       border-radius: 50%;
-      margin-left: 4rem;
+      margin-left: 2rem;
+      margin-right: 2rem;
 
       background-position: center;
       background-repeat: no-repeat;
       background-size: contain;
 
       box-shadow: base.$shadow;
+
+      @media (max-width: 1600px) {
+        width: 4rem;
+        height: 4rem;
+        margin-right: 0;
+      }
     }
   }
 }
