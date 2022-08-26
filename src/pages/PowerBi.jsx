@@ -31,6 +31,11 @@ export default class PowerBi extends Component {
         ordersPerRestaurant: [],
         usersPerRestaurant: [],
         deliveryTimePerRestaurant: [],
+        totalOrders: {
+          today: 0,
+          week: 0,
+          month: 0,
+        },
       },
       users: [],
       numberOfUsers: 0,
@@ -63,9 +68,9 @@ export default class PowerBi extends Component {
 
       $(".loading").hide();
 
-      setInterval(function() {
+      setInterval(function () {
         window.location.reload();
-      }, 300000); 
+      }, 300000);
 
       $("#infoNav").addClass("active");
       sessionStorage.setItem("powerbi", ".powerBiContainer");
@@ -273,9 +278,7 @@ export default class PowerBi extends Component {
 
             <li key="restaurantAlertPhoneNumber">
               <p>Telefone</p>
-              <strong>
-                {this.state.restaurantDetails.phoneNumber}
-              </strong>
+              <strong>{this.state.restaurantDetails.phoneNumber}</strong>
             </li>
           </ul>
         </Alert>
@@ -395,21 +398,24 @@ export default class PowerBi extends Component {
               <h1>Pedidos</h1>
               <div className="listRow">
                 <ul>
-                  <li key="todayRevenue">
+                  <li key="todayTotalOrders">
                     <p>
-                      Hoje: <span>{this.state.powerBiData.revenue.today}</span>
+                      Hoje:{" "}
+                      <span>{this.state.powerBiData.totalOrders.today}</span>
                     </p>
                   </li>
 
-                  <li key="weekRevenue">
+                  <li key="weekTotalOrders">
                     <p>
-                      Semana: <span>{this.state.powerBiData.revenue.week}</span>
+                      Semana:{" "}
+                      <span>{this.state.powerBiData.totalOrders.week}</span>
                     </p>
                   </li>
 
-                  <li key="monthRevenue">
+                  <li key="monthTotalOrders">
                     <p>
-                      Mês: <span>{this.state.powerBiData.revenue.month}</span>
+                      Mês:{" "}
+                      <span>{this.state.powerBiData.totalOrders.month}</span>
                     </p>
                   </li>
                 </ul>
