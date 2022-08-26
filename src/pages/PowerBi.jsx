@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Menu from "../components/Menu";
 import $ from "jquery";
-import { Button, Spinner } from "react-bootstrap";
+import { Alert, Button, Spinner } from "react-bootstrap";
 import { Services } from "../services";
 
 import "./PowerBi.scss";
@@ -38,6 +38,10 @@ export default class PowerBi extends Component {
       numberOfOrders: 0,
       restaurants: [],
       numberOfRestaurants: 0,
+      userDetails: {},
+      showUserAlert: false,
+      restaurantDetails: {},
+      showRestaurantAlert: false,
     };
   }
 
@@ -58,6 +62,10 @@ export default class PowerBi extends Component {
       const restaurants = await services.getRestaurants(0);
 
       $(".loading").hide();
+
+      setInterval(function() {
+        window.location.reload();
+      }, 300000); 
 
       $("#infoNav").addClass("active");
       sessionStorage.setItem("powerbi", ".powerBiContainer");
@@ -122,10 +130,155 @@ export default class PowerBi extends Component {
     }
   }
 
+  async handleUserAlert(user) {
+    console.log(user);
+    this.setState({
+      showUserAlert: true,
+      userDetails: user,
+    });
+  }
+
+  async handleRestaurantAlert(restaurant) {
+    console.log(restaurant);
+    this.setState({
+      showRestaurantAlert: true,
+      restaurantDetails: restaurant,
+    });
+  }
+
   render() {
     return (
       <main className="powerBi">
         <Menu />
+
+        <Alert
+          className="powerBiAlert"
+          show={this.state.showUserAlert}
+          onClose={() => {
+            this.setState({ showUserAlert: false });
+          }}
+          dismissible
+        >
+          <Alert.Heading className="powerBiAlertHeader">
+            {this.state.userDetails.username}
+            <br />
+            <p>#ID {this.state.userDetails.id}</p>
+          </Alert.Heading>
+
+          <ul>
+            <li key="userAlertConfirmed">
+              <p>Confimado</p>
+              <strong>
+                {this.state.userDetails.confirmed ? "SIM" : "NÃO"}
+              </strong>
+            </li>
+
+            <li key="userAlertBlocked">
+              <p>Bloqueado</p>
+              <strong>{this.state.userDetails.blocked ? "SIM" : "NÃO"}</strong>
+            </li>
+
+            <li key="userAlertEmail">
+              <p>Email</p> <strong>{this.state.userDetails.email}</strong>
+            </li>
+
+            <li key="userAlertEmailConfirmed">
+              <p>Email confirmado</p>
+              <strong>
+                {this.state.userDetails.emailConfirmed ? "SIM" : "NÃO"}
+              </strong>
+            </li>
+
+            <li key="userAlertPhoneNumber">
+              <p>Telefone</p>
+              <strong>{this.state.userDetails.phoneNumber}</strong>
+            </li>
+
+            <li key="userAlertPhoneConfirmed">
+              <p>Telefone confirmado</p>
+              <strong>
+                {this.state.userDetails.phoneNumberConfirmed ? "SIM" : "NÃO"}
+              </strong>
+            </li>
+
+            <li key="userAlertCPF">
+              <p>CPF</p>
+              <strong>{this.state.userDetails.cpf}</strong>
+            </li>
+          </ul>
+        </Alert>
+
+        <Alert
+          className="powerBiAlert"
+          show={this.state.showRestaurantAlert}
+          onClose={() => {
+            this.setState({ showRestaurantAlert: false });
+          }}
+          dismissible
+        >
+          <Alert.Heading className="powerBiAlertHeader">
+            {this.state.restaurantDetails.name}
+            <br />
+            <p>#ID {this.state.restaurantDetails.id}</p>
+          </Alert.Heading>
+
+          <ul>
+            <li key="restaurantAlertisOpen">
+              <p>Aberto</p>
+              <strong>
+                {this.state.restaurantDetails.isOpen ? "SIM" : "NÃO"}
+              </strong>
+            </li>
+
+            <li key="restaurantAlertScheduleAvailable">
+              <p>Agendamento habilitado</p>
+              <strong>
+                {this.state.restaurantDetails.scheduleAvailable ? "SIM" : "NÃO"}
+              </strong>
+            </li>
+
+            <li key="restaurantAlertPendingOrdersLimit">
+              <p>Máximo ordens pendentes</p>
+              <strong>{this.state.restaurantDetails.pendingOrdersLimit}</strong>
+            </li>
+
+            <li key="restaurantAlertRating">
+              <p>Rating</p>
+              <strong>{this.state.restaurantDetails.rating}</strong>
+            </li>
+
+            <li key="restaurantAlertStatus">
+              <p>Status</p>
+              <strong>{this.state.restaurantDetails.status}</strong>
+            </li>
+
+            <li key="restaurantAlertCategory">
+              <p>Categoria</p>
+              <strong>{this.state.restaurantDetails.category}</strong>
+            </li>
+
+            <li key="restaurantAlertDeliveryTime">
+              <p>Tempo de entrega</p>
+              <strong>
+                {this.state.restaurantDetails.estimatedDeliveryTime}
+              </strong>
+            </li>
+
+            <li key="restaurantAlertMinimumOrderValue">
+              <p>Valor mínimo</p>
+              <strong>
+                R$ {this.state.restaurantDetails.minimumOrderValue}
+              </strong>
+            </li>
+
+            <li key="restaurantAlertPhoneNumber">
+              <p>Telefone</p>
+              <strong>
+                {this.state.restaurantDetails.phoneNumber}
+              </strong>
+            </li>
+          </ul>
+        </Alert>
 
         <div className="loading">
           <Spinner className="spinner" animation="border" />
@@ -382,9 +535,21 @@ export default class PowerBi extends Component {
                   </strong>
 
                   <div className="cardButtons">
-                    <button>Ver usuário</button>
+                    <button
+                      onClick={() => {
+                        this.handleUserAlert(order.user);
+                      }}
+                    >
+                      Ver usuário
+                    </button>
 
-                    <button>Ver restaurante</button>
+                    <button
+                      onClick={() => {
+                        this.handleRestaurantAlert(order.restaurant);
+                      }}
+                    >
+                      Ver restaurante
+                    </button>
 
                     <button>Mais</button>
                   </div>
@@ -412,8 +577,6 @@ export default class PowerBi extends Component {
             <strong>Rating</strong>
 
             {this.state.restaurants.map((restaurant) => {
-              console.log(restaurant);
-
               return (
                 <div className="restaurantCard">
                   <div
@@ -425,7 +588,13 @@ export default class PowerBi extends Component {
                     }}
                   ></div>
 
-                  <strong style={{ color: "#717171", fontSize: "1.3rem", textAlign: "start" }}>
+                  <strong
+                    style={{
+                      color: "#717171",
+                      fontSize: "1.3rem",
+                      textAlign: "start",
+                    }}
+                  >
                     {restaurant.name} <br />
                     <span
                       style={{
