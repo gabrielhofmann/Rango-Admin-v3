@@ -4,8 +4,8 @@ import $ from "jquery";
 class Services {
   constructor() {
     this.localhost = "http://localhost:1337/v2";
-    this.api = "https://api.rangosemfila.com.br/v2";
-    this.production = "https://api.rangosemfila.com.br/v2";
+    this.api = "https://www.api.rangosemfila.com.br/v2";
+    this.production = "https://www.api.rangosemfila.com.br/v2";
   }
 
   // COMPONENTS BEHAVIOR
@@ -64,7 +64,7 @@ class Services {
 
   async getPowerBiData() {
     const response = await axios.get(
-      "https://api.rangosemfila.com.br/v2/getPowerBiData",
+      "https://www.api.rangosemfila.com.br/v2/getPowerBiData",
       {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -80,7 +80,7 @@ class Services {
   async getUsers(offset) {
     try {
       const response = await axios.get(
-        `https://api.rangosemfila.com.br/v2/allUsers/${offset}`,
+        `https://www.api.rangosemfila.com.br/v2/allUsers/${offset}`,
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -102,7 +102,7 @@ class Services {
   async getOrders(offset) {
     try {
       const response = await axios.get(
-        `https://api.rangosemfila.com.br/v2/allOrders/${offset}`,
+        `https://www.api.rangosemfila.com.br/v2/allOrders/${offset}`,
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -124,7 +124,7 @@ class Services {
   async getRestaurants(offset) {
     try {
       const response = await axios.get(
-        `https://api.rangosemfila.com.br/v2/allRestaurants/${offset}`,
+        `https://www.api.rangosemfila.com.br/v2/allRestaurants/${offset}`,
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
