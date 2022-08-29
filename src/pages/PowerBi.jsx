@@ -628,6 +628,8 @@ export default class PowerBi extends Component {
                   <strong style={{ color: "#52e899" }}>
                     {restaurant.rating}
                   </strong>
+
+                  <button>Ver mais</button>
                 </div>
               );
             })}

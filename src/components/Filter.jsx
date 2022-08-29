@@ -141,7 +141,7 @@ export default class Filter extends Component {
     if (inputData.length == 0) {
       if (this.props.target == "orders") {
         results = await axios.get(
-          `https://staging.rangosemfila.com.br/v2/allOrders/0`,
+          `https://api.rangosemfila.com.br/v2/allOrders/0`,
           {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -152,7 +152,7 @@ export default class Filter extends Component {
         this.props.callback(results.data[0]);
       } else {
         results = await axios.get(
-          `https://staging.rangosemfila.com.br/v2/allRestaurants/0`,
+          `https://api.rangosemfila.com.br/v2/allRestaurants/0`,
           {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -176,7 +176,7 @@ export default class Filter extends Component {
 
     if (this.props.target == "orders") {
       results = await axios.get(
-        `https://staging.rangosemfila.com.br/v2/findOrders${url}`,
+        `https://api.rangosemfila.com.br/v2/findOrders${url}`,
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -185,7 +185,7 @@ export default class Filter extends Component {
       );
     } else if (this.props.target == "restaurants") {
       results = await axios.get(
-        `https://staging.rangosemfila.com.br/v2/restaurants${url}`,
+        `https://api.rangosemfila.com.br/v2/restaurants${url}`,
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,

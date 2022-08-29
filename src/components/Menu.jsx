@@ -56,6 +56,14 @@ export default function Menu() {
 
           <li>
             <a href="">
+              <span className="material-symbols-rounded">list_alt</span>
+
+              <p>Pedidos</p>
+            </a>
+          </li>
+
+          <li>
+            <a href="">
               <span className="material-symbols-rounded">sell</span>
 
               <p>Cupons</p>
@@ -75,14 +83,6 @@ export default function Menu() {
               <span className="material-symbols-rounded">group</span>
 
               <p>Suporte</p>
-            </a>
-          </li>
-
-          <li>
-            <a href="">
-              <span className="material-symbols-rounded">restart_alt</span>
-
-              <p>Devoluções</p>
             </a>
           </li>
 
