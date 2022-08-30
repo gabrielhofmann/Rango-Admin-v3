@@ -33,6 +33,11 @@ export default class Pagination extends Component {
 
         break;
 
+      case "users":
+        response = await services.getUsers(0);
+
+        break;
+
       default:
         break;
     }
@@ -58,6 +63,13 @@ export default class Pagination extends Component {
 
         this.setState({ currentPage: 1 });
         this.props.callback(restaurants.restaurants);
+        break;
+
+      case "users":
+        const users = await services.getUsers(0);
+
+        this.setState({ currentPage: 1 });
+        this.props.callback(users.users);
         break;
 
       default:
@@ -91,6 +103,15 @@ export default class Pagination extends Component {
           this.props.callback(restaurants.restaurants);
           break;
 
+        case "users":
+          const users = await services.getUsers(
+            (this.state.currentPage - 2) * 10
+          );
+
+          this.setState({ currentPage: this.state.currentPage - 1 });
+          this.props.callback(users.users);
+          break;
+
         default:
           break;
       }
@@ -120,6 +141,13 @@ export default class Pagination extends Component {
           this.props.callback(restaurants.restaurants);
           break;
 
+        case "users":
+          const users = await services.getUsers(this.state.currentPage * 10);
+
+          this.setState({ currentPage: this.state.currentPage + 1 });
+          this.props.callback(users.users);
+          break;
+
         default:
           break;
       }
@@ -146,6 +174,13 @@ export default class Pagination extends Component {
 
         this.setState({ currentPage: this.state.maxPage });
         this.props.callback(restaurants.restaurants);
+        break;
+
+      case "users":
+        const users = await services.getUsers((this.state.maxPage - 1) * 10);
+
+        this.setState({ currentPage: this.state.maxPage });
+        this.props.callback(users.users);
         break;
 
       default:

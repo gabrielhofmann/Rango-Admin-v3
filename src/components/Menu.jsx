@@ -47,7 +47,7 @@ export default function Menu() {
           </li>
 
           <li>
-            <a href="">
+            <a href="/#/users">
               <span className="material-symbols-rounded">person</span>
 
               <p>Usuários</p>

@@ -1,0 +1,59 @@
+@use "../base.scss";
+
+.users {
+  .usersContainer {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+
+    .userCardsContainer {
+      width: calc(100% - 2rem);
+      height: auto;
+
+      margin: 1rem auto;
+      padding: 1rem;
+
+      font-size: base.$font-medium;
+
+      border-radius: 1rem;
+      box-shadow: base.$shadow;
+
+      display: grid;
+      grid-template-columns: .3fr repeat(8, 1fr);
+      row-gap: 1.5rem;
+      justify-items: center;
+
+      .userCard {
+        width: 100%;
+        grid-column: span 9;
+
+        display: grid;
+        grid-template-columns: .3fr repeat(8, 1fr);
+        align-items: center;
+        color: base.$color-orange;
+        box-shadow: base.$shadow;
+        border-radius: 0.5rem;
+        padding: 2rem 1rem;
+        text-align: center;
+        height: auto;
+        font-size: base.$font-small;
+
+        button {
+          background-color: white;
+          color: base.$color-orange;
+          box-shadow: base.$shadow;
+          border: none;
+          outline: none;
+          border-radius: 3rem;
+          width: 10rem;
+          padding: 0.5rem 2rem;
+
+          transition: all ease 0.5s;
+        }
+
+        button:hover {
+          background-color: rgba($color: base.$color-orange, $alpha: 0.3);
+        }
+      }
+    }
+  }
+}

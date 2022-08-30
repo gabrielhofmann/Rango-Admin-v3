@@ -3,6 +3,9 @@ import $ from "jquery";
 
 import "./Filter.scss";
 import axios from "axios";
+import { Services } from "../services";
+
+const services = new Services();
 
 const orderStatusList = [
   "scheduled",
@@ -140,27 +143,14 @@ export default class Filter extends Component {
 
     if (inputData.length == 0) {
       if (this.props.target == "orders") {
-        results = await axios.get(
-          `https://www.api.rangosemfila.com.br/v2/allOrders/0`,
-          {
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-            },
-          }
-        );
+        const orders = await services.getOrders(0);
 
-        this.props.callback(results.data[0]);
-      } else {
-        results = await axios.get(
-          `https://www.api.rangosemfila.com.br/v2/allRestaurants/0`,
-          {
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-            },
-          }
-        );
+        this.props.callback(orders.orders);
+      } else if (this.props.target == "restaurants") {
+        const restaurants = await services.getRestaurants(0);
 
-        this.props.callback(results.data[0]);
+        this.props.callback(restaurants.restaurants);
+      } else if (this.props.target == "users") {
       }
     }
 
