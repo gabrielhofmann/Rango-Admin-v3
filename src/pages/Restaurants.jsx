@@ -70,7 +70,7 @@ export default class Restaurants extends Component {
 
           <div className="pageTitle">
             <h1>Restaurantes</h1>
-            <span className="material-symbols-rounded">monitoring</span>
+            <span className="material-symbols-rounded">store</span>
           </div>
         </div>
 
@@ -119,7 +119,24 @@ export default class Restaurants extends Component {
                   </div>
 
                   <div className="restaurantCardFooter">
-                    <a href="">Ver mais</a>
+                    <a
+                      href="/#/restaurantDetails"
+                      onClick={() => {
+                        sessionStorage.setItem("restaurantId", restaurant.id);
+
+                        sessionStorage.setItem(
+                          "restaurantName",
+                          restaurant.name
+                        );
+
+                        sessionStorage.setItem(
+                          "restaurantStatus",
+                          restaurant.status
+                        );
+                      }}
+                    >
+                      Ver mais
+                    </a>
 
                     {restaurant.status == "criado" ? (
                       <button>Enviar para avaliação</button>

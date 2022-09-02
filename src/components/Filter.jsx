@@ -71,6 +71,10 @@ export default class Filter extends Component {
     this.handleFilter = this.handleFilter.bind(this);
   }
 
+  componentDidMount() {
+    $(".cpf").mask("000.000.000-00");
+  }
+
   async handleFilter(e) {
     e.preventDefault();
 
@@ -182,6 +186,15 @@ export default class Filter extends Component {
           },
         }
       );
+    } else if (this.props.target == "users") {
+      results = await axios.get(
+        `https://www.api.rangosemfila.com.br/v2/users${url}`,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
     }
 
     this.props.callback(results.data);
@@ -219,6 +232,8 @@ export default class Filter extends Component {
                   );
                 })}
               </select>
+            ) : this.props.target == "users" ? (
+              <input type="text" placeholder="Email" name="email" />
             ) : (
               <select name="category" id="category">
                 <option value="">Selecionar categoria</option>
@@ -231,7 +246,22 @@ export default class Filter extends Component {
                 })}
               </select>
             )}
-            <input type="date" placeholder="Data" name="createdAt" />
+            {this.props.target == "users" ? (
+              <input className="cpf" type="text" placeholder="CPF" name="cpf" />
+            ) : this.props.target == "restaurants" ? (
+              <select name="status" id="status">
+                <option value="">Selecionar status</option>
+                {restaurantStatusList.map((status) => {
+                  return (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  );
+                })}
+              </select>
+            ) : (
+              <input type="date" placeholder="Data" name="createdAt" />
+            )}
             <button type="submit">
               <span className="material-symbols-rounded">search</span>
             </button>

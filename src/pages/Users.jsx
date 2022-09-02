@@ -3,6 +3,7 @@ import { Spinner } from "react-bootstrap";
 import Menu from "../components/Menu";
 import { Services } from "../services";
 import $ from "jquery";
+import "jquery-mask-plugin";
 
 import "./Users.scss";
 import Pagination from "../components/Pagination";
@@ -40,6 +41,8 @@ export default class Users extends Component {
         }
       });
 
+      $(".cpf").mask("000.000.000-00");
+
       this.setState({ users: users.users });
 
       $(".loading").hide();
@@ -73,7 +76,7 @@ export default class Users extends Component {
         <Pagination target="users" callback={this.setUsers} />
 
         <section className="pageContainer usersContainer">
-          <Filter />
+          <Filter target="users" callback={this.setUsers} />
 
           <div className="userCardsContainer">
             <strong>ID</strong>

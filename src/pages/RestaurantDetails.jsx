@@ -1,13 +1,20 @@
 import React, { Component } from "react";
+import { Spinner } from "react-bootstrap";
 import Menu from "../components/Menu";
+import { Services } from "../services";
+import $, { getJSON } from "jquery";
 
 import "./RestaurantDetails.scss";
+
+const services = new Services();
 
 export default class RestaurantDetails extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      name: "",
+    };
   }
 
   async componentDidMount() {
@@ -16,6 +23,30 @@ export default class RestaurantDetails extends Component {
 
     if (!token) {
       $(".restaurantDetails").html("Not Authorized!!");
+    } else {
+      $(".loading").show();
+
+      const restaurantId = sessionStorage.getItem("restaurantId");
+      const restaurantName = sessionStorage.getItem("restaurantName");
+      const restaurantStatus = sessionStorage.getItem("restaurantStatus");
+
+      console.log(restaurantId);
+
+      $(".restaurantDetails").on("click", () => {
+        let active = sessionStorage.getItem("isMenuActive");
+
+        if (active == "true") {
+          services.handleMenuToggle();
+        }
+      });
+
+      this.setState({
+        id: restaurantId,
+        name: restaurantName,
+        status: restaurantStatus,
+      });
+
+      $(".loading").hide();
     }
   }
 
@@ -24,7 +55,35 @@ export default class RestaurantDetails extends Component {
       <main className="restaurantDetails">
         <Menu />
 
-        
+        <div className="loading">
+          <Spinner className="spinner" animation="border" />
+        </div>
+
+        <div className="pageHeader">
+          <div className="menuToggle" onClick={services.handleMenuToggle}>
+            <span className="material-symbols-rounded">menu</span>
+          </div>
+
+          <div className="pageTitle">
+            <h1>{this.state.name}</h1>
+            <span className="material-symbols-rounded">store</span>
+          </div>
+        </div>
+
+        <section className="restaurantDetailsContainer">
+          <div className="smallInfoBox">
+            <div className="smallInfoBoxHeader">
+              <div className="smallInfoBoxHeaderImage"></div>
+
+              <div className="smallInfoBoxHeaderText">
+                <p>#ID {this.state.id}</p>
+                <strong>{this.state.name}</strong>
+              </div>
+            </div>
+
+            <strong className="smallInfoBoxStatus">{this.state.status}</strong>
+          </div>
+        </section>
       </main>
     );
   }
