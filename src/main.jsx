@@ -15,8 +15,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/register" element={<Register />} />
       <Route path="/powerBi" element={<PowerBi />} />
       <Route path="/restaurantes" element={<Restaurants />} />
-      <Route path="/restaurantDetails" element={<RestaurantDetails />} />
-      <Route path="/users" element={<Users />} />
+      <Route path="/detalhesRestaurante" element={<RestaurantDetails />} />
+      <Route path="/usuarios" element={<Users />} />
     </Routes>
   </HashRouter>
 );

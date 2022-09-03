@@ -81,7 +81,21 @@ export default class RestaurantDetails extends Component {
               </div>
             </div>
 
-            <strong className="smallInfoBoxStatus">{this.state.status}</strong>
+            <strong
+              className="smallInfoBoxStatus"
+              style={{
+                color:
+                  this.state.status == "pendente"
+                    ? "#f18a33"
+                    : this.state.status == "recusado"
+                    ? "red"
+                    : this.state.status == "operando"
+                    ? "#52e899"
+                    : "black",
+              }}
+            >
+              {this.state.status}
+            </strong>
           </div>
         </section>
       </main>

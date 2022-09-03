@@ -120,7 +120,7 @@ export default class Restaurants extends Component {
 
                   <div className="restaurantCardFooter">
                     <a
-                      href="/#/restaurantDetails"
+                      href="/#/detalhesRestaurante"
                       onClick={() => {
                         sessionStorage.setItem("restaurantId", restaurant.id);
 
@@ -139,12 +139,57 @@ export default class Restaurants extends Component {
                     </a>
 
                     {restaurant.status == "criado" ? (
-                      <button>Enviar para avaliação</button>
+                      <button
+                        onClick={() => {
+                          $(".loading").show();
+
+                          services.updateRestaurantStatus(
+                            restaurant.id,
+                            "pendente"
+                          );
+
+                          $(".loading").hide();
+
+                          window.location.reload();
+                        }}
+                      >
+                        Enviar para avaliação
+                      </button>
                     ) : restaurant.status == "pendente" ? (
                       <div className="restaurantCardButtonsRow">
-                        <button>Confirmar</button>
+                        <button
+                          onClick={() => {
+                            $(".loading").show();
 
-                        <button>Recusar</button>
+                            services.updateRestaurantStatus(
+                              restaurant.id,
+                              "confirmado"
+                            );
+
+                            $(".loading").hide();
+
+                            window.location.reload();
+                          }}
+                        >
+                          Confirmar
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            $(".loading").show();
+
+                            services.updateRestaurantStatus(
+                              restaurant.id,
+                              "recusado"
+                            );
+
+                            $(".loading").hide();
+
+                            window.location.reload();
+                          }}
+                        >
+                          Recusar
+                        </button>
                       </div>
                     ) : null}
                   </div>

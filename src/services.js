@@ -15,7 +15,6 @@ class Services {
     let screenWidth = window.innerWidth;
     let currentState = sessionStorage.getItem("isMenuActive");
 
-
     screenWidth <= 1024
       ? (width = "70")
       : screenWidth <= 1400
@@ -34,7 +33,6 @@ class Services {
 
       $(".menuNav").hide();
       $(".menu").css("width", 0);
-
 
       return;
     }
@@ -141,6 +139,18 @@ class Services {
     } catch (e) {
       console.error(e);
     }
+  }
+
+  async updateRestaurantStatus(id, status) {
+    const response = await axios.put(
+      `https://api.rangosemfila.com.br/v2/restaurants/${id}`,
+      { status: status },
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
   }
 }
 

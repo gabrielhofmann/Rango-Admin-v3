@@ -78,6 +78,8 @@ export default class Filter extends Component {
   async handleFilter(e) {
     e.preventDefault();
 
+    const date = new Date();
+
     let results;
 
     const elements = $("input");
@@ -132,9 +134,27 @@ export default class Filter extends Component {
             break;
 
           case "createdAt":
-            dateString = `[createdAt][$eq]=${new Date(
-              element.value
-            ).toISOString()}`;
+            const start = new Date(
+              element.value.split("-")[0],
+              element.value.split("-")[1] - 1,
+              element.value.split("-")[2],
+              0,
+              0,
+              1
+            );
+
+            const end = new Date(
+              element.value.split("-")[0],
+              element.value.split("-")[1] - 1,
+              element.value.split("-")[2],
+              23,
+              59,
+              0
+            );
+
+            console.log(start, end);
+
+            dateString = `[createdAt][$between]=[${start.toISOString()}, ${end.toISOString()}]`;
             inputData.push({ name: element.name, value: dateString });
 
             break;
