@@ -629,7 +629,22 @@ export default class PowerBi extends Component {
                     {restaurant.rating}
                   </strong>
 
-                  <button>Ver mais</button>
+                  <button
+                    onClick={() => {
+                      sessionStorage.setItem("restaurantId", restaurant.id);
+
+                      sessionStorage.setItem("restaurantName", restaurant.name);
+
+                      sessionStorage.setItem(
+                        "restaurantStatus",
+                        restaurant.status
+                      );
+
+                      window.location.href = "/#/detalhesRestaurante";
+                    }}
+                  >
+                    Ver mais
+                  </button>
                 </div>
               );
             })}

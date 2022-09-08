@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { Spinner } from "react-bootstrap";
 import Menu from "../components/Menu";
 import { Services } from "../services";
-import $, { getJSON } from "jquery";
+import $ from "jquery";
+import logo from "../assets/logo.svg";
 
 import "./RestaurantDetails.scss";
 
@@ -13,7 +14,7 @@ export default class RestaurantDetails extends Component {
     super(props);
 
     this.state = {
-      name: "",
+      restaurant: {},
     };
   }
 
@@ -26,11 +27,9 @@ export default class RestaurantDetails extends Component {
     } else {
       $(".loading").show();
 
-      const restaurantId = sessionStorage.getItem("restaurantId");
-      const restaurantName = sessionStorage.getItem("restaurantName");
-      const restaurantStatus = sessionStorage.getItem("restaurantStatus");
-
-      console.log(restaurantId);
+      const restaurant = await services.findRestaurant(
+        sessionStorage.getItem("restaurantId")
+      );
 
       $(".restaurantDetails").on("click", () => {
         let active = sessionStorage.getItem("isMenuActive");
@@ -41,9 +40,7 @@ export default class RestaurantDetails extends Component {
       });
 
       this.setState({
-        id: restaurantId,
-        name: restaurantName,
-        status: restaurantStatus,
+        restaurant: restaurant,
       });
 
       $(".loading").hide();
@@ -73,11 +70,18 @@ export default class RestaurantDetails extends Component {
         <section className="restaurantDetailsContainer">
           <div className="smallInfoBox">
             <div className="smallInfoBoxHeader">
-              <div className="smallInfoBoxHeaderImage"></div>
+              <div
+                className="smallInfoBoxHeaderImage"
+                style={{
+                  backgroundImage: this.state.restaurant.thumbnailImageUrl
+                    ? `url(${this.state.restaurant.thumbnailImageUrl})`
+                    : `url(${logo})`,
+                }}
+              ></div>
 
               <div className="smallInfoBoxHeaderText">
-                <p>#ID {this.state.id}</p>
-                <strong>{this.state.name}</strong>
+                <p>#ID {this.state.restaurant.id}</p>
+                <strong>{this.state.restaurant.name}</strong>
               </div>
             </div>
 
@@ -85,16 +89,16 @@ export default class RestaurantDetails extends Component {
               className="smallInfoBoxStatus"
               style={{
                 color:
-                  this.state.status == "pendente"
+                  this.state.restaurant.status == "pendente"
                     ? "#f18a33"
-                    : this.state.status == "recusado"
+                    : this.state.restaurant.status == "recusado"
                     ? "red"
-                    : this.state.status == "operando"
+                    : this.state.restaurant.status == "operando"
                     ? "#52e899"
                     : "black",
               }}
             >
-              {this.state.status}
+              {this.state.restaurant.status}
             </strong>
           </div>
         </section>

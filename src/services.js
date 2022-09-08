@@ -97,6 +97,19 @@ class Services {
     }
   }
 
+  async filterUsers(input, param) {
+    let result;
+    param == "username"
+      ? (result = await axios.get(
+          `https://www.api.rangosemfila.com.br/v2/users?filters[username][$containsi]=${input}`
+        ))
+      : (result = await axios.get(
+          `https://www.api.rangosemfila.com.br/v2/users?filters[id][$eq]=${input}`
+        ));
+
+    return result.data;
+  }
+
   // ORDERS
 
   async getOrders(offset) {
@@ -141,6 +154,19 @@ class Services {
     }
   }
 
+  async findRestaurant(id) {
+    const response = await axios.get(
+      `https://www.api.rangosemfila.com.br/v2/findRestaurant/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    return response.data;
+  }
+
   async updateRestaurantStatus(id, status) {
     const response = await axios.put(
       `https://api.rangosemfila.com.br/v2/restaurants/${id}`,
@@ -149,6 +175,43 @@ class Services {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
+      }
+    );
+  }
+
+  async filterRestaurants(input, param) {
+    let result;
+    param == "name"
+      ? (result = await axios.get(
+          `https://www.api.rangosemfila.com.br/v2/restaurants?filters[name][$containsi]=${input}`
+        ))
+      : (result = await axios.get(
+          `https://www.api.rangosemfila.com.br/v2/restaurants?filters[id][$eq]=${input}`
+        ));
+
+    return result.data;
+  }
+
+  // COUPONS
+
+  async getCoupons(offset) {
+    const response = await axios.get(
+      `https://www.api.rangosemfila.com.br/v2/coupons/${offset}`
+    );
+
+    return response.data;
+  }
+
+  async newCoupon(body) {
+    const response = await axios.post(
+      "https://www.api.rangosemfila.com.br/v2/coupons",
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      },
+      {
+        data: body,
       }
     );
   }

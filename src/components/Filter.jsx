@@ -88,10 +88,12 @@ export default class Filter extends Component {
     let url = "?filters";
     let idString,
       userString,
+      usernameString,
       restaurantNameString,
       totalString,
       statusString,
       categoryString,
+      cpfString,
       dateString;
 
     elements.map((index, element) => {
@@ -103,9 +105,15 @@ export default class Filter extends Component {
 
             break;
 
-          case "username":
+          case "user":
             userString = `[user][username][$containsi]=${element.value}`;
             inputData.push({ name: element.name, value: userString });
+
+            break;
+
+          case "username":
+            usernameString = `[username][$containsi]=${element.value}`;
+            inputData.push({ name: element.name, value: usernameString });
 
             break;
 
@@ -130,6 +138,12 @@ export default class Filter extends Component {
           case "category":
             categoryString = `[category][$eq]=${element.value}`;
             inputData.push({ name: element.name, value: categoryString });
+
+            break;
+
+          case "cpf":
+            cpfString = `[cpf][$eq]=${element.value}`;
+            inputData.push({ name: element.name, value: cpfString });
 
             break;
 
@@ -234,9 +248,9 @@ export default class Filter extends Component {
           <form id="filterForm" onSubmit={this.handleFilter}>
             <input type="text" placeholder="ID" name="id" />
             {this.props.target == "orders" ? (
-              <input type="text" placeholder="Cliente" name="username" />
+              <input type="text" placeholder="Cliente" name="user" />
             ) : (
-              <input type="text" placeholder="Nome" name="name" />
+              <input type="text" placeholder="Nome" name="username" />
             )}
             {this.props.target == "orders" ? (
               <input type="text" placeholder="Valor" name="total" />

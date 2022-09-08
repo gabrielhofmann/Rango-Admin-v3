@@ -1,0 +1,206 @@
+@use "../base.scss";
+
+.coupons {
+  display: flex;
+  flex-direction: column;
+
+  padding-bottom: 7rem;
+}
+
+.couponsNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40rem;
+  margin: auto;
+  padding-top: 10rem;
+
+  ul {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    width: 100%;
+    padding: 1rem;
+    margin: 0;
+
+    .navLink {
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: base.$color-grey;
+    }
+
+    .navLink.active {
+      border-bottom: 2px solid base.$color-orange;
+      color: black;
+    }
+
+    .navLink:hover:not(.active) {
+      border-bottom: 2px solid base.$color-orange;
+      margin-top: -2px;
+    }
+  }
+
+  @media (max-width: 1600px) {
+    width: 90vw;
+    margin-bottom: 3rem;
+  }
+}
+
+.availableCoupons {
+  width: calc(100% - 2rem);
+  height: auto;
+
+  margin: 1rem auto;
+  padding: 1rem;
+
+  font-size: base.$font-medium;
+
+  border-radius: 1rem;
+  box-shadow: base.$shadow;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.couponsNameplates {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem;
+
+  text-align: center;
+}
+
+.couponCard {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  width: 100%;
+  align-items: center;
+
+  font-size: base.$font-small;
+
+  margin: 0.5rem 1rem;
+  padding: 2rem 1rem;
+  box-shadow: base.$shadow;
+  border-radius: 0.5rem;
+
+  color: base.$color-orange;
+
+  text-align: center;
+}
+
+.expiredCoupons {
+  width: calc(100% - 2rem);
+  height: auto;
+
+  margin: 1rem auto;
+  padding: 1rem;
+
+  font-size: base.$font-medium;
+
+  border-radius: 1rem;
+  box-shadow: base.$shadow;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.newCoupon {
+  width: calc(100% - 2rem);
+  min-height: auto;
+
+  margin: 1rem auto;
+
+  font-size: base.$font-medium;
+
+  border-radius: 1rem;
+
+  form {
+    display: grid;
+    grid-template:
+      "a b"
+      "c c"
+      "d d";
+    align-items: center;
+    justify-items: center;
+    padding: 2rem;
+    row-gap: 2rem;
+    column-gap: 2rem;
+
+    padding-bottom: 20rem;
+
+    label {
+      font-weight: 700;
+    }
+
+    input {
+      margin-bottom: 1rem;
+    }
+
+    button {
+      grid-area: d;
+      width: 62rem;
+      border: none;
+      outline: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      color: base.$color-orange;
+      background-color: white;
+      box-shadow: base.$shadow;
+
+      transition: all ease 0.5s;
+    }
+
+    button:hover {
+      background-color: rgba($color: base.$color-orange, $alpha: 0.3);
+    }
+  }
+}
+
+.newCouponGroup {
+  box-shadow: base.$shadow;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.form-check-label {
+  margin-bottom: -0.3rem;
+}
+
+#group1 {
+  grid-area: a;
+  width: 30rem;
+  height: 23rem;
+  justify-self: flex-end;
+}
+
+#group2 {
+  grid-area: b;
+  width: 30rem;
+  height: 23rem;
+  justify-self: flex-start;
+}
+
+#group3 {
+  grid-area: c;
+  width: 62rem;
+  overflow: visible;
+}
+
+.customSelect {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  -webkit-overflow-scrolling: none !important;
+  overflow: visible !important;
+  margin-bottom: 1rem;
+}

@@ -63,7 +63,7 @@ export default function Menu() {
           </li>
 
           <li>
-            <a href="">
+            <a href="/#/cupons">
               <span className="material-symbols-rounded">sell</span>
 
               <p>Cupons</p>

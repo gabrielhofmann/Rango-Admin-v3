@@ -38,13 +38,17 @@ export default class Pagination extends Component {
 
         break;
 
+      case "coupons":
+        response = await services.getCoupons(0);
+
+
+        break;
+
       default:
         break;
     }
 
-    this.setState({ maxPage: Math.ceil(response.count / 10) }, () => {
-      console.log(this.state);
-    });
+    this.setState({ maxPage: Math.ceil(response.count / 10) });
   }
 
   async firstPage() {
@@ -70,6 +74,13 @@ export default class Pagination extends Component {
 
         this.setState({ currentPage: 1 });
         this.props.callback(users.users);
+        break;
+
+      case "coupons":
+        const coupons = await services.getCoupons(0);
+
+        this.setState({ currentPage: 1 });
+        this.props.callback(coupons.coupons);
         break;
 
       default:
@@ -112,6 +123,15 @@ export default class Pagination extends Component {
           this.props.callback(users.users);
           break;
 
+        case "coupons":
+          const coupons = await services.getCoupons(
+            (this.state.currentPage - 2) * 10
+          );
+
+          this.setState({ currentPage: this.state.currentPage - 1 });
+          this.props.callback(coupons.coupons);
+          break;
+
         default:
           break;
       }
@@ -148,6 +168,15 @@ export default class Pagination extends Component {
           this.props.callback(users.users);
           break;
 
+        case "coupons":
+          const coupons = await services.getCoupons(
+            this.state.currentPage * 10
+          );
+
+          this.setState({ currentPage: this.state.currentPage + 1 });
+          this.props.callback(coupons.coupons);
+          break;
+
         default:
           break;
       }
@@ -181,6 +210,15 @@ export default class Pagination extends Component {
 
         this.setState({ currentPage: this.state.maxPage });
         this.props.callback(users.users);
+        break;
+
+      case "coupons":
+        const coupons = await services.getCoupons(
+          (this.state.maxPage - 1) * 10
+        );
+
+        this.setState({ currentPage: this.state.maxPage });
+        this.props.callback(coupons.coupons);
         break;
 
       default:
