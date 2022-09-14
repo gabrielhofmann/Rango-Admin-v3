@@ -9,16 +9,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tinymce/tinymce-react": "^4.2.0",
     "axios": "^0.27.2",
     "bootstrap": "^5.2.0",
     "jquery": "^3.6.0",
     "jquery-mask-plugin": "^1.14.16",
+    "raw-loader": "^4.0.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
     "react-select": "^5.4.0",
-    "sass": "^1.54.4"
+    "sass": "^1.54.4",
+    "tinymce": "^6.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",

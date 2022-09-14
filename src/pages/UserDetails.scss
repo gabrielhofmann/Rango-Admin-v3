@@ -1,0 +1,144 @@
+@use "../base.scss";
+
+.userDetails {
+  width: 100vw;
+  height: 100vh;
+}
+
+.userDetailsContainer {
+  width: calc(100% - 2rem);
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.addressContainer {
+  display: none;
+}
+
+.gridContainer {
+  padding: 0 1rem;
+  border-radius: 0.5rem;
+  box-shadow: base.$shadow;
+
+  div {
+    box-shadow: base.$shadow;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+
+    ul {
+      margin: 0;
+      padding: 0;
+
+      li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0.5rem 0;
+        font-size: 1.3rem;
+
+        border-bottom: 1px solid base.$color-grey;
+        padding-bottom: 0.5rem;
+
+        strong {
+          color: base.$color-orange;
+        }
+
+        span {
+          margin-left: 3rem;
+          color: black;
+        }
+      }
+    }
+  }
+
+  .editableContainer {
+    form {
+      position: relative;
+
+      label {
+        color: base.$color-orange;
+        font-weight: 700;
+        margin: 0;
+        margin-left: 0.3rem;
+        font-size: 1.2rem;
+      }
+
+      input {
+        border-color: rgba($color: base.$color-grey, $alpha: 0.3);
+        margin-bottom: 1.5rem;
+        box-shadow: none;
+
+        padding: 0.7rem;
+      }
+
+      .switch {
+        width: 5rem;
+        height: 2.5rem;
+        overflow: hidden;
+        position: relative;
+
+        input {
+          height: 100%;
+          width: 100%;
+          border-radius: 3rem;
+          border: none;
+          background-color: rgba($color: base.$color-grey, $alpha: 0.3);
+        }
+
+        input:focus {
+          border-color: rgba($color: base.$color-grey, $alpha: 0.3);
+          box-shadow: none;
+        }
+
+        .slider {
+          width: 2rem;
+          height: 2rem;
+          background-color: white;
+          position: absolute;
+          left: 0.2rem;
+          bottom: 0;
+          top: 0;
+          margin: auto;
+          border-radius: 2rem;
+
+          -webkit-transition: all ease 0.4s;
+          transition: all ease 0.4s;
+        }
+
+        .slider.active {
+          -webkit-transform: translateX(2.5rem);
+          -ms-transform: translateX(2.5rem);
+          transform: translateX(2.5rem);
+        }
+
+        input.active {
+          background-color: base.$color-orange;
+        }
+      }
+
+      button {
+        position: absolute;
+        right: 1rem;
+        bottom: 1rem;
+        box-shadow: base.$shadow;
+        border: none;
+        border-radius: 0.5rem;
+        outline: none;
+        background-color: white;
+        padding: 0.5rem 2rem;
+        font-size: 0.9rem;
+        color: base.$color-orange;
+        transition: all ease 0.4s;
+      }
+
+      button:hover {
+        background-color: rgba($color: base.$color-orange, $alpha: 0.3);
+      }
+    }
+  }
+}

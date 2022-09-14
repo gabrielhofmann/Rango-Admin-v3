@@ -1,0 +1,106 @@
+@use "../base.scss";
+
+.mailingContainer {
+  padding-top: 7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+
+  h1 {
+    border-bottom: 1px solid base.$color-grey;
+    padding-bottom: 1.5rem;
+
+    span {
+      color: base.$color-orange;
+    }
+  }
+
+  #editor {
+    border-radius: 0 0 0.5rem 0.5rem;
+  }
+
+  #toolbar {
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+
+  form {
+    width: 70rem;
+    display: grid;
+    row-gap: 2rem;
+    column-gap: 2rem;
+
+    grid-template:
+      "a b"
+      "c c"
+      "d d";
+
+    margin: 3rem 0;
+    box-shadow: base.$shadow;
+    border-radius: 0.5rem;
+    padding: 1rem;
+
+    label {
+      margin: 1rem 0 0 0.5rem;
+    }
+
+    .mailingFormGroup {
+      grid-area: a;
+    }
+
+    #radioInputs {
+      text-align: center;
+      grid-area: b;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      label {
+        font-size: 1.5rem;
+        margin-bottom: 0.7rem;
+      }
+
+      #radioOptions {
+        margin: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+        label {
+          margin: 0 0 0 0.5rem;
+          font-size: 1.4rem;
+        }
+
+        input {
+          padding: 0.7rem;
+          margin: 0.3rem;
+        }
+      }
+    }
+
+    #editor {
+      grid-area: c;
+    }
+
+    #mailingFormButton {
+      width: 25rem;
+      margin: 1rem auto;
+      padding: 1rem 0;
+      border: none;
+      border-radius: 1rem;
+      color: base.$color-orange;
+      box-shadow: base.$shadow;
+      background-color: white;
+      grid-area: d;
+      font-size: 1.2rem;
+
+      transition: all ease 0.5s;
+    }
+
+    #mailingFormButton:hover {
+      background-color: rgba($color: base.$color-orange, $alpha: 0.3);
+    }
+  }
+}

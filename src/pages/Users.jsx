@@ -99,7 +99,14 @@ export default class Users extends Component {
                   <strong>{user.role.name}</strong>
                   <strong>{user.blocked ? "SIM" : "NÃO"}</strong>
                   <strong>{user.confirmed ? "SIM" : "NÃO"}</strong>
-                  <button>Ver mais</button>
+                  <button
+                    onClick={() => {
+                      sessionStorage.setItem("userId", user.id);
+                      window.location.href = "/#/detalhesUsuario";
+                    }}
+                  >
+                    Ver mais
+                  </button>
                 </div>
               );
             })}

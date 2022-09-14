@@ -37,7 +37,6 @@ export default function Menu() {
               <p>Power BI</p>
             </a>
           </li>
-
           <li>
             <a href="/#/restaurantes">
               <span className="material-symbols-rounded">store</span>
@@ -45,7 +44,6 @@ export default function Menu() {
               <p>Restaurantes</p>
             </a>
           </li>
-
           <li>
             <a href="/#/usuarios">
               <span className="material-symbols-rounded">person</span>
@@ -53,7 +51,6 @@ export default function Menu() {
               <p>Usuários</p>
             </a>
           </li>
-
           <li>
             <a href="">
               <span className="material-symbols-rounded">list_alt</span>
@@ -61,7 +58,6 @@ export default function Menu() {
               <p>Pedidos</p>
             </a>
           </li>
-
           <li>
             <a href="/#/cupons">
               <span className="material-symbols-rounded">sell</span>
@@ -69,7 +65,14 @@ export default function Menu() {
               <p>Cupons</p>
             </a>
           </li>
+          
+          <li>
+            <a href="/#/mailing">
+              <span className="material-symbols-rounded">send</span>
 
+              <p>Mailing</p>
+            </a>
+          </li>
           <li>
             <a href="">
               <span className="material-symbols-rounded">web_asset</span>
@@ -77,7 +80,6 @@ export default function Menu() {
               <p>Conteúdos</p>
             </a>
           </li>
-
           <li>
             <a href="">
               <span className="material-symbols-rounded">group</span>
@@ -85,7 +87,6 @@ export default function Menu() {
               <p>Suporte</p>
             </a>
           </li>
-
           <li>
             <a href="">
               <span className="material-symbols-rounded">
@@ -95,7 +96,6 @@ export default function Menu() {
               <p>One Signal</p>
             </a>
           </li>
-
           <li>
             <a href="">
               <span className="material-symbols-rounded logout">logout</span>

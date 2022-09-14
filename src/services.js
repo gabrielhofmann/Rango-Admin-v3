@@ -110,6 +110,21 @@ class Services {
     return result.data;
   }
 
+  async findUser(userID) {
+    const token = sessionStorage.getItem("token");
+
+    const response = await axios.get(
+      `https://www.api.rangosemfila.com.br/v2/users/${userID}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  }
+
   // ORDERS
 
   async getOrders(offset) {

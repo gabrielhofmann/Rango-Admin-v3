@@ -89,11 +89,11 @@ export default class Filter extends Component {
     let idString,
       userString,
       usernameString,
-      restaurantNameString,
       totalString,
       statusString,
       categoryString,
       cpfString,
+      nameString,
       dateString;
 
     elements.map((index, element) => {
@@ -102,6 +102,12 @@ export default class Filter extends Component {
           case "id":
             idString = `[id][$eq]=${element.value}`;
             inputData.push({ name: element.name, value: idString });
+
+            break;
+
+          case "name":
+            nameString = `[name][$containsi]=${element.value}`;
+            inputData.push({ name: element.name, value: nameString });
 
             break;
 
@@ -114,12 +120,6 @@ export default class Filter extends Component {
           case "username":
             usernameString = `[username][$containsi]=${element.value}`;
             inputData.push({ name: element.name, value: usernameString });
-
-            break;
-
-          case "name":
-            restaurantNameString = `[name][$containsi]=${element.value}`;
-            inputData.push({ name: element.name, value: restaurantNameString });
 
             break;
 
@@ -250,7 +250,7 @@ export default class Filter extends Component {
             {this.props.target == "orders" ? (
               <input type="text" placeholder="Cliente" name="user" />
             ) : (
-              <input type="text" placeholder="Nome" name="username" />
+              <input type="text" placeholder="Nome" name="name" />
             )}
             {this.props.target == "orders" ? (
               <input type="text" placeholder="Valor" name="total" />

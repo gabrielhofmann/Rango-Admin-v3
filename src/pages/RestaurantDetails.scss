@@ -12,59 +12,265 @@
     align-items: center;
 
     min-height: 100%;
+  }
 
-    .smallInfoBox {
-      box-shadow: base.$shadow;
-      border-radius: 0.5rem;
-      margin: 7rem 0 2rem 0;
-      padding: 1rem 1rem 2rem 1rem;
+  .restaurantDetailsHeader {
+    box-shadow: base.$shadow;
+    margin-top: 7rem;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
 
-      width: fit-content;
-      height: 13rem;
-
+    .nameAndImage {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
+      text-align: start;
+      margin-bottom: 2rem;
 
-      .smallInfoBoxStatus {
-        font-size: 2rem;
-        color: black;
+      strong {
+        font-size: 1.8rem;
+        font-weight: black;
+        color: base.$color-orange;
+        line-height: normal;
+
+        span {
+          color: base.$color-grey;
+          font-size: 1.3rem;
+
+          font-weight: normal;
+        }
       }
 
-      .smallInfoBoxHeader {
+      .image {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+
+        box-shadow: base.$shadow;
+
+        margin: 0.5rem 2rem 0.5rem 0.5rem;
+
+        width: 5rem;
+        height: 5rem;
+        border-radius: 50%;
+      }
+    }
+
+    .restaurantDetailsRow {
+      .rowContent {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0.5rem;
+
+        div {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          margin: 0 1rem;
+          box-shadow: base.$shadow;
+          padding: 0 1.5rem;
+          border-radius: 1rem;
+          min-height: 5rem;
+          cursor: pointer;
+
+          p {
+            margin: 0;
+          }
+        }
+
+        .restaurantIcon {
+          padding: 0.3rem;
+        }
+
+        .rating {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0.5rem;
+          font-size: 1.3rem;
+
+          .restaurantIcon {
+            font-size: 1.5rem;
+            color: base.$color-orange;
+          }
+          overflow: hidden;
+
+          .icons {
+            display: flex;
+            flex-direction: row;
+            box-shadow: none;
+            align-items: flex-start;
+            padding: 0;
+            margin: 0;
+            height: 2rem;
+            overflow: hidden;
+            min-height: 0;
+
+            span {
+              overflow: hidden;
+              height: 2.5rem;
+            }
+          }
+        }
+
+        .isOpen {
+          color: white;
+          font-size: 1.2rem;
+        }
+
+        .orders {
+          strong {
+            margin: 0;
+            font-size: 1.7rem;
+            margin-bottom: -1.5rem 0;
+          }
+
+          #row {
+            box-shadow: none;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+            min-height: 0;
+            margin-top: -2rem;
+
+            span {
+              font-size: 1.3rem;
+            }
+          }
+        }
+
+        .status {
+          padding: 1rem;
+          box-shadow: base.$shadow;
+          border-radius: 1rem;
+          font-size: 1.6rem;
+        }
+
+        .sendToAnalysis {
+          height: 5rem;
+          border-radius: 1rem;
+          background-color: base.$color-orange;
+          border: none;
+          box-shadow: base.$shadow;
+          color: white;
+          padding: 0 2rem;
+          font-size: 1.2rem;
+          font-weight: bold;
+
+          transition: all ease 0.5s;
+        }
+
+        .sendToAnalysis:hover {
+          background-color: rgba($color: #da7b2f, $alpha: 1);
+        }
+
+        .actionButton {
+          height: 5rem;
+          border-radius: 1rem;
+          padding: 0 2rem;
+          box-shadow: base.$shadow;
+          border: none;
+          font-weight: bold;
+          color: white;
+          font-size: 1.2rem;
+          transition: all ease 0.5s;
+        }
+
+        .confirm {
+          background-color: #52e899;
+        }
+
+        .refuse {
+          background-color: #e4420f;
+          margin-left: 1rem;
+        }
+
+        .confirm:hover {
+          background-color: #47c783;
+        }
+
+        .refuse:hover {
+          background-color: #c2370d;
+        }
+      }
+    }
+  }
+
+  .pageContentWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    .leftContainer {
+      display: flex;
+      flex-direction: column;
+      width: 50%;
+      margin: 2rem;
+
+      .row1,
+      .row2,
+      .row3 {
+        padding: 1rem;
+      }
+
+      .card {
+        display: flex;
+        width: 30%;
+        padding: 1rem;
+        border: none;
+        box-shadow: base.$shadow;
+      }
+
+      .row1 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .row2 {
         display: flex;
         align-items: center;
         justify-content: space-between;
 
-        width: 100%;
+        ul {
+          width: 50%;
+        }
 
-        .smallInfoBoxHeaderImage {
-          width: 5rem;
-          height: 5rem;
-
-          border-radius: 50%;
-          margin: 1rem 2rem 1rem 1rem;
-
-          background-position: center;
-          background-repeat: no-repeat;
-          background-size: contain;
-
+        .accountInfo {
+          width: 50%;
           box-shadow: base.$shadow;
-        }
-
-        color: base.$color-orange;
-
-        p {
-          margin: 0;
-          font-size: 1.1rem;
-        }
-
-        strong {
-          margin: 0;
-          font-size: 1.5rem;
+          padding: 1rem;
+          border-radius: .5rem;
         }
       }
+
+      .row3 {
+        display: flex;
+        flex-direction: column;
+        box-shadow: base.$shadow;
+        padding: 1rem;
+        margin: 1rem;
+        border-radius: 0.5rem;
+
+        div {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+        }
+      }
+    }
+
+    .rightContainer {
+      display: flex;
+      flex-direction: column;
+      width: 50%;
+      margin: 2rem;
     }
   }
 }
