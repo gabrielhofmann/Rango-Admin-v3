@@ -209,9 +209,11 @@ class Services {
 
   // COUPONS
 
-  async getCoupons(offset) {
+  async getCoupons(offset, filters) {
     const response = await axios.get(
-      `https://www.api.rangosemfila.com.br/v2/coupons/${offset}`
+      `https://www.api.rangosemfila.com.br/v2/coupons/${offset}${
+        filters != undefined ? filters : null
+      }`
     );
 
     return response.data;

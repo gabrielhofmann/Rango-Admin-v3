@@ -7,6 +7,7 @@ import $ from "jquery";
 import Select from "react-select";
 
 import "./Coupons.scss";
+import Pagination from "../components/Pagination";
 
 const services = new Services();
 
@@ -18,12 +19,15 @@ export default class Coupons extends Component {
       validCoupons: [],
       expiredCoupons: [],
 
+      filters: "",
+
       usersOptions: [],
       restaurantsOptions: [],
     };
 
     this.handleNewCoupon = this.handleNewCoupon.bind(this);
     this.handleNavigation = this.handleNavigation.bind(this);
+    this.setCoupons = this.setCoupons.bind(this);
   }
 
   async componentDidMount() {
@@ -35,19 +39,16 @@ export default class Coupons extends Component {
       $(".loading").hide();
       $(".coupons").html("Not Authorized!!");
     } else {
-      const coupons = await services.getCoupons(0);
-
       let date = new Date();
       date = date.toISOString().split("T")[0];
 
-      let validCoupons = [];
-      let expiredCoupons = [];
+      const filtersValid = `?filters[validThru][$gte]=${date}`;
+      const filtersExpired = `?filters[validThru][$lte]=${date}`;
 
-      coupons.coupons.map((coupon) => {
-        date >= coupon.validThru
-          ? expiredCoupons.push(coupon)
-          : validCoupons.push(coupon);
-      });
+      const validCoupons = await services.getCoupons(0, filtersValid);
+      const expiredCoupons = await services.getCoupons(0, filtersExpired);
+
+      console.log(validCoupons, expiredCoupons);
 
       $("#availableNav").addClass("active");
       sessionStorage.setItem("coupons", ".availableCoupons");
@@ -154,10 +155,13 @@ export default class Coupons extends Component {
         });
 
       this.setState({
-        validCoupons: validCoupons,
-        expiredCoupons: expiredCoupons,
+        validCoupons: validCoupons.coupons,
+        expiredCoupons: expiredCoupons.coupons,
         usersOptions: usersOptions,
         restaurantsOptions: restaurantsOptions,
+        filters: filtersValid,
+        filtersValid: filtersValid,
+        filtersExpired: filtersExpired,
       });
 
       $(".loading").hide();
@@ -222,6 +226,12 @@ export default class Coupons extends Component {
       <main className="coupons">
         <Menu />
 
+        <Pagination
+          target="coupons"
+          filters={this.state.filters}
+          callback={this.setCoupons}
+        />
+
         <div className="loading">
           <Spinner className="spinner" animation="border" />
         </div>
@@ -243,6 +253,7 @@ export default class Coupons extends Component {
               id="availableNav"
               className="navLink"
               onClick={(e) => {
+                this.setState({ filters: this.state.filtersValid });
                 this.handleNavigation("coupons", ".availableCoupons", e.target);
               }}
               key="availableNav"
@@ -254,6 +265,7 @@ export default class Coupons extends Component {
               id="expiredNav"
               className="navLink"
               onClick={(e) => {
+                this.setState({ filters: this.state.filtersExpired });
                 this.handleNavigation("coupons", ".expiredCoupons", e.target);
               }}
               key="expiredNav"

@@ -39,8 +39,7 @@ export default class Pagination extends Component {
         break;
 
       case "coupons":
-        response = await services.getCoupons(0);
-
+        response = await services.getCoupons(0, this.props.filters);
 
         break;
 
@@ -77,7 +76,9 @@ export default class Pagination extends Component {
         break;
 
       case "coupons":
-        const coupons = await services.getCoupons(0);
+        const coupons = await services.getCoupons(0, this.props.filters);
+
+        this.setState({ maxPage: Math.ceil(coupons.count / 10) });
 
         this.setState({ currentPage: 1 });
         this.props.callback(coupons.coupons);
@@ -125,10 +126,14 @@ export default class Pagination extends Component {
 
         case "coupons":
           const coupons = await services.getCoupons(
-            (this.state.currentPage - 2) * 10
+            (this.state.currentPage - 2) * 10,
+            this.props.filters
           );
 
-          this.setState({ currentPage: this.state.currentPage - 1 });
+          this.setState({
+            currentPage: this.state.currentPage - 1,
+            maxPage: Math.ceil(coupons.count / 10),
+          });
           this.props.callback(coupons.coupons);
           break;
 
@@ -170,10 +175,14 @@ export default class Pagination extends Component {
 
         case "coupons":
           const coupons = await services.getCoupons(
-            this.state.currentPage * 10
+            this.state.currentPage * 10,
+            this.props.filters
           );
 
-          this.setState({ currentPage: this.state.currentPage + 1 });
+          this.setState({
+            currentPage: this.state.currentPage + 1,
+            maxPage: Math.ceil(coupons.count / 10),
+          });
           this.props.callback(coupons.coupons);
           break;
 
@@ -217,7 +226,10 @@ export default class Pagination extends Component {
           (this.state.maxPage - 1) * 10
         );
 
-        this.setState({ currentPage: this.state.maxPage });
+        this.setState({
+          currentPage: this.state.maxPage,
+          maxPage: Math.ceil(coupons.count / 10),
+        });
         this.props.callback(coupons.coupons);
         break;
 
