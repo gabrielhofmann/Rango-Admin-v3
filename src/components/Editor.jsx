@@ -54,7 +54,7 @@ import "tinymce/plugins/emoticons/js/emojis";
 
 export default function BundledEditor(props) {
   const { init, ...rest } = props;
-  
+
   // note that skin and content_css is disabled to avoid the normal
   // loading process and is instead loaded as a string via content_style
   return (
@@ -63,10 +63,7 @@ export default function BundledEditor(props) {
         ...init,
         skin: false,
         content_css: false,
-        content_style: [
-         
-          init.content_style || "",
-        ].join("\n"),
+        content_style: [init.content_style || ""].join("\n"),
       }}
       {...rest}
     />

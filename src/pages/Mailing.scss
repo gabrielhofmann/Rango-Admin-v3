@@ -56,17 +56,29 @@
       flex-direction: column;
       align-items: center;
 
+      position: relative;
+      overflow: visible;
+      border-left: 1px solid black;
+
+
       label {
         font-size: 1.5rem;
         margin-bottom: 0.7rem;
       }
 
+      #mailingUserSelect {
+        width: 25rem;
+        margin: 2rem 0;
+        font-size: 1.3rem;
+      }
+
       #radioOptions {
         margin: 0;
-        width: 100%;
+        width: 25rem;
         display: flex;
         align-items: center;
         justify-content: space-around;
+        padding-bottom: 1rem;
 
         label {
           margin: 0 0 0 0.5rem;

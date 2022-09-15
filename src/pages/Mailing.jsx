@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import { Form } from "react-bootstrap";
 import Menu from "../components/Menu";
 import { Services } from "../services";
+import Select from "react-select";
 
 import $ from "jquery";
 
 import "./Mailing.scss";
 import BundledEditor from "../components/Editor";
+import tinymce from "tinymce";
 
 const services = new Services();
 
@@ -14,7 +16,9 @@ export default class Mailing extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      usersOptions: [],
+    };
 
     this.handleMailing = this.handleMailing.bind(this);
   }
@@ -28,6 +32,52 @@ export default class Mailing extends Component {
       $(".loading").hide();
       $(".powerBi").html("Not Authorized!!");
     } else {
+      const users = await services.getUsers(0);
+
+      const usersOptions = users.users.map((user) => {
+        return {
+          label: user.username,
+          value: user.email,
+        };
+      });
+
+      $("#mailingUserSelect").hide();
+
+      document
+        .querySelector(".userSearch")
+        .querySelector(".select__input")
+        .addEventListener("keyup", async (e) => {
+          const input = e.target.value;
+
+          let isNumber = /^\d+$/.test(input);
+
+          if (isNumber) {
+            const users = await services.filterUsers(input, "id");
+
+            const options = users.map((user) => {
+              return {
+                label: user.username,
+                value: user.id,
+              };
+            });
+
+            this.setState({ usersOptions: options });
+          } else {
+            if (input.length >= 3) {
+              const users = await services.filterUsers(input, "username");
+
+              const options = users.map((user) => {
+                return {
+                  label: user.username,
+                  value: user.email,
+                };
+              });
+
+              this.setState({ usersOptions: options });
+            }
+          }
+        });
+
       $(".mailing").on("click", () => {
         let active = sessionStorage.getItem("isMenuActive");
 
@@ -36,13 +86,64 @@ export default class Mailing extends Component {
         }
       });
 
-      // EDITOR CONFIG
+      this.setState({ usersOptions: usersOptions });
 
       $(".loading").hide();
     }
   }
 
-  async handleMailing() {}
+  async handleMailing(e) {
+    e.preventDefault();
+
+    $(".loading").show();
+
+    const form = $("#mailingForm").serializeArray();
+    var subject, title, body, sender;
+    var recievers = new Array();
+    var body = $("textarea").val();
+    let toAllUsers = false;
+
+    form.map((e) => {
+      if (e.value.trim() != "") {
+        e.name == "subject"
+          ? (subject = e.value)
+          : e.name == "title"
+          ? (title = e.value)
+          : e.name == "users"
+          ? recievers.push(e.value)
+          : e.name == "sender"
+          ? (sender = e.value)
+          : null;
+      }
+    });
+
+    let requestBody;
+
+    if (toAllUsers) {
+      requestBody = {
+        subject: subject,
+        title: title,
+        body: body,
+        sender: sender != "" ? sender : null,
+        recievers: ["hofmannmarinho@gmail.com"],
+      };
+    } else {
+      requestBody = {
+        subject: subject,
+        title: title,
+        body: body,
+        sender: sender != "" ? sender : null,
+        recievers: recievers,
+      };
+    }
+
+    const response = await services.sendMail(requestBody);
+    console.log(response);
+
+    $(".loading").hide();
+
+    window.location.reload();
+  }
 
   render() {
     return (
@@ -65,7 +166,12 @@ export default class Mailing extends Component {
             Envio de e-mails comerciais utilizando o <span>RanGo Mailer</span>
           </h1>
 
-          <Form onSubmit={this.handleMailing}>
+          <Form
+            id="mailingForm"
+            onSubmit={(e) => {
+              this.handleMailing(e);
+            }}
+          >
             <Form.Group className="mailingFormGroup">
               <Form.Label>Assunto:</Form.Label>
 
@@ -88,6 +194,7 @@ export default class Mailing extends Component {
               <Form.Label>Corpo:</Form.Label>
 
               <BundledEditor
+                id="editor"
                 initialValue="<p></p>"
                 init={{
                   height: 500,
@@ -124,10 +231,36 @@ export default class Mailing extends Component {
               <Form.Label>Enviar para:</Form.Label>
 
               <div id="radioOptions">
-                <Form.Check name="recievers" type="radio" label="Todos" />
+                <Form.Check
+                  name="recievers"
+                  type="radio"
+                  label="Todos"
+                  onClick={() => {
+                    $("#mailingUserSelect").hide();
+                  }}
+                  required
+                />
 
-                <Form.Check name="recievers" type="radio" label="Selecionar" />
+                <Form.Check
+                  name="recievers"
+                  type="radio"
+                  label="Selecionar"
+                  onClick={() => {
+                    $("#mailingUserSelect").show();
+                  }}
+                  required
+                />
               </div>
+
+              <Select
+                id="mailingUserSelect"
+                name="users"
+                className="basic-single customSelect userSearch"
+                classNamePrefix="select"
+                options={this.state.usersOptions}
+                isSearchable="true"
+                isMulti
+              ></Select>
             </Form.Group>
 
             <button id="mailingFormButton" type="submit">

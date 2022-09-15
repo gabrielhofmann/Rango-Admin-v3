@@ -230,6 +230,20 @@ class Services {
       }
     );
   }
+
+  // MAILING
+
+  async sendMail(body) {
+    const response = await axios.post(
+      "https://www.api.rangosemfila.com.br/v2/rangoMailer",
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      },
+      body
+    );
+  }
 }
 
 export { Services };
