@@ -359,7 +359,17 @@ export default class RestaurantDetails extends Component {
                 </strong>
 
                 <div className="scheduleAvailable">
-                  <div id="switch">
+                  <div
+                    style={{
+                      backgroundColor: this.state.restaurant.scheduleAvailable
+                        ? "#52e899"
+                        : null,
+                      flexDirection: this.state.restaurant.scheduleAvailable
+                        ? "row-reverse"
+                        : null,
+                    }}
+                    id="switch"
+                  >
                     <div id="ball"></div>
                   </div>
 
