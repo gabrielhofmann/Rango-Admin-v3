@@ -94,6 +94,7 @@ export default class Filter extends Component {
       categoryString,
       cpfString,
       nameString,
+      emailString,
       dateString;
 
     elements.map((index, element) => {
@@ -147,6 +148,12 @@ export default class Filter extends Component {
 
             break;
 
+          case "email":
+            emailString = `[email][$eq]=${element.value}`;
+            inputData.push({ name: element.name, value: emailString });
+
+            break;
+
           case "createdAt":
             const start = new Date(
               element.value.split("-")[0],
@@ -178,19 +185,6 @@ export default class Filter extends Component {
         }
       }
     });
-
-    if (inputData.length == 0) {
-      if (this.props.target == "orders") {
-        const orders = await services.getOrders(0);
-
-        this.props.callback(orders.orders);
-      } else if (this.props.target == "restaurants") {
-        const restaurants = await services.getRestaurants(0);
-
-        this.props.callback(restaurants.restaurants);
-      } else if (this.props.target == "users") {
-      }
-    }
 
     if (inputData.length == 1) {
       url += `${inputData[0].value}`;
@@ -229,6 +223,15 @@ export default class Filter extends Component {
           },
         }
       );
+    } else if (this.props.target == "coupons") {
+      results = await axios.get(
+        `https://www.api.rangosemfila.com.br/v2/coupons${url}`,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
     }
 
     this.props.callback(results.data);
@@ -249,6 +252,8 @@ export default class Filter extends Component {
             <input type="text" placeholder="ID" name="id" />
             {this.props.target == "orders" ? (
               <input type="text" placeholder="Cliente" name="user" />
+            ) : this.props.target == "users" ? (
+              <input type="text" placeholder="Nome" name="username" />
             ) : (
               <input type="text" placeholder="Nome" name="name" />
             )}

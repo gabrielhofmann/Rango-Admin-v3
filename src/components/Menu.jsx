@@ -65,7 +65,7 @@ export default function Menu() {
               <p>Cupons</p>
             </a>
           </li>
-          
+
           <li>
             <a href="/#/mailing">
               <span className="material-symbols-rounded">send</span>
@@ -88,7 +88,7 @@ export default function Menu() {
             </a>
           </li>
           <li>
-            <a href="">
+            <a href="/#/onesignal">
               <span className="material-symbols-rounded">
                 radio_button_checked
               </span>

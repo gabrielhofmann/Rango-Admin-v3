@@ -15,7 +15,10 @@ export default class RestaurantDetails extends Component {
 
     this.state = {
       restaurant: {},
-      commission: [],
+      billing: {},
+      acquirer: {},
+      legal: {},
+      timing: [],
       totalRestaurantOrders: 0,
     };
   }
@@ -33,13 +36,13 @@ export default class RestaurantDetails extends Component {
         sessionStorage.getItem("restaurantId")
       );
 
+      console.log(restaurant);
+
       const data = await services.getPowerBiData();
 
       console.log(restaurant);
 
       data.ordersPerRestaurant.forEach((e) => {
-        console.log(e);
-
         if (e.restaurant.name == restaurant.name) {
           this.setState({ totalRestaurantOrders: e.orders });
         }
@@ -55,7 +58,10 @@ export default class RestaurantDetails extends Component {
 
       this.setState({
         restaurant: restaurant,
-        commission: restaurant.acquirer.commission,
+        billing: restaurant.billing,
+        acquirer: restaurant.acqurier,
+        legal: restaurant.legal,
+        timing: restaurant.timing,
       });
 
       $(".loading").hide();
@@ -243,141 +249,195 @@ export default class RestaurantDetails extends Component {
             </div>
           </div>
 
-          <div className="pageContentWrapper">
-            <div className="leftContainer">
-              <div className="row1">
-                <div className="card">
-                  <p>Telefone:</p>
+          {this.state.restaurant.status == "operando" ? (
+            <div className="pageContentWrapper">
+              <div className="leftContainer">
+                <div className="row1">
+                  <div className="card">
+                    <p>Telefone:</p>
 
-                  <strong>{this.state.restaurant.phoneNumber}</strong>
-                </div>
-
-                <div className="card">
-                  <p>Proprietário:</p>
-
-                  <strong>{this.state.restaurant.name}</strong>
-                </div>
-
-                <div className="card">
-                  <p>Email:</p>
-
-                  <strong>{this.state.restaurant.name}</strong>
-                </div>
-              </div>
-
-              <div className="row2">
-                <ul></ul>
-
-                <div className="accountInfo">
-                  <div>
-                    <p>Nome do Banco</p>
-
-                    <strong>banco</strong>
+                    <strong>{this.state.restaurant.phoneNumber}</strong>
                   </div>
 
-                  <div>
-                    <div>
-                      <p>Código do Banco</p>
+                  <div className="card">
+                    <p>Categoria:</p>
 
-                      <strong>codigo</strong>
+                    <strong>{this.state.restaurant.category}</strong>
+                  </div>
+
+                  <div className="card">
+                    <p>RanGo maior do mundo:</p>
+
+                    <strong>Sim</strong>
+                  </div>
+                </div>
+
+                <div className="row2">
+                  <ul>
+                    {this.state.timing.map((el) => {
+                      return (
+                        <li key={el.weekDay}>
+                          <p>{el.weekDay}</p>
+
+                          <div>
+                            <strong>
+                              {el.openingTime} - {el.closingTime}
+                            </strong>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+
+                  <div className="accountInfo">
+                    <div>
+                      <p>Nome do Banco</p>
+
+                      <strong>{this.state.billing.bank}</strong>
                     </div>
 
                     <div>
-                      <p>Agência</p>
+                      <div>
+                        <p>Código do Banco</p>
 
-                      <strong>agencia</strong>
+                        <strong>
+                          {this.state.billing.bankCode
+                            ? this.state.billing.bankCode
+                            : "N/A"}
+                        </strong>
+                      </div>
+
+                      <div>
+                        <p>Agência</p>
+
+                        <strong>{this.state.billing.agency}</strong>
+                      </div>
+                    </div>
+
+                    <div>
+                      <p>Conta</p>
+
+                      <strong>{this.state.billing.account}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row3">
+                  <div>
+                    <div>
+                      <p>
+                        Razão Social
+                        <br />
+                        <strong>{this.state.legal.razaoSocial}</strong>
+                      </p>
+                    </div>
+
+                    <div>
+                      <p>
+                        CNPJ
+                        <br />
+                        <strong>{this.state.legal.cnpj}</strong>
+                      </p>
                     </div>
                   </div>
 
                   <div>
-                    <p>Conta</p>
-
-                    <strong>conta</strong>
+                    <p>
+                      Nome fantasia
+                      <br />
+                      <strong>
+                        {this.state.legal.nomeFantasia
+                          ? this.state.legal.nomeFantasia
+                          : "N/A"}
+                      </strong>
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="row3">
-                <div>
-                  <div>
-                    <p>
-                      Razão Social
-                      <br />
-                      <strong>razao social</strong>
-                    </p>
-                  </div>
-
-                  <div>
-                    <p>
-                      CNPJ
-                      <br />
-                      <strong>cnpj</strong>
-                    </p>
+              <div className="rightContainer">
+                <div className="row1">
+                  <div className="commissionCard">
+                    <strong>
+                      {this.state.restaurant.acquirer.currentPlan == "daily"
+                        ? "Diário"
+                        : el.commissionPlan == "weekly"
+                        ? "Semanal"
+                        : "Mensal"}
+                    </strong>
                   </div>
                 </div>
 
-                <div>
-                  <p>
-                    Nome fantasia
+                <div className="row2">
+                  <strong>
+                    R${this.state.restaurant.minimumOrderValue}
                     <br />
-                    <strong>nome fantasia</strong>
+                    <p>Pedido Mínimo</p>
+                  </strong>
+
+                  <strong>
+                    {this.state.restaurant.estimatedDeliveryTime} minutos
+                    <br />
+                    <p>Tempo de entrega médio</p>
+                  </strong>
+
+                  <div className="scheduleAvailable">
+                    <div
+                      style={{
+                        backgroundColor: this.state.restaurant.scheduleAvailable
+                          ? "#52e899"
+                          : null,
+                        flexDirection: this.state.restaurant.scheduleAvailable
+                          ? "row-reverse"
+                          : null,
+                      }}
+                      id="switch"
+                    >
+                      <div id="ball"></div>
+                    </div>
+
+                    <p>Aceita Agendamento</p>
+                  </div>
+                </div>
+
+                <div className="row3">
+                  <div>
+                    <p>
+                      CEP: <br />
+                      <strong>{this.state.restaurant.address.cep}</strong>
+                    </p>
+
+                    <p>
+                      Estado: <br />
+                      <strong>{this.state.restaurant.address.state}</strong>
+                    </p>
+
+                    <p>
+                      Cidade: <br />
+                      <strong>{this.state.restaurant.address.city}</strong>
+                    </p>
+
+                    <p>
+                      Bairro: <br />
+                      <strong>
+                        {this.state.restaurant.address.neighborhood}
+                      </strong>
+                    </p>
+                  </div>
+
+                  <p>
+                    Endereço completo: <br />
+                    <strong>
+                      {this.state.restaurant.address.address} <br />{" "}
+                      {this.state.restaurant.address.complement}
+                    </strong>
                   </p>
                 </div>
               </div>
             </div>
-
-            <div className="rightContainer">
-              <div className="row1">
-                {this.state.commission.map((el) => {
-                  return (
-                    <div className="commissionCard">
-                      <strong>
-                        {el.feePercent}%
-                        <br />
-                        {el.commissionPlan == "daily"
-                          ? "Diário"
-                          : el.commissionPlan == "weekly"
-                          ? "Semanal"
-                          : "Mensal"}
-                      </strong>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="row2">
-                <strong>
-                  R${this.state.restaurant.minimumOrderValue}
-                  <br />
-                  <p>Pedido Mínimo</p>
-                </strong>
-
-                <strong>
-                  {this.state.restaurant.estimatedDeliveryTime} minutos
-                  <br />
-                  <p>Tempo de entrega médio</p>
-                </strong>
-
-                <div className="scheduleAvailable">
-                  <div
-                    style={{
-                      backgroundColor: this.state.restaurant.scheduleAvailable
-                        ? "#52e899"
-                        : null,
-                      flexDirection: this.state.restaurant.scheduleAvailable
-                        ? "row-reverse"
-                        : null,
-                    }}
-                    id="switch"
-                  >
-                    <div id="ball"></div>
-                  </div>
-
-                  <p>Aceita Agendamento</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          ) : this.state.restaurant.status == "confirmado" ? (
+            <div className="confirmedContainer">confirmado</div>
+          ) : null}
         </section>
       </main>
     );

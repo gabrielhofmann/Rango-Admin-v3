@@ -101,10 +101,20 @@ class Services {
     let result;
     param == "username"
       ? (result = await axios.get(
-          `https://www.api.rangosemfila.com.br/v2/users?filters[username][$containsi]=${input}`
+          `https://www.api.rangosemfila.com.br/v2/users?filters[username][$containsi]=${input}`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+          }
         ))
       : (result = await axios.get(
-          `https://www.api.rangosemfila.com.br/v2/users?filters[id][$eq]=${input}`
+          `https://www.api.rangosemfila.com.br/v2/users?filters[id][$eq]=${input}`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+          }
         ));
 
     return result.data;
@@ -123,6 +133,18 @@ class Services {
     );
 
     return response.data;
+  }
+
+  async updateUser(userID, body) {
+    const response = await axios.put(
+      `https://www.api.rangosemfila.com.br/v2/users/${userID}`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      },
+      body
+    );
   }
 
   // ORDERS

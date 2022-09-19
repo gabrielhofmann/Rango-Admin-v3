@@ -4,6 +4,7 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import Coupons from "./pages/Coupons";
 import Login from "./pages/Login";
 import Mailing from "./pages/Mailing";
+import OneSignal from "./pages/OneSignal";
 import PowerBi from "./pages/PowerBi";
 import Register from "./pages/Register";
 import RestaurantDetails from "./pages/RestaurantDetails";
@@ -23,6 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/detalhesUsuario" element={<UserDetails />} />
       <Route path="/cupons" element={<Coupons />} />
       <Route path="/mailing" element={<Mailing />} />
+      <Route path="/onesignal" element={<OneSignal />} />
     </Routes>
   </HashRouter>
 );

@@ -84,7 +84,7 @@ export default class Users extends Component {
             <strong>E-mail</strong>
             <strong>Telefone</strong>
             <strong>CPF</strong>
-            <strong>Role</strong>
+            {/* <strong>Role</strong> */}
             <strong>Bloqueado</strong>
             <strong>Confirmado</strong>
 
@@ -96,7 +96,7 @@ export default class Users extends Component {
                   <strong>{user.email}</strong>
                   <strong>{user.phoneNumber}</strong>
                   <strong>{user.cpf}</strong>
-                  <strong>{user.role.name}</strong>
+                  {/* <strong>{user.role.name}</strong> */}
                   <strong>{user.blocked ? "SIM" : "NÃO"}</strong>
                   <strong>{user.confirmed ? "SIM" : "NÃO"}</strong>
                   <button

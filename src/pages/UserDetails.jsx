@@ -14,6 +14,7 @@ export default class UserDetails extends Component {
 
     this.state = {
       user: {},
+      isChanged: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,8 +33,6 @@ export default class UserDetails extends Component {
 
       const user = await services.findUser(userId);
 
-      console.log(user);
-
       $(".userDetails").on("click", () => {
         let active = sessionStorage.getItem("isMenuActive");
 
@@ -50,10 +49,27 @@ export default class UserDetails extends Component {
     }
   }
 
-  async handleSubmit() {
-    const data = $("form").serializeArray();
+  async handleSubmit(e) {
+    e.preventDefault();
 
-    console.log(data);
+    $(".loading").show();
+
+    const email = $("#email");
+    const phone = $("#phone");
+    const blocked = $("#blocked")[0].checked;
+
+    const body = {
+      ...this.state.user,
+      email: email[0].value,
+      phoneNumber: phone[0].value,
+      blocked: blocked,
+    };
+
+    await services.updateUser(this.state.user.id, body);
+
+    $(".loading").hide();
+
+    window.location.reload();
   }
 
   render() {
@@ -103,19 +119,50 @@ export default class UserDetails extends Component {
             </div>
 
             <div className="editableContainer">
-              <Form onSubmit={this.handleSubmit}>
+              <Form
+                onSubmit={(e) => {
+                  this.handleSubmit(e);
+                }}
+              >
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="text" value={this.state.user.email} />
+                <Form.Control
+                  id="email"
+                  type="text"
+                  defaultValue={this.state.user.email}
+                  onChange={
+                    this.state.isChanged == false
+                      ? () => {
+                          $("#submitButton").show();
+
+                          this.setState({ isChanged: true });
+                        }
+                      : null
+                  }
+                />
 
                 <Form.Label>Telefone</Form.Label>
-                <Form.Control type="text" value={this.state.user.phoneNumber} />
+                <Form.Control
+                  id="phone"
+                  defaultValue={this.state.user.phoneNumber}
+                  type="text"
+                  onChange={
+                    this.state.isChanged == false
+                      ? () => {
+                          $("#submitButton").show();
 
-                <Form.Label>Blocked</Form.Label>
+                          this.setState({ isChanged: true });
+                        }
+                      : null
+                  }
+                />
+
+                <Form.Label style={{ marginLeft: "1rem" }}>Blocked</Form.Label>
 
                 <br />
 
                 <Form.Label className="switch">
                   <Form.Control
+                    id="blocked"
                     type="checkbox"
                     className="sliderInput"
                     onClick={() => {
@@ -123,13 +170,15 @@ export default class UserDetails extends Component {
                       $(".sliderInput").toggleClass("active");
                       $(".slider").toggleClass("active");
 
-                      $(".submitButton").addClass("active");
+                      $("#submitButton").show();
                     }}
                   />
                   <span className="slider "></span>
                 </Form.Label>
 
-                <button type="submit">Salvar</button>
+                <button id="submitButton" type="submit">
+                  Salvar
+                </button>
               </Form>
             </div>
 

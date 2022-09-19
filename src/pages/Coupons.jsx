@@ -216,9 +216,14 @@ export default class Coupons extends Component {
   }
 
   setCoupons = (results) => {
-    this.setState({
-      coupons: results,
-    });
+    const currentFilter = this.state.filters;
+    currentFilter.includes("gte")
+      ? this.setState({
+          validCoupons: results,
+        })
+      : this.setState({
+          expiredCoupons: results,
+        });
   };
 
   render() {

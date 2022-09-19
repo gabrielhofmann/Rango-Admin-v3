@@ -223,7 +223,8 @@ export default class Pagination extends Component {
 
       case "coupons":
         const coupons = await services.getCoupons(
-          (this.state.maxPage - 1) * 10
+          (this.state.maxPage - 1) * 10,
+          this.props.filters
         );
 
         this.setState({
