@@ -245,7 +245,6 @@
         align-items: center;
         justify-content: space-between;
         padding: 0 1rem;
-        
 
         ul {
           width: 50%;
@@ -258,9 +257,9 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: base.$shadow;
-            margin: .7rem 0;
+            margin: 0.7rem 0;
             padding: 1rem;
-            border-radius: .5rem;
+            border-radius: 0.5rem;
 
             p {
               margin: 0;
@@ -377,7 +376,7 @@
         margin: 0 3rem;
         margin-bottom: 2rem;
         padding: 2rem;
-        border-radius: .5rem;
+        border-radius: 0.5rem;
         box-shadow: base.$shadow;
         font-size: 1.3rem;
 
@@ -396,9 +395,59 @@
           justify-content: space-between;
           width: 100%;
           margin-bottom: 2rem;
-
         }
       }
     }
+  }
+}
+
+.confirmedContainer {
+  box-shadow: base.$shadow;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  width: 50rem;
+  margin-bottom: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  h1 {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  input {
+    margin-bottom: 2rem;
+    width: 20rem;
+  }
+
+  div {
+    margin: 0 1rem;
+  }
+
+  button {
+    width: 20rem;
+    padding: 0.7rem 0;
+    border: none;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: base.$shadow;
+    font-size: 1rem;
+    color: base.$color-orange;
+    margin-top: 2rem;
+
+    transition: all ease 0.5s;
+  }
+
+  button:hover {
+    background-color: rgba($color: base.$color-orange, $alpha: 0.3);
+  }
+
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
   }
 }

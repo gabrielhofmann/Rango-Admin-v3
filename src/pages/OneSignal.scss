@@ -1,1 +1,69 @@
 @use "../base.scss";
+
+.oneSignal {
+  min-height: 100vh;
+  width: 100vw;
+
+  h1 {
+    margin-top: 9rem;
+    text-align: center;
+  }
+
+  .oneSignalContainer {
+    box-shadow: base.$shadow;
+    width: 50rem;
+    height: 35rem;
+    margin: 3rem auto;
+    padding: 2rem;
+    border-radius: 0.5rem;
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      justify-content: space-between;
+      height: 100%;
+
+      overflow: visible;
+
+      input[type="text"] {
+        width: 30rem;
+      }
+
+      #oneSignalSelect {
+        width: 30rem;
+        overflow: visible;
+      }
+
+      button {
+        width: 30rem;
+        padding: 0.7rem;
+        border-radius: 0.5rem;
+        background-color: white;
+        color: base.$color-orange;
+        border: none;
+        box-shadow: base.$shadow;
+        margin: 1rem auto;
+        transition: all ease 0.5s;
+      }
+
+      button:hover {
+        background-color: rgba($color: base.$color-orange, $alpha: 0.3);
+      }
+    }
+
+    .form-check {
+      text-align: start;
+    }
+
+    .form-check-input {
+      padding: 0.7rem;
+      margin-right: 0.7rem;
+    }
+
+    .form-check-label {
+      margin-top: 0.1rem;
+    }
+  }
+}

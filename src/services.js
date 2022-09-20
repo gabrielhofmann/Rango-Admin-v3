@@ -255,6 +255,61 @@ class Services {
     );
   }
 
+  // SUBACCOUNT
+
+  async createSubaccount(body, restaurantId) {
+    const token = this.getToken();
+
+    try {
+      const response = await axios.post(
+        `https://www.api.rangosemfila.com.br/v2/createSubaccount/${restaurantId}`,
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response);
+      return response;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // NOTIFICATION
+
+  async sendPushNotification(id, body) {
+    const response = await axios.post(
+      `https://www.api.rangosemfila.com.br/v2/sendPushNotification/${id}`,
+      body,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    console.log(response);
+    return response;
+  }
+
+  async sendPushNotificationToAll(body) {
+    const response = await axios.post(
+      `https://www.api.rangosemfila.com.br/v2/sendPushNotificationToAll`,
+      body,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    console.log(response);
+    return response;
+  }
+
   // MAILING
 
   async sendMail(body) {

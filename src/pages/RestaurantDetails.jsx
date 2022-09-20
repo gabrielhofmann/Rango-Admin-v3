@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Spinner } from "react-bootstrap";
+import { Form, Spinner } from "react-bootstrap";
 import Menu from "../components/Menu";
 import { Services } from "../services";
 import $ from "jquery";
@@ -21,6 +21,8 @@ export default class RestaurantDetails extends Component {
       timing: [],
       totalRestaurantOrders: 0,
     };
+
+    this.createsubAccount = this.createsubAccount.bind(this);
   }
 
   async componentDidMount() {
@@ -66,6 +68,23 @@ export default class RestaurantDetails extends Component {
 
       $(".loading").hide();
     }
+  }
+
+  async createsubAccount() {
+    $(".loading").show();
+
+    const id = this.state.restaurant.id;
+    const data = $("#subaccountForm").serializeArray();
+
+    let body = {};
+
+    data.map((el) => {
+      body[el.name] = el.value;
+    });
+
+    const response = await services.createSubaccount(body, id);
+
+    $(".loading").hide();
   }
 
   render() {
@@ -361,7 +380,7 @@ export default class RestaurantDetails extends Component {
                     <strong>
                       {this.state.restaurant.acquirer.currentPlan == "daily"
                         ? "Diário"
-                        : el.commissionPlan == "weekly"
+                        : this.state.restaurant.acquirer.currentPlan == "weekly"
                         ? "Semanal"
                         : "Mensal"}
                     </strong>
@@ -436,7 +455,63 @@ export default class RestaurantDetails extends Component {
               </div>
             </div>
           ) : this.state.restaurant.status == "confirmado" ? (
-            <div className="confirmedContainer">confirmado</div>
+            <div className="confirmedContainer">
+              <h1>Criar subconta</h1>
+
+              <Form id="subaccountForm">
+                <Form.Group>
+                  <Form.Label>Taxa antecipação</Form.Label>
+                  <Form.Control
+                    name="antecipationTax"
+                    type="number"
+                    step={0.01}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Taxa crédito</Form.Label>
+                  <Form.Control
+                    name="creditTax"
+                    type="number"
+                    step={0.01}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Taxa débito</Form.Label>
+                  <Form.Control
+                    name="debitTax"
+                    type="number"
+                    step={0.01}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Taxa PIX</Form.Label>
+                  <Form.Control
+                    name="pixTax"
+                    type="number"
+                    step={0.01}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Taxa crypto</Form.Label>
+                  <Form.Control
+                    name="cryptoTax"
+                    type="number"
+                    step={0.01}
+                    required
+                  />
+                </Form.Group>
+              </Form>
+
+              <button onClick={this.createsubAccount}>Enviar</button>
+            </div>
           ) : null}
         </section>
       </main>

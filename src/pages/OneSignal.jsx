@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Spinner } from "react-bootstrap";
+import { Form, Spinner } from "react-bootstrap";
 import { Services } from "../services";
 import $ from "jquery";
 import "./OneSignal.scss";
 import Menu from "../components/Menu";
+import Select from "react-select";
 
 const services = new Services();
 
@@ -11,7 +12,12 @@ export default class OneSignal extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      selectedUser: "",
+      usersOptions: [],
+    };
+
+    this.sendNotification = this.sendNotification.bind(this);
   }
 
   async componentDidMount() {
@@ -23,6 +29,55 @@ export default class OneSignal extends Component {
       $(".loading").hide();
       $(".coupons").html("Not Authorized!!");
     } else {
+      const users = await services.getUsers(0);
+      $("#oneSignalSelect").hide();
+
+      const usersOptions = users.users.map((user) => {
+        return {
+          label: user.username,
+          value: user.id,
+        };
+      });
+
+      document
+        .getElementById("oneSignalSelect")
+        .querySelector(".select__input")
+        .addEventListener("keyup", async (e) => {
+          const input = e.target.value;
+
+          let isNumber = /^\d+$/.test(input);
+
+          if (isNumber) {
+            const users = await services.filterUsers(input, "id");
+
+            const options = users.map((user) => {
+              return {
+                label: user.username,
+                value: user.id,
+              };
+            });
+
+            this.setState({ usersOptions: options });
+          } else {
+            if (input.length >= 3) {
+              const users = await services.filterUsers(input, "username");
+
+              const options = users.map((user) => {
+                return {
+                  label: user.username,
+                  value: user.id,
+                };
+              });
+
+              this.setState({ usersOptions: options });
+            }
+          }
+        });
+
+      this.setState({
+        usersOptions: usersOptions,
+      });
+
       $(".oneSignal").on("click", () => {
         let active = sessionStorage.getItem("isMenuActive");
 
@@ -33,6 +88,31 @@ export default class OneSignal extends Component {
 
       $(".loading").hide();
     }
+  }
+
+  async sendNotification(e) {
+    e.preventDefault();
+
+    $(".loading").show();
+
+    const message = $("#message")[0].value;
+    const user = this.state.selectedUser;
+
+    const body = { message: message };
+
+    const selectedRadio = document.querySelector(
+      'input[name="oneSignalRadio"]:checked'
+    ).value;
+
+    if (selectedRadio == "one") {
+      console.log(body);
+
+      await services.sendPushNotification(user, body);
+    } else {
+      await services.sendPushNotificationToAll(body);
+    }
+
+    $(".loading").hide();
   }
 
   render() {
@@ -55,6 +135,67 @@ export default class OneSignal extends Component {
               radio_button_checked
             </span>
           </div>
+        </div>
+
+        <h1>Envie notificações para UM ou TODOS os usuários</h1>
+
+        <div className="oneSignalContainer">
+          <Form
+            id="oneSignalForm"
+            onSubmit={(e) => {
+              this.sendNotification(e);
+            }}
+          >
+            <Form.Group>
+              <Form.Label>
+                <strong>Enviar para:</strong>
+              </Form.Label>
+
+              <Form.Check
+                id="one"
+                name="oneSignalRadio"
+                type="radio"
+                label="UM usuário"
+                value="one"
+                onClick={() => {
+                  $("#oneSignalSelect").show();
+                }}
+                required
+              />
+
+              <Form.Check
+                id="all"
+                name="oneSignalRadio"
+                type="radio"
+                label="TODOS os usuários"
+                value="all"
+                onClick={() => {
+                  $("#oneSignalSelect").hide();
+                }}
+                required
+              />
+            </Form.Group>
+
+            <Select
+              className="basic-single"
+              id="oneSignalSelect"
+              classNamePrefix="select"
+              options={this.state.usersOptions}
+              isSearchable="true"
+              onChange={(e) => {
+                this.setState({ selectedUser: e.value });
+              }}
+            ></Select>
+
+            <Form.Group>
+              <Form.Label>
+                <strong>Mensagem:</strong>
+              </Form.Label>
+              <Form.Control id="message" name="message" type="text" required />
+            </Form.Group>
+
+            <button type="submit">Enviar</button>
+          </Form>
         </div>
       </main>
     );
