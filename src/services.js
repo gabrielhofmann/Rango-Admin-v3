@@ -77,6 +77,19 @@ class Services {
 
   // USERS
 
+  async getAllUsers() {
+    const allUsers = await axios.get(
+      "https://www.api.rangosemfila.com.br/v2/users",
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    return allUsers.data;
+  }
+
   async getUsers(offset) {
     try {
       const response = await axios.get(

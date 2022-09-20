@@ -9,6 +9,7 @@ import $ from "jquery";
 import "./Mailing.scss";
 import BundledEditor from "../components/Editor";
 import tinymce from "tinymce";
+import axios from "axios";
 
 const services = new Services();
 
@@ -100,8 +101,15 @@ export default class Mailing extends Component {
     const form = $("#mailingForm").serializeArray();
     var subject, title, body, sender;
     var recievers = new Array();
+    var allRecievers = new Array();
     var body = $("textarea").val();
     let toAllUsers = false;
+
+    const allUsers = await services.getAllUsers();
+
+    allUsers.map((el) => {
+      allRecievers.push(el.email);
+    });
 
     form.map((e) => {
       if (e.value.trim() != "") {
@@ -125,7 +133,7 @@ export default class Mailing extends Component {
         title: title,
         body: body,
         sender: sender != "" ? sender : null,
-        recievers: ["hofmannmarinho@gmail.com"],
+        recievers: allRecievers,
       };
     } else {
       requestBody = {
