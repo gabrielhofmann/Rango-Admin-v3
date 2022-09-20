@@ -328,12 +328,12 @@ class Services {
   async sendMail(body) {
     const response = await axios.post(
       "https://www.api.rangosemfila.com.br/v2/rangoMailer",
+      body,
       {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
-      },
-      body
+      }
     );
   }
 }
