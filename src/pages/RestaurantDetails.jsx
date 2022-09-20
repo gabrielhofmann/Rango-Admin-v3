@@ -268,7 +268,8 @@ export default class RestaurantDetails extends Component {
             </div>
           </div>
 
-          {this.state.restaurant.status == "operando" ? (
+          {this.state.restaurant.status == "operando" &&
+          this.state.restaurant.acquirer != undefined ? (
             <div className="pageContentWrapper">
               <div className="leftContainer">
                 <div className="row1">
