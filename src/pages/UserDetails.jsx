@@ -14,6 +14,7 @@ export default class UserDetails extends Component {
 
     this.state = {
       user: {},
+      role: "",
       isChanged: false,
     };
 
@@ -41,8 +42,11 @@ export default class UserDetails extends Component {
         }
       });
 
+      $("#phone").mask("(00) 00000-0000")
+
       this.setState({
         user: user,
+        role: user.role.name,
       });
 
       $(".loading").hide();
@@ -59,7 +63,6 @@ export default class UserDetails extends Component {
     const blocked = $("#blocked")[0].checked;
 
     const body = {
-      ...this.state.user,
       email: email[0].value,
       phoneNumber: phone[0].value,
       blocked: blocked,
@@ -104,6 +107,11 @@ export default class UserDetails extends Component {
                 <li key="userId">
                   <strong>ID</strong>
                   <span>#ID {this.state.user.id}</span>
+                </li>
+
+                <li key="userRole">
+                  <strong>Role</strong>
+                  <span>{this.state.role}</span>
                 </li>
 
                 <li key="userCPF">

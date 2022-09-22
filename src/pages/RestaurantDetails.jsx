@@ -38,11 +38,7 @@ export default class RestaurantDetails extends Component {
         sessionStorage.getItem("restaurantId")
       );
 
-      console.log(restaurant);
-
       const data = await services.getPowerBiData();
-
-      console.log(restaurant);
 
       data.ordersPerRestaurant.forEach((e) => {
         if (e.restaurant.name == restaurant.name) {
@@ -139,10 +135,10 @@ export default class RestaurantDetails extends Component {
 
                   <button
                     className="sendToAnalysis"
-                    onClick={() => {
+                    onClick={async () => {
                       $(".loading").show();
 
-                      services.updateRestaurantStatus(
+                      await services.updateRestaurantStatus(
                         this.state.restaurant.id,
                         "pendente"
                       );
@@ -165,10 +161,10 @@ export default class RestaurantDetails extends Component {
 
                   <button
                     className="confirm actionButton"
-                    onClick={() => {
+                    onClick={async () => {
                       $(".loading").show();
 
-                      services.updateRestaurantStatus(
+                      await services.updateRestaurantStatus(
                         this.state.restaurant.id,
                         "confirmado"
                       );
@@ -183,10 +179,10 @@ export default class RestaurantDetails extends Component {
 
                   <button
                     className="refuse actionButton"
-                    onClick={() => {
+                    onClick={async () => {
                       $(".loading").show();
 
-                      services.updateRestaurantStatus(
+                      await services.updateRestaurantStatus(
                         this.state.restaurant.id,
                         "recusado"
                       );

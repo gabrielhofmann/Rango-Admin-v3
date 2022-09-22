@@ -151,12 +151,12 @@ class Services {
   async updateUser(userID, body) {
     const response = await axios.put(
       `https://www.api.rangosemfila.com.br/v2/users/${userID}`,
+      body,
       {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
-      },
-      body
+      }
     );
   }
 
@@ -257,13 +257,11 @@ class Services {
   async newCoupon(body) {
     const response = await axios.post(
       "https://www.api.rangosemfila.com.br/v2/coupons",
+      body,
       {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
-      },
-      {
-        data: body,
       }
     );
   }
@@ -271,15 +269,13 @@ class Services {
   // SUBACCOUNT
 
   async createSubaccount(body, restaurantId) {
-    const token = this.getToken();
-
     try {
       const response = await axios.post(
-        `https://www.api.rangosemfila.com.br/v2/createSubaccount/${restaurantId}`,
+        `https://www.api.rangosemfila.com.br/v2/createSubAccount/${restaurantId}`,
         body,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
         }
       );

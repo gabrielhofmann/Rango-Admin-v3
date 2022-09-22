@@ -241,7 +241,7 @@ export default class Coupons extends Component {
           <Spinner className="spinner" animation="border" />
         </div>
 
-        <div className="pageHeader">
+        <div id="couponsHeader" className="pageHeader">
           <div className="menuToggle" onClick={services.handleMenuToggle}>
             <span className="material-symbols-rounded">menu</span>
           </div>
@@ -251,6 +251,8 @@ export default class Coupons extends Component {
             <span className="material-symbols-rounded">sell</span>
           </div>
         </div>
+
+        <Filter style={{marginTop: "10rem"}} target="coupons" callback={this.setCoupons} />
 
         <nav className="couponsNav">
           <ul>

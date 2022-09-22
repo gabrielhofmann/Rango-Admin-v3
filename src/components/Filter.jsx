@@ -95,6 +95,7 @@ export default class Filter extends Component {
       cpfString,
       nameString,
       emailString,
+      discountTypeString,
       dateString;
 
     elements.map((index, element) => {
@@ -151,6 +152,13 @@ export default class Filter extends Component {
           case "email":
             emailString = `[email][$eq]=${element.value}`;
             inputData.push({ name: element.name, value: emailString });
+
+            break;
+
+          case "discountTypeFilter":
+            console.log(element);
+            discountTypeString = `[discountType][$eq]=${element.value}`;
+            inputData.push({ name: element.id, value: discountTypeString });
 
             break;
 
@@ -273,6 +281,16 @@ export default class Filter extends Component {
               </select>
             ) : this.props.target == "users" ? (
               <input type="text" placeholder="Email" name="email" />
+            ) : this.props.target == "coupons" ? (
+              <select name="discountTypeFilter" id="discountType">
+                <option value="">Tipo de desconto</option>
+                <option key="percentage" value="percentage">
+                  Porcentagem
+                </option>
+                <option key="value" value="value">
+                  Valor
+                </option>
+              </select>
             ) : (
               <select name="category" id="category">
                 <option value="">Selecionar categoria</option>
@@ -298,7 +316,7 @@ export default class Filter extends Component {
                   );
                 })}
               </select>
-            ) : (
+            ) : this.props.target == "coupons" ? null : (
               <input type="date" placeholder="Data" name="createdAt" />
             )}
             <button type="submit">
