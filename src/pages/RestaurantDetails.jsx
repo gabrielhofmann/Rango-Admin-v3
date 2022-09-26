@@ -61,30 +61,35 @@ export default class RestaurantDetails extends Component {
         }
       });
 
-      const anticipationData = await axios
-        .get(
-          "https://api.safe2pay.com.br/v2/PaymentMethod/Get?codePaymentMethod=2",
-          {
+      if (restaurant.status == "operando") {
+        const anticipationData = await axios
+          .get(
+            "https://api.safe2pay.com.br/v2/PaymentMethod/Get?codePaymentMethod=2",
+            {
+              headers: {
+                "x-api-key": restaurant.acquirer.apiToken,
+              },
+            }
+          )
+          .then((response) => {
+            return response.data.ResponseDetail;
+          });
+
+        const paymentMethods = await axios
+          .get("https://api.safe2pay.com.br/v2/PaymentMethod/List", {
             headers: {
               "x-api-key": restaurant.acquirer.apiToken,
             },
-          }
-        )
-        .then((response) => {
-          return response.data.ResponseDetail;
-        });
+          })
+          .then((response) => {
+            return response.data.ResponseDetail;
+          });
 
-      const paymentMethods = await axios
-        .get("https://api.safe2pay.com.br/v2/PaymentMethod/List", {
-          headers: {
-            "x-api-key": restaurant.acquirer.apiToken,
-          },
-        })
-        .then((response) => {
-          return response.data.ResponseDetail;
+        this.setState({
+          anticipationEnabled: anticipationData.IsImmediateAnticipation,
+          paymentMethods: paymentMethods,
         });
-
-      console.log(paymentMethods);
+      }
 
       this.setState({
         restaurant: restaurant,
@@ -92,8 +97,6 @@ export default class RestaurantDetails extends Component {
         acquirer: restaurant.acqurier,
         legal: restaurant.legal,
         timing: restaurant.timing,
-        anticipationEnabled: anticipationData.IsImmediateAnticipation,
-        paymentMethods: paymentMethods,
       });
 
       $(".loading").hide();
@@ -188,25 +191,16 @@ export default class RestaurantDetails extends Component {
   async editPaymentMethods() {
     $(".loading").show();
 
-    let body;
-
-    this.state.paymentMethods.forEach((el) => {
-      if (el.PaymentMethod.Code == this.state.selectedPaymentMethod.code) {
-        body = el;
-      }
-    });
-
-    body.Tax[0].Amount = this.state.selectedPaymentMethod.tax;
-
-    await axios.put(
-      "https://api.safe2pay.com.br/v2/PaymentMethod/Update",
-      body,
+    const subaccountData = await axios.get(
+      `https://api.safe2pay.com.br/v2/Marketplace/Get?id=${this.state.restaurant.acquirer.id}`,
       {
         headers: {
           "x-api-key": this.state.restaurant.acquirer.apiToken,
         },
       }
     );
+
+    console.log(subaccountData);
 
     $(".loading").hide();
 
@@ -768,44 +762,46 @@ export default class RestaurantDetails extends Component {
           ) : null}
         </section>
 
-        <section className="paymentMethodsContainer">
-          <h2>Formas de pagamento</h2>
+        {this.state.restaurant.status == "operando" ? (
+          <section className="paymentMethodsContainer">
+            <h2>Formas de pagamento</h2>
 
-          <ul>
-            {this.state.paymentMethods.map((el) => {
-              return (
-                <li className="paymentMethodCard" key={el.PaymentMethod.Name}>
-                  <strong>{el.PaymentMethod.Name}</strong>
+            <ul>
+              {this.state.paymentMethods.map((el) => {
+                return (
+                  <li className="paymentMethodCard" key={el.PaymentMethod.Name}>
+                    <strong>{el.PaymentMethod.Name}</strong>
 
-                  <input
-                    name={el.PaymentMethod.Code}
-                    onChange={(e) => {
-                      $("#editPaymentMethodTaxButton").addClass("active");
+                    <input
+                      name={el.PaymentMethod.Code}
+                      onChange={(e) => {
+                        $("#editPaymentMethodTaxButton").addClass("active");
 
-                      this.setState({
-                        selectedPaymentMethod: {
-                          code: el.PaymentMethod.Code,
-                          tax: e.target.value,
-                        },
-                      });
-                    }}
-                    className="paymentMethodTax"
-                    type="number"
-                    step={0.01}
-                    defaultValue={el.Tax[0].Amount}
-                  />
-                </li>
-              );
-            })}
-          </ul>
+                        this.setState({
+                          selectedPaymentMethod: {
+                            code: el.PaymentMethod.Code,
+                            tax: e.target.value,
+                          },
+                        });
+                      }}
+                      className="paymentMethodTax"
+                      type="number"
+                      step={0.01}
+                      defaultValue={el.Tax[0].Amount}
+                    />
+                  </li>
+                );
+              })}
+            </ul>
 
-          <button
-            id="editPaymentMethodTaxButton"
-            onClick={this.editPaymentMethods}
-          >
-            Salvar
-          </button>
-        </section>
+            <button
+              id="editPaymentMethodTaxButton"
+              onClick={this.editPaymentMethods}
+            >
+              Salvar
+            </button>
+          </section>
+        ) : null}
       </main>
     );
   }
