@@ -172,3 +172,24 @@ h6 {
 label {
   font-size: $font-small;
 }
+
+.switch {
+  background-color: rgba($color: $color-grey, $alpha: 0.5);
+  width: 110px;
+  height: 40px;
+  border-radius: 2rem;
+  margin: auto;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+  cursor: pointer;
+
+  .ball {
+    background-color: white;
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+  }
+}
+

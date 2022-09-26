@@ -229,6 +229,18 @@ class Services {
     );
   }
 
+  async updateRestaurant(id, body) {
+    const response = await axios.put(
+      `https://api.rangosemfila.com.br/v2/restaurants/${id}`,
+      body,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+  }
+
   async filterRestaurants(input, param) {
     let result;
     param == "name"

@@ -16,14 +16,6 @@
     }
   }
 
-  #editor {
-    border-radius: 0 0 0.5rem 0.5rem;
-  }
-
-  #toolbar {
-    border-radius: 0.5rem 0.5rem 0 0;
-  }
-
   form {
     width: 70rem;
     display: grid;
@@ -60,7 +52,6 @@
       overflow: visible;
       border-left: 1px solid black;
 
-
       label {
         font-size: 1.5rem;
         margin-bottom: 0.7rem;
@@ -92,10 +83,6 @@
       }
     }
 
-    #editor {
-      grid-area: c;
-    }
-
     #mailingFormButton {
       width: 25rem;
       margin: 1rem auto;
@@ -115,4 +102,11 @@
       background-color: rgba($color: base.$color-orange, $alpha: 0.3);
     }
   }
+}
+
+#editor {
+  grid-area: c;
+  min-height: 30rem;
+  overflow: visible;
+  margin-bottom: 5rem;
 }

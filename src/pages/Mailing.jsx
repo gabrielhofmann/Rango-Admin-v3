@@ -7,9 +7,8 @@ import Select from "react-select";
 import $ from "jquery";
 
 import "./Mailing.scss";
-import BundledEditor from "../components/Editor";
-import tinymce from "tinymce";
 import axios from "axios";
+import Quill from "quill";
 
 const services = new Services();
 
@@ -87,6 +86,24 @@ export default class Mailing extends Component {
         }
       });
 
+      var toolbarOptions = [
+        [{ font: [] }, { size: [] }],
+        ["bold", "italic", "underline", "strike"],
+        ["color", "background"],
+        [{ script: "sub" }, { script: "super" }],
+        [{ header: 1 }, { header: 2 }, "blockquote", "code-block"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        ["link", "image", "video"],
+        ["clean"],
+      ];
+
+      var quill = new Quill("#quill", {
+        modules: {
+          toolbar: toolbarOptions,
+        },
+        theme: "snow",
+      });
+
       this.setState({ usersOptions: usersOptions });
 
       $(".loading").hide();
@@ -132,7 +149,7 @@ export default class Mailing extends Component {
         subject: subject,
         title: title,
         body: body,
-        sender: sender != "" ? sender : null,
+        sender: sender,
         recievers: allRecievers,
       };
     } else {
@@ -140,7 +157,7 @@ export default class Mailing extends Component {
         subject: subject,
         title: title,
         body: body,
-        sender: sender != "" ? sender : null,
+        sender: sender,
         recievers: recievers,
       };
     }
@@ -183,56 +200,21 @@ export default class Mailing extends Component {
             <Form.Group className="mailingFormGroup">
               <Form.Label>Assunto:</Form.Label>
 
-              <Form.Control name="subject" type="text" />
+              <Form.Control name="subject" type="text" required />
 
               <Form.Label>Título:</Form.Label>
 
-              <Form.Control name="title" type="text" />
+              <Form.Control name="title" type="text" required />
 
-              <Form.Label>Remetente: (opcional)</Form.Label>
+              <Form.Label>Remetente:</Form.Label>
 
-              <Form.Control name="sender" type="text" />
-
-              <p style={{ fontSize: "1rem", color: "#717171" }}>
-                * Ao omitir remetente: comercial@rangosemfila.com.br
-              </p>
+              <Form.Control name="sender" type="text" required />
             </Form.Group>
 
             <div id="editor">
               <Form.Label>Corpo:</Form.Label>
 
-              <BundledEditor
-                id="editor"
-                initialValue="<p></p>"
-                init={{
-                  height: 500,
-                  menubar: false,
-                  plugins: [
-                    "advlist",
-                    "anchor",
-                    "autolink",
-                    "charmap",
-                    "emoticons",
-                    "help",
-                    "image",
-                    "link",
-                    "lists",
-                    "media",
-                    "nonbreaking",
-                    "preview",
-                    "searchreplace",
-                    "table",
-                    "wordcount",
-                  ],
-                  toolbar:
-                    "undo redo | charmap emoticons media | nonbreaking " +
-                    "bold italic link | alignleft aligncenter " +
-                    "alignright alignjustify | bullist numlist outdent indent  | " +
-                    "preview removeformat | help",
-                  content_style:
-                    "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-                }}
-              />
+              <div id="quill"></div>
             </div>
 
             <Form.Group id="radioInputs">

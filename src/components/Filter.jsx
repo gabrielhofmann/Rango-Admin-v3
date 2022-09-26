@@ -231,15 +231,6 @@ export default class Filter extends Component {
           },
         }
       );
-    } else if (this.props.target == "coupons") {
-      results = await axios.get(
-        `https://www.api.rangosemfila.com.br/v2/coupons${url}`,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }
-      );
     }
 
     this.props.callback(results.data);

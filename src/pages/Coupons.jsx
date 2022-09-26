@@ -23,6 +23,8 @@ export default class Coupons extends Component {
 
       usersOptions: [],
       restaurantsOptions: [],
+      restaurants: [],
+      showPagination: true,
     };
 
     this.handleNewCoupon = this.handleNewCoupon.bind(this);
@@ -47,8 +49,6 @@ export default class Coupons extends Component {
 
       const validCoupons = await services.getCoupons(0, filtersValid);
       const expiredCoupons = await services.getCoupons(0, filtersExpired);
-
-      console.log(validCoupons, expiredCoupons);
 
       $("#availableNav").addClass("active");
       sessionStorage.setItem("coupons", ".availableCoupons");
@@ -197,8 +197,6 @@ export default class Coupons extends Component {
     const formData = $("#newCouponForm").serializeArray();
 
     formData.forEach((data) => {
-      console.log(data);
-
       if (data.value.trim() != "") {
         body[`${data.name}`] = data.value;
       }
@@ -207,6 +205,13 @@ export default class Coupons extends Component {
     body.singleUse == undefined
       ? (body.singleUse = false)
       : (body.singleUse = true);
+
+    body = {
+      data: {
+        ...body,
+        restaurants: this.state.restaurants,
+      },
+    };
 
     const response = await services.newCoupon(body);
 
@@ -231,11 +236,14 @@ export default class Coupons extends Component {
       <main className="coupons">
         <Menu />
 
-        <Pagination
-          target="coupons"
-          filters={this.state.filters}
-          callback={this.setCoupons}
-        />
+        {this.state.showPagination ? (
+          <Pagination
+            id="couponsPagination"
+            target="coupons"
+            filters={this.state.filters}
+            callback={this.setCoupons}
+          />
+        ) : null}
 
         <div className="loading">
           <Spinner className="spinner" animation="border" />
@@ -252,15 +260,16 @@ export default class Coupons extends Component {
           </div>
         </div>
 
-        <Filter style={{marginTop: "10rem"}} target="coupons" callback={this.setCoupons} />
-
         <nav className="couponsNav">
           <ul>
             <li
               id="availableNav"
               className="navLink"
               onClick={(e) => {
-                this.setState({ filters: this.state.filtersValid });
+                this.setState({
+                  filters: this.state.filtersValid,
+                  showPagination: true,
+                });
                 this.handleNavigation("coupons", ".availableCoupons", e.target);
               }}
               key="availableNav"
@@ -272,7 +281,10 @@ export default class Coupons extends Component {
               id="expiredNav"
               className="navLink"
               onClick={(e) => {
-                this.setState({ filters: this.state.filtersExpired });
+                this.setState({
+                  filters: this.state.filtersExpired,
+                  showPagination: true,
+                });
                 this.handleNavigation("coupons", ".expiredCoupons", e.target);
               }}
               key="expiredNav"
@@ -285,6 +297,7 @@ export default class Coupons extends Component {
               className="navLink"
               onClick={(e) => {
                 this.handleNavigation("coupons", ".newCoupon", e.target);
+                this.setState({ showPagination: false });
               }}
               key="restaurantsNavKey"
             >
@@ -412,6 +425,7 @@ export default class Coupons extends Component {
                 name="discountType"
                 type="radio"
                 label="Porcentagem"
+                value="percentage"
                 required
               />
 
@@ -419,6 +433,7 @@ export default class Coupons extends Component {
                 name="discountType"
                 type="radio"
                 label="Valor"
+                value="value"
                 required
               />
             </Form.Group>
@@ -442,6 +457,17 @@ export default class Coupons extends Component {
                 classNamePrefix="select"
                 options={this.state.restaurantsOptions}
                 isSearchable="true"
+                onChange={(e) => {
+                  let restaurants = [];
+
+                  e.forEach((el) => {
+                    restaurants.push(el.value);
+                  });
+
+                  this.setState({
+                    restaurants: restaurants,
+                  });
+                }}
                 isMulti
               ></Select>
             </Form.Group>

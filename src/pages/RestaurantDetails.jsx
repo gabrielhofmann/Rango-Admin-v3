@@ -6,6 +6,7 @@ import $ from "jquery";
 import logo from "../assets/logo.svg";
 
 import "./RestaurantDetails.scss";
+import axios from "axios";
 
 const services = new Services();
 
@@ -20,9 +21,15 @@ export default class RestaurantDetails extends Component {
       legal: {},
       timing: [],
       totalRestaurantOrders: 0,
+      anticipationEnabled: false,
+      paymentMethods: [],
     };
 
     this.createsubAccount = this.createsubAccount.bind(this);
+    this.handleEditCommission = this.handleEditCommission.bind(this);
+    this.handleAutoAnticipation = this.handleAutoAnticipation.bind(this);
+    this.handleScheduleAvailable = this.handleScheduleAvailable.bind(this);
+    this.editPaymentMethods = this.editPaymentMethods.bind(this);
   }
 
   async componentDidMount() {
@@ -54,12 +61,39 @@ export default class RestaurantDetails extends Component {
         }
       });
 
+      const anticipationData = await axios
+        .get(
+          "https://api.safe2pay.com.br/v2/PaymentMethod/Get?codePaymentMethod=2",
+          {
+            headers: {
+              "x-api-key": restaurant.acquirer.apiToken,
+            },
+          }
+        )
+        .then((response) => {
+          return response.data.ResponseDetail;
+        });
+
+      const paymentMethods = await axios
+        .get("https://api.safe2pay.com.br/v2/PaymentMethod/List", {
+          headers: {
+            "x-api-key": restaurant.acquirer.apiToken,
+          },
+        })
+        .then((response) => {
+          return response.data.ResponseDetail;
+        });
+
+      console.log(paymentMethods);
+
       this.setState({
         restaurant: restaurant,
         billing: restaurant.billing,
         acquirer: restaurant.acqurier,
         legal: restaurant.legal,
         timing: restaurant.timing,
+        anticipationEnabled: anticipationData.IsImmediateAnticipation,
+        paymentMethods: paymentMethods,
       });
 
       $(".loading").hide();
@@ -81,6 +115,102 @@ export default class RestaurantDetails extends Component {
     const response = await services.createSubaccount(body, id);
 
     $(".loading").hide();
+  }
+
+  async handleEditCommission() {
+    const [currentPlanElement, feePercentElements] = [
+      $("#currentPlan"),
+      $(".feePercent"),
+    ];
+
+    const currentPlan = currentPlanElement[0].value;
+    const feePercent = feePercentElements.map((i, el) => {
+      console.log(el);
+      return {
+        plan: el.name,
+        fee: el.value,
+      };
+    });
+
+    console.log(currentPlan, feePercent);
+  }
+
+  async handleAutoAnticipation() {
+    $(".loading").show();
+
+    const currentConfig = await axios
+      .get(
+        "https://api.safe2pay.com.br/v2/PaymentMethod/Get?codePaymentMethod=2",
+        {
+          headers: {
+            "x-api-key": this.state.restaurant.acquirer.apiToken,
+          },
+        }
+      )
+      .then((response) => {
+        return response.data.ResponseDetail;
+      });
+
+    const currentAnticipation = currentConfig.IsImmediateAnticipation;
+
+    const updatedConfig = {
+      ...currentConfig,
+      IsImmediateAnticipation: !currentAnticipation,
+    };
+
+    await axios.put(
+      "https://api.safe2pay.com.br/v2/PaymentMethod/Update",
+      updatedConfig,
+      {
+        headers: {
+          "x-api-key": this.state.restaurant.acquirer.apiToken,
+        },
+      }
+    );
+
+    $(".loading").hide();
+
+    window.location.reload();
+  }
+
+  async handleScheduleAvailable() {
+    $(".loading").show();
+
+    await services.updateRestaurant(this.state.restaurant.id, {
+      scheduleAvailable: !this.state.restaurant.scheduleAvailable,
+    });
+
+    $(".loading").hide();
+
+    window.location.reload();
+  }
+
+  async editPaymentMethods() {
+    $(".loading").show();
+
+    let body;
+
+    this.state.paymentMethods.forEach((el) => {
+      if (el.PaymentMethod.Code == this.state.selectedPaymentMethod.code) {
+        body = el;
+      }
+    });
+
+    body.Tax[0].Amount = this.state.selectedPaymentMethod.tax;
+
+    await axios.put(
+      "https://api.safe2pay.com.br/v2/PaymentMethod/Update",
+      body,
+      {
+        headers: {
+          "x-api-key": this.state.restaurant.acquirer.apiToken,
+        },
+      }
+    );
+
+    $(".loading").hide();
+
+    // window.location.reload();
   }
 
   render() {
@@ -206,23 +336,9 @@ export default class RestaurantDetails extends Component {
                   <div className="rating">
                     <div className="icons">
                       {this.state.restaurant.rating > 0 ? (
-                        () => {
-                          for (
-                            var i = 0;
-                            i < this.state.restaurant.rating;
-                            i++
-                          ) {
-                            return (
-                              <span className="material-symbols-rounded restaurantIcon">
-                                star
-                              </span>
-                            );
-                          }
-                        }
+                        this.state.restaurant.rating
                       ) : (
-                        <span className="material-symbols-rounded restaurantIcon">
-                          star
-                        </span>
+                        <strong>-</strong>
                       )}
                     </div>
 
@@ -373,14 +489,152 @@ export default class RestaurantDetails extends Component {
 
               <div className="rightContainer">
                 <div className="row1">
-                  <div className="commissionCard">
-                    <strong>
-                      {this.state.restaurant.acquirer.currentPlan == "daily"
-                        ? "Diário"
-                        : this.state.restaurant.acquirer.currentPlan == "weekly"
-                        ? "Semanal"
-                        : "Mensal"}
-                    </strong>
+                  <div id="commissionRow">
+                    <div className="currentPlan">
+                      <p>
+                        <b style={{ color: "grey" }}>Plano atual:</b>
+                      </p>
+
+                      <select
+                        name="currentPlan"
+                        id="currentPlan"
+                        onChange={async (e) => {
+                          $(".loading").show();
+
+                          let planCode;
+                          const restaurantToken =
+                            this.state.restaurant.acquirer.apiToken;
+
+                          const acquirer = {
+                            acquirer: {
+                              ...this.state.restaurant.acquirer,
+                              currentPlan: e.target.value,
+                            },
+                          };
+
+                          switch (e.target.value) {
+                            case "daily":
+                              planCode = "7";
+
+                              break;
+
+                            case "weekly":
+                              planCode = "6";
+
+                              break;
+
+                            case "monthly":
+                              planCode = "1";
+
+                              break;
+
+                            default:
+                              break;
+                          }
+
+                          await services.updateRestaurant(
+                            this.state.restaurant.id,
+                            acquirer
+                          );
+
+                          await axios.put(
+                            "https://api.safe2pay.com.br/v2/MerchantPaymentDate/Update",
+                            {
+                              PlanFrequence: {
+                                Code: planCode,
+                              },
+                            },
+                            {
+                              headers: {
+                                "x-api-key": restaurantToken,
+                              },
+                            }
+                          );
+
+                          $(".loading").hide();
+
+                          window.location.reload();
+                        }}
+                      >
+                        <option
+                          value={this.state.restaurant.acquirer.currentPlan}
+                        >
+                          {this.state.restaurant.acquirer.currentPlan}
+                        </option>
+                        {this.state.restaurant.acquirer.commission.map((el) => {
+                          if (
+                            el.commissionPlan !=
+                            this.state.restaurant.acquirer.currentPlan
+                          ) {
+                            return (
+                              <option value={el.commissionPlan}>
+                                {el.commissionPlan}
+                              </option>
+                            );
+                          }
+                        })}
+                      </select>
+                    </div>
+
+                    <div className="commission">
+                      <ul>
+                        {this.state.restaurant.acquirer.commission.map((el) => {
+                          return (
+                            <li key={el.commissionPlan}>
+                              <strong>{el.commissionPlan}</strong>
+
+                              <input
+                                className="feePercent"
+                                name={el.commissionPlan}
+                                type="text"
+                                defaultValue={el.feePercent}
+                              />
+                            </li>
+                          );
+                        })}
+
+                        <strong
+                          id="toggleEditMode"
+                          onClick={() => {
+                            $("#toggleEditMode").hide();
+                            $("#saveButton").show();
+                          }}
+                        >
+                          Editar
+                        </strong>
+
+                        <button
+                          id="saveButton"
+                          onClick={this.handleEditCommission}
+                        >
+                          Salvar
+                        </button>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="autoAnticipation">
+                    <div
+                      id="anticipationSwitch"
+                      className="switch"
+                      onClick={this.handleAutoAnticipation}
+                      style={{
+                        backgroundColor: this.state.anticipationEnabled
+                          ? "#52e899"
+                          : null,
+                        flexDirection: this.state.anticipationEnabled
+                          ? "row-reverse"
+                          : null,
+                      }}
+                    >
+                      <div className="ball"></div>
+                    </div>
+
+                    <p>
+                      <b style={{ color: "grey", textAlign: "center" }}>
+                        Antecipação automática
+                      </b>
+                    </p>
                   </div>
                 </div>
 
@@ -399,6 +653,7 @@ export default class RestaurantDetails extends Component {
 
                   <div className="scheduleAvailable">
                     <div
+                      id="scheduleSwitch"
                       style={{
                         backgroundColor: this.state.restaurant.scheduleAvailable
                           ? "#52e899"
@@ -407,9 +662,10 @@ export default class RestaurantDetails extends Component {
                           ? "row-reverse"
                           : null,
                       }}
-                      id="switch"
+                      onClick={this.handleScheduleAvailable}
+                      className="switch"
                     >
-                      <div id="ball"></div>
+                      <div className="ball"></div>
                     </div>
 
                     <p>Aceita Agendamento</p>
@@ -510,6 +766,45 @@ export default class RestaurantDetails extends Component {
               <button onClick={this.createsubAccount}>Enviar</button>
             </div>
           ) : null}
+        </section>
+
+        <section className="paymentMethodsContainer">
+          <h2>Formas de pagamento</h2>
+
+          <ul>
+            {this.state.paymentMethods.map((el) => {
+              return (
+                <li className="paymentMethodCard" key={el.PaymentMethod.Name}>
+                  <strong>{el.PaymentMethod.Name}</strong>
+
+                  <input
+                    name={el.PaymentMethod.Code}
+                    onChange={(e) => {
+                      $("#editPaymentMethodTaxButton").addClass("active");
+
+                      this.setState({
+                        selectedPaymentMethod: {
+                          code: el.PaymentMethod.Code,
+                          tax: e.target.value,
+                        },
+                      });
+                    }}
+                    className="paymentMethodTax"
+                    type="number"
+                    step={0.01}
+                    defaultValue={el.Tax[0].Amount}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+
+          <button
+            id="editPaymentMethodTaxButton"
+            onClick={this.editPaymentMethods}
+          >
+            Salvar
+          </button>
         </section>
       </main>
     );
