@@ -140,10 +140,10 @@ export default class Restaurants extends Component {
 
                     {restaurant.status == "criado" ? (
                       <button
-                        onClick={() => {
+                        onClick={async () => {
                           $(".loading").show();
 
-                          services.updateRestaurantStatus(
+                          await services.updateRestaurantStatus(
                             restaurant.id,
                             "pendente"
                           );
@@ -158,10 +158,10 @@ export default class Restaurants extends Component {
                     ) : restaurant.status == "pendente" ? (
                       <div className="restaurantCardButtonsRow">
                         <button
-                          onClick={() => {
+                          onClick={async () => {
                             $(".loading").show();
 
-                            services.updateRestaurantStatus(
+                            await services.updateRestaurantStatus(
                               restaurant.id,
                               "confirmado"
                             );
@@ -175,10 +175,10 @@ export default class Restaurants extends Component {
                         </button>
 
                         <button
-                          onClick={() => {
+                          onClick={async () => {
                             $(".loading").show();
 
-                            services.updateRestaurantStatus(
+                            await services.updateRestaurantStatus(
                               restaurant.id,
                               "recusado"
                             );
