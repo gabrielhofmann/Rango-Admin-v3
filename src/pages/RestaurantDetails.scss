@@ -217,7 +217,7 @@
       display: flex;
       flex-direction: column;
       width: 50%;
-      height: 80vh;
+      height: 83vh;
       box-shadow: base.$shadow;
       border-radius: 0.5rem;
       margin-right: 1rem;
@@ -273,16 +273,28 @@
         .accountInfo {
           width: 50%;
           box-shadow: base.$shadow;
-          padding: 3rem 1rem;
+          padding: 1rem;
           border-radius: 0.5rem;
+          position: relative;
 
-          p {
-            margin: 0;
+          #saveAccountBilling {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            color: base.$color-orange;
+            display: none;
+            cursor: pointer;
           }
 
-          strong {
-            display: flex;
-            margin-bottom: 0.5rem;
+          form {
+            .accountInfoGroup {
+              display: flex;
+              flex-direction: column;
+
+              input {
+                margin-bottom: 1rem;
+              }
+            }
           }
         }
       }
@@ -310,7 +322,7 @@
       width: 50%;
       box-shadow: base.$shadow;
       border-radius: 0.5rem;
-      height: 80vh;
+      height: 83vh;
 
       #commissionRow {
         display: flex;
@@ -488,6 +500,11 @@
   }
 
   input {
+    width: 20rem;
+    margin-bottom: 2rem;
+  }
+
+  select {
     margin-bottom: 2rem;
     width: 20rem;
   }
@@ -525,79 +542,4 @@
 .switch.active {
   background-color: #52e899;
   flex-direction: row-reverse;
-}
-
-.paymentMethodsContainer {
-  width: calc(100% - 6rem);
-  margin: -2rem auto 5rem auto;
-  padding: 2rem;
-  border-radius: 0.5rem;
-  box-shadow: base.$shadow;
-  text-align: center;
-
-  h2 {
-    margin-bottom: 3rem;
-    border-bottom: 1px solid grey;
-    padding-bottom: 2rem;
-  }
-
-  ul {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0;
-    padding: 0;
-
-    .paymentMethodCard {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 20%;
-
-      strong {
-        margin-bottom: 1rem;
-        color: base.$color-orange;
-        font-size: 1.3rem;
-      }
-
-      input {
-        padding: 1rem;
-        font-size: 1.3rem;
-        border: none;
-        box-shadow: base.$shadow;
-        margin: 0.5rem;
-        border-radius: 0.5rem;
-        outline: none;
-      }
-
-      input:focus {
-        outline: 2px solid base.$color-orange;
-      }
-    }
-  }
-
-  button {
-    width: 25%;
-    margin-top: 3rem;
-    border: none;
-    background-color: white;
-    border-radius: 0.5rem;
-    color: base.$color-orange;
-    box-shadow: base.$shadow;
-    height: 0;
-    padding: 0;
-
-    transition: all ease .5s;
-  }
-
-  button.active {
-    padding: 1rem;
-    height: auto;
-  }
-
-  button:hover {
-    background-color: rgba($color: base.$color-orange, $alpha: 0.3);
-  }
 }

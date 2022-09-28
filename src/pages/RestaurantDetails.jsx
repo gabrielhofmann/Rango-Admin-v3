@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Spinner } from "react-bootstrap";
+import { Form, Spinner, ThemeProvider } from "react-bootstrap";
 import Menu from "../components/Menu";
 import { Services } from "../services";
 import $ from "jquery";
@@ -9,6 +9,7 @@ import "./RestaurantDetails.scss";
 import axios from "axios";
 
 const services = new Services();
+const apiToken = "CAC313AA12A44B5783CF26D60B664804";
 
 export default class RestaurantDetails extends Component {
   constructor(props) {
@@ -30,6 +31,7 @@ export default class RestaurantDetails extends Component {
     this.handleAutoAnticipation = this.handleAutoAnticipation.bind(this);
     this.handleScheduleAvailable = this.handleScheduleAvailable.bind(this);
     this.editPaymentMethods = this.editPaymentMethods.bind(this);
+    this.handleEditBilling = this.handleEditBilling.bind(this);
   }
 
   async componentDidMount() {
@@ -44,6 +46,8 @@ export default class RestaurantDetails extends Component {
       const restaurant = await services.findRestaurant(
         sessionStorage.getItem("restaurantId")
       );
+
+      console.log(restaurant);
 
       const data = await services.getPowerBiData();
 
@@ -103,6 +107,22 @@ export default class RestaurantDetails extends Component {
     }
   }
 
+  async handleEditBilling() {
+    $(".loading").show();
+
+    let body = {};
+
+    const data = $("#billing").serializeArray();
+
+    data.forEach((el) => {
+      body[el.name] = el.value;
+    });
+
+    console.log(body);
+
+    $(".loading").hide();
+  }
+
   async createsubAccount() {
     $(".loading").show();
 
@@ -118,6 +138,8 @@ export default class RestaurantDetails extends Component {
     const response = await services.createSubaccount(body, id);
 
     $(".loading").hide();
+
+    window.location.reload();
   }
 
   async handleEditCommission() {
@@ -416,35 +438,68 @@ export default class RestaurantDetails extends Component {
                   </ul>
 
                   <div className="accountInfo">
-                    <div>
-                      <p>Nome do Banco</p>
+                    <strong
+                      id="saveAccountBilling"
+                      onClick={this.handleEditBilling}
+                    >
+                      Salvar
+                    </strong>
 
-                      <strong>{this.state.billing.bank}</strong>
-                    </div>
+                    <Form id="billing">
+                      <Form.Group className="accountInfoGroup">
+                        <Form.Label>Nome do banco</Form.Label>
 
-                    <div>
-                      <div>
-                        <p>Código do Banco</p>
+                        <input
+                          name="bank"
+                          type="text"
+                          defaultValue={this.state.restaurant.billing.bank}
+                          onChange={() => {
+                            $("#saveAccountBilling").show();
+                          }}
+                        />
+                      </Form.Group>
 
-                        <strong>
-                          {this.state.billing.bankCode
-                            ? this.state.billing.bankCode
-                            : "N/A"}
-                        </strong>
-                      </div>
+                      <Form.Group className="accountInfoGroup">
+                        <Form.Label>Código do banco</Form.Label>
 
-                      <div>
-                        <p>Agência</p>
+                        <input
+                          name="bankCode"
+                          type="text"
+                          defaultValue={
+                            this.state.restaurant.billing.bankCode ?? "N/A"
+                          }
+                          onChange={() => {
+                            $("#saveAccountBilling").show();
+                          }}
+                        />
+                      </Form.Group>
 
-                        <strong>{this.state.billing.agency}</strong>
-                      </div>
-                    </div>
+                      <Form.Group className="accountInfoGroup">
+                        <Form.Label>Agência</Form.Label>
 
-                    <div>
-                      <p>Conta</p>
+                        <input
+                          name="agency"
+                          type="text"
+                          defaultValue={this.state.restaurant.billing.agency}
+                          onChange={() => {
+                            $("#saveAccountBilling").show();
+                          }}
+                        />
+                      </Form.Group>
 
-                      <strong>{this.state.billing.account}</strong>
-                    </div>
+                      <Form.Group className="accountInfoGroup">
+                        <Form.Label>Conta</Form.Label>
+
+                        <input
+                          name="account"
+                          type="text"
+                          defaultValue={this.state.restaurant.billing.account}
+                          onChange={() => {
+                            $("#saveAccountBilling").show();
+                          }}
+                        />
+                      </Form.Group>
+                    </Form>
                   </div>
                 </div>
 
@@ -707,9 +762,18 @@ export default class RestaurantDetails extends Component {
 
               <Form id="subaccountForm">
                 <Form.Group>
-                  <Form.Label>Taxa antecipação</Form.Label>
+                  <Form.Label>Plano</Form.Label>
+                  <Form.Select name="currentPlan" required>
+                    <option value="daily">Diário</option>
+                    <option value="weekly">Semanal</option>
+                    <option value="monthly">Mensal</option>
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Taxa diário</Form.Label>
                   <Form.Control
-                    name="antecipationTax"
+                    name="dailyTax"
                     type="number"
                     step={0.01}
                     required
@@ -717,9 +781,9 @@ export default class RestaurantDetails extends Component {
                 </Form.Group>
 
                 <Form.Group>
-                  <Form.Label>Taxa crédito</Form.Label>
+                  <Form.Label>Taxa semanal</Form.Label>
                   <Form.Control
-                    name="creditTax"
+                    name="weeklyTax"
                     type="number"
                     step={0.01}
                     required
@@ -727,29 +791,9 @@ export default class RestaurantDetails extends Component {
                 </Form.Group>
 
                 <Form.Group>
-                  <Form.Label>Taxa débito</Form.Label>
+                  <Form.Label>Taxa mensal</Form.Label>
                   <Form.Control
-                    name="debitTax"
-                    type="number"
-                    step={0.01}
-                    required
-                  />
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label>Taxa PIX</Form.Label>
-                  <Form.Control
-                    name="pixTax"
-                    type="number"
-                    step={0.01}
-                    required
-                  />
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label>Taxa crypto</Form.Label>
-                  <Form.Control
-                    name="cryptoTax"
+                    name="monthlyTax"
                     type="number"
                     step={0.01}
                     required
@@ -761,47 +805,6 @@ export default class RestaurantDetails extends Component {
             </div>
           ) : null}
         </section>
-
-        {this.state.restaurant.status == "operando" ? (
-          <section className="paymentMethodsContainer">
-            <h2>Formas de pagamento</h2>
-
-            <ul>
-              {this.state.paymentMethods.map((el) => {
-                return (
-                  <li className="paymentMethodCard" key={el.PaymentMethod.Name}>
-                    <strong>{el.PaymentMethod.Name}</strong>
-
-                    <input
-                      name={el.PaymentMethod.Code}
-                      onChange={(e) => {
-                        $("#editPaymentMethodTaxButton").addClass("active");
-
-                        this.setState({
-                          selectedPaymentMethod: {
-                            code: el.PaymentMethod.Code,
-                            tax: e.target.value,
-                          },
-                        });
-                      }}
-                      className="paymentMethodTax"
-                      type="number"
-                      step={0.01}
-                      defaultValue={el.Tax[0].Amount}
-                    />
-                  </li>
-                );
-              })}
-            </ul>
-
-            <button
-              id="editPaymentMethodTaxButton"
-              onClick={this.editPaymentMethods}
-            >
-              Salvar
-            </button>
-          </section>
-        ) : null}
       </main>
     );
   }

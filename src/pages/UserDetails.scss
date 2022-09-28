@@ -87,12 +87,7 @@
           width: 100%;
           border-radius: 3rem;
           border: none;
-          background-color: rgba($color: base.$color-grey, $alpha: 0.3);
-        }
-
-        input:focus {
-          border-color: rgba($color: base.$color-grey, $alpha: 0.3);
-          box-shadow: none;
+          background-color: transparent;
         }
 
         .slider {
@@ -114,10 +109,6 @@
           -webkit-transform: translateX(2.5rem);
           -ms-transform: translateX(2.5rem);
           transform: translateX(2.5rem);
-        }
-
-        input.active {
-          background-color: base.$color-orange;
         }
       }
 

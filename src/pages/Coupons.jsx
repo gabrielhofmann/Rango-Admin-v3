@@ -329,15 +329,13 @@ export default class Coupons extends Component {
                 <strong>{coupon.singleUse ? "SIM" : "NÃO"}</strong>
                 <strong>{coupon.numberOfCoupons}</strong>
                 <strong>{coupon.validThru}</strong>
-                <strong>{coupon.user ? coupon.user : "N/A"}</strong>
+                <strong>{coupon.user ? coupon.user.username : "N/A"}</strong>
                 <strong>
-                  {coupon.restaurants.length == 0
-                    ? "N/A"
-                    : coupon.restaurants.length > 1
+                  {coupon.restaurants.length > 0
                     ? coupon.restaurants.map((restaurant) => {
-                        return `\xa0\xa0\xa0${restaurant.name}`;
+                        return restaurant.name + " | ";
                       })
-                    : coupon.restaurants[0].name}
+                    : "N/A"}
                 </strong>
               </div>
             );
