@@ -299,6 +299,10 @@ class Services {
     }
   }
 
+  async updatePaymentMethods() {
+    
+  }
+
   // NOTIFICATION
 
   async sendPushNotification(id, body) {

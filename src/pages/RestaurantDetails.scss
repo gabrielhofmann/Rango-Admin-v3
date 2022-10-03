@@ -329,10 +329,20 @@
         align-items: center;
         justify-content: space-between;
         box-shadow: base.$shadow;
+        position: relative;
 
         padding: 1rem;
         border-radius: 0.5rem;
         width: 80%;
+
+        #saveTaxes {
+          color: base.$color-orange;
+          cursor: pointer;
+          position: absolute;
+          top: 1rem;
+          right: 2rem;
+          display: none;
+        }
       }
 
       .row1 {
@@ -371,6 +381,7 @@
           padding: 0;
           margin: 0;
           display: flex;
+          align-items: center;
           position: relative;
           overflow: visible;
           height: 9rem;

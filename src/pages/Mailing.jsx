@@ -89,7 +89,6 @@ export default class Mailing extends Component {
       var toolbarOptions = [
         [{ font: [] }, { size: [] }],
         ["bold", "italic", "underline", "strike"],
-        ["color", "background"],
         [{ script: "sub" }, { script: "super" }],
         [{ header: 1 }, { header: 2 }, "blockquote", "code-block"],
         [{ list: "ordered" }, { list: "bullet" }],

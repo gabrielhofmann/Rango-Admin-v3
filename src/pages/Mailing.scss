@@ -6,6 +6,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: start;
+  position: relative;
 
   h1 {
     border-bottom: 1px solid base.$color-grey;
@@ -18,6 +19,7 @@
 
   form {
     width: 70rem;
+    height: 90rem;
     display: grid;
     row-gap: 2rem;
     column-gap: 2rem;
@@ -92,8 +94,12 @@
       color: base.$color-orange;
       box-shadow: base.$shadow;
       background-color: white;
-      grid-area: d;
       font-size: 1.2rem;
+      position: absolute;
+      bottom: 4rem;
+      left: 0;
+      right: 0;
+      margin: auto;
 
       transition: all ease 0.5s;
     }
@@ -108,5 +114,12 @@
   grid-area: c;
   min-height: 30rem;
   overflow: visible;
-  margin-bottom: 5rem;
+  margin-bottom: 12rem;
+}
+
+.ql-picker,
+.ql-formats {
+  height: 13rem;
+  width: fit-content;
+  overflow: visible !important;
 }

@@ -24,14 +24,16 @@ export default class RestaurantDetails extends Component {
       totalRestaurantOrders: 0,
       anticipationEnabled: false,
       paymentMethods: [],
+      restaurantOwner: {},
+      currentPlanTaxChanged: false,
     };
 
     this.createsubAccount = this.createsubAccount.bind(this);
     this.handleEditCommission = this.handleEditCommission.bind(this);
     this.handleAutoAnticipation = this.handleAutoAnticipation.bind(this);
     this.handleScheduleAvailable = this.handleScheduleAvailable.bind(this);
-    this.editPaymentMethods = this.editPaymentMethods.bind(this);
     this.handleEditBilling = this.handleEditBilling.bind(this);
+    this.handleEditTaxes = this.handleEditTaxes.bind(this);
   }
 
   async componentDidMount() {
@@ -95,12 +97,24 @@ export default class RestaurantDetails extends Component {
         });
       }
 
+      const restaurantOwner = await axios.get(
+        `https://www.api.rangosemfila.com.br/v2/users?filters[restaurants][id]=${restaurant.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log(restaurantOwner.data[0]);
+
       this.setState({
         restaurant: restaurant,
         billing: restaurant.billing,
         acquirer: restaurant.acqurier,
         legal: restaurant.legal,
         timing: restaurant.timing,
+        restaurantOwner: restaurantOwner.data[0],
       });
 
       $(".loading").hide();
@@ -118,7 +132,11 @@ export default class RestaurantDetails extends Component {
       body[el.name] = el.value;
     });
 
-    console.log(body);
+    const billing = {
+      billing: body,
+    };
+
+    console.log(billing);
 
     $(".loading").hide();
   }
@@ -135,11 +153,16 @@ export default class RestaurantDetails extends Component {
       body[el.name] = el.value;
     });
 
-    const response = await services.createSubaccount(body, id);
+    try {
+      const response = await services.createSubaccount(body, id);
 
-    $(".loading").hide();
+      console.log(response);
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
 
-    window.location.reload();
+      $(".loading").hide();
+    }
   }
 
   async handleEditCommission() {
@@ -210,19 +233,135 @@ export default class RestaurantDetails extends Component {
     window.location.reload();
   }
 
-  async editPaymentMethods() {
+  async handleEditTaxes() {
     $(".loading").show();
 
-    const subaccountData = await axios.get(
-      `https://api.safe2pay.com.br/v2/Marketplace/Get?id=${this.state.restaurant.acquirer.id}`,
-      {
-        headers: {
-          "x-api-key": this.state.restaurant.acquirer.apiToken,
-        },
+    let [daily, weekly, monthly] = [
+      $("#daily")[0].value,
+      $("#weekly")[0].value,
+      $("#monthly")[0].value,
+    ];
+
+    let currentPlanTax;
+    switch (this.state.restaurant.acquirer.currentPlan) {
+      case "daily":
+        currentPlanTax = daily;
+
+        break;
+
+      case "weekly":
+        currentPlanTax = weekly;
+
+        break;
+
+      case "monthly":
+        currentPlanTax = monthly;
+
+        break;
+
+      default:
+        break;
+    }
+
+    let updatedCommission = this.state.restaurant.acquirer.commission.map(
+      (el) => {
+        switch (el.commissionPlan) {
+          case "daily":
+            return {
+              ...el,
+              feePercent: daily,
+            };
+
+          case "weekly":
+            return {
+              ...el,
+              feePercent: weekly,
+            };
+
+          case "monthly":
+            return {
+              ...el,
+              feePercent: monthly,
+            };
+
+          default:
+            break;
+        }
       }
     );
 
-    console.log(subaccountData);
+    const body = {
+      acquirer: {
+        ...this.state.restaurant.acquirer,
+        commission: updatedCommission,
+      },
+    };
+
+    const response = await services.updateRestaurant(
+      this.state.restaurant.id,
+      body
+    );
+
+    if (this.state.currentPlanTaxChanged) {
+      let subaccountData = await axios
+        .get(
+          `https://api.safe2pay.com.br/v2/Marketplace/Get?id=${this.state.restaurant.acquirer.accountId}`,
+          {
+            headers: {
+              "x-api-key": apiToken,
+            },
+          }
+        )
+        .then((response) => {
+          return response.data.ResponseDetail;
+        });
+
+      console.log(subaccountData);
+
+      const PaymentMethods = subaccountData.PaymentMethods.map((el) => {
+        if (el.PaymentMethod == "15") {
+          return {
+            PaymentMethod: el.PaymentMethod,
+            IsPayTax: el.IsPayTax,
+            Taxes: [
+              {
+                TaxType: "Percentual",
+                Tax: "2.5",
+              },
+            ],
+          };
+        } else {
+          return {
+            PaymentMethod: el.PaymentMethod,
+            IsPayTax: el.IsPayTax,
+            Taxes: [
+              {
+                TaxType: "Percentual",
+                Tax: currentPlanTax,
+              },
+            ],
+          };
+        }
+      });
+
+      subaccountData = {
+        PaymentMethods: PaymentMethods,
+      };
+
+      console.log(subaccountData);
+
+      const response = await axios.put(
+        `https://api.safe2pay.com.br/v2/Marketplace/Update?id=${this.state.restaurant.acquirer.accountId}`,
+        subaccountData,
+        {
+          headers: {
+            "x-api-token": apiToken,
+          },
+        }
+      );
+
+      console.log(response);
+    }
 
     $(".loading").hide();
 
@@ -408,15 +547,15 @@ export default class RestaurantDetails extends Component {
                   </div>
 
                   <div className="card">
-                    <p>Categoria:</p>
+                    <p>Email:</p>
 
-                    <strong>{this.state.restaurant.category}</strong>
+                    <strong>{this.state.restaurantOwner.email}</strong>
                   </div>
 
                   <div className="card">
-                    <p>RanGo maior do mundo:</p>
+                    <p>Proprietário:</p>
 
-                    <strong>Sim</strong>
+                    <strong>{this.state.restaurantOwner.username}</strong>
                   </div>
                 </div>
 
@@ -633,33 +772,32 @@ export default class RestaurantDetails extends Component {
                               <strong>{el.commissionPlan}</strong>
 
                               <input
+                                id={el.commissionPlan}
                                 className="feePercent"
                                 name={el.commissionPlan}
                                 type="text"
                                 defaultValue={el.feePercent}
+                                onChange={() => {
+                                  if (
+                                    el.commissionPlan ==
+                                    this.state.restaurant.acquirer.currentPlan
+                                  ) {
+                                    this.setState({
+                                      currentPlanTaxChanged: true,
+                                    });
+                                  }
+                                  $("#saveTaxes").show();
+                                }}
                               />
                             </li>
                           );
                         })}
-
-                        <strong
-                          id="toggleEditMode"
-                          onClick={() => {
-                            $("#toggleEditMode").hide();
-                            $("#saveButton").show();
-                          }}
-                        >
-                          Editar
-                        </strong>
-
-                        <button
-                          id="saveButton"
-                          onClick={this.handleEditCommission}
-                        >
-                          Salvar
-                        </button>
                       </ul>
                     </div>
+
+                    <strong onClick={this.handleEditTaxes} id="saveTaxes">
+                      Salvar
+                    </strong>
                   </div>
 
                   <div className="autoAnticipation">
@@ -679,7 +817,7 @@ export default class RestaurantDetails extends Component {
                       <div className="ball"></div>
                     </div>
 
-                    <p>
+                    <p style={{ textAlign: "center" }}>
                       <b style={{ color: "grey", textAlign: "center" }}>
                         Antecipação automática
                       </b>
