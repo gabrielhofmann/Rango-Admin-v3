@@ -50,6 +50,8 @@ export default class Coupons extends Component {
       const validCoupons = await services.getCoupons(0, filtersValid);
       const expiredCoupons = await services.getCoupons(0, filtersExpired);
 
+      console.log(validCoupons);
+
       $("#availableNav").addClass("active");
       sessionStorage.setItem("coupons", ".availableCoupons");
 
@@ -259,6 +261,12 @@ export default class Coupons extends Component {
             <span className="material-symbols-rounded">sell</span>
           </div>
         </div>
+
+        <Filter
+          target="coupons"
+          callback={this.setCoupons}
+          filters={this.state.filters}
+        />
 
         <nav className="couponsNav">
           <ul>

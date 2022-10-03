@@ -96,6 +96,7 @@ export default class Filter extends Component {
       nameString,
       emailString,
       discountTypeString,
+      couponUserString,
       dateString;
 
     elements.map((index, element) => {
@@ -231,6 +232,31 @@ export default class Filter extends Component {
           },
         }
       );
+    } else if (this.props.target == "coupons") {
+      let couponsUrl =
+        "?filters[and][0][validThru]" +
+        this.props.filters.split("?filters[validThru]")[1];
+
+      if (inputData.length == 1) {
+        couponsUrl += `&filters[and][1]${inputData[0].value}`;
+      } else {
+        inputData.map((element, index) => {
+          index == 0
+            ? (couponsUrl += `[and][1]${element.value}`)
+            : (couponsUrl += `&filters[and][${index + 1}]${element.value}`);
+        });
+      }
+
+      console.log(couponsUrl);
+
+      results = await axios.get(
+        `https://www.api.rangosemfila.com.br/v2/coupons/0${couponsUrl}`,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
     }
 
     this.props.callback(results.data);
@@ -249,16 +275,21 @@ export default class Filter extends Component {
         <div className="filter">
           <form id="filterForm" onSubmit={this.handleFilter}>
             <input type="text" placeholder="ID" name="id" />
+
             {this.props.target == "orders" ? (
               <input type="text" placeholder="Cliente" name="user" />
             ) : this.props.target == "users" ? (
               <input type="text" placeholder="Nome" name="username" />
+            ) : this.props.target == "coupons" ? (
+              <input type="text" placeholder="Nome" name="user" />
             ) : (
               <input type="text" placeholder="Nome" name="name" />
             )}
+
             {this.props.target == "orders" ? (
               <input type="text" placeholder="Valor" name="total" />
             ) : null}
+
             {this.props.target == "orders" ? (
               <select name="status" id="status">
                 <option value="">Selecionar status</option>
@@ -294,6 +325,7 @@ export default class Filter extends Component {
                 })}
               </select>
             )}
+
             {this.props.target == "users" ? (
               <input className="cpf" type="text" placeholder="CPF" name="cpf" />
             ) : this.props.target == "restaurants" ? (
@@ -310,6 +342,7 @@ export default class Filter extends Component {
             ) : this.props.target == "coupons" ? null : (
               <input type="date" placeholder="Data" name="createdAt" />
             )}
+
             <button type="submit">
               <span className="material-symbols-rounded">search</span>
             </button>
