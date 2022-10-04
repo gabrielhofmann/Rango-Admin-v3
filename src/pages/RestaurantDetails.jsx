@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Spinner, ThemeProvider } from "react-bootstrap";
+import { Alert, Form, Spinner, ThemeProvider } from "react-bootstrap";
 import Menu from "../components/Menu";
 import { Services } from "../services";
 import $ from "jquery";
@@ -17,19 +17,20 @@ export default class RestaurantDetails extends Component {
 
     this.state = {
       restaurant: {},
-      billing: {},
-      acquirer: {},
-      legal: {},
+      bankData: {},
+
       timing: [],
       totalRestaurantOrders: 0,
       anticipationEnabled: false,
       paymentMethods: [],
       restaurantOwner: {},
       currentPlanTaxChanged: false,
+
+      showErrorAlert: false,
+      errorText: "",
     };
 
     this.createsubAccount = this.createsubAccount.bind(this);
-    this.handleEditCommission = this.handleEditCommission.bind(this);
     this.handleAutoAnticipation = this.handleAutoAnticipation.bind(this);
     this.handleScheduleAvailable = this.handleScheduleAvailable.bind(this);
     this.handleEditBilling = this.handleEditBilling.bind(this);
@@ -91,9 +92,23 @@ export default class RestaurantDetails extends Component {
             return response.data.ResponseDetail;
           });
 
+        let subaccountData = await axios
+          .get(
+            `https://api.safe2pay.com.br/v2/Marketplace/Get?id=${restaurant.acquirer.accountId}`,
+            {
+              headers: {
+                "x-api-key": apiToken,
+              },
+            }
+          )
+          .then((response) => {
+            return response.data.ResponseDetail;
+          });
+
         this.setState({
           anticipationEnabled: anticipationData.IsImmediateAnticipation,
           paymentMethods: paymentMethods,
+          bankData: subaccountData.BankData,
         });
       }
 
@@ -126,19 +141,35 @@ export default class RestaurantDetails extends Component {
 
     let body = {};
 
-    const data = $("#billing").serializeArray();
+    const inputs = $("#billing").serializeArray();
 
-    data.forEach((el) => {
-      body[el.name] = el.value;
+    inputs.forEach((el) => {
+      if (el.name == "Bank" || el.name == "AccountType") {
+        body[el.name] = {
+          Code: el.value,
+        };
+      } else {
+        body[el.name] = el.value;
+      }
     });
 
-    const billing = {
-      billing: body,
-    };
+    console.log(body);
 
-    console.log(billing);
+    const response = await axios.put(
+      `https://api.safe2pay.com.br/v2/Marketplace/Update?id=${this.state.restaurant.acquirer.accountId}`,
+      body,
+      {
+        headers: {
+          "x-api-key": apiToken,
+        },
+      }
+    );
+
+    console.log(response);
 
     $(".loading").hide();
+
+    // window.location.reload();
   }
 
   async createsubAccount() {
@@ -161,26 +192,13 @@ export default class RestaurantDetails extends Component {
     } catch (error) {
       console.error(error);
 
+      this.setState({
+        showErrorAlert: true,
+        errorText: "Erro ao criar subconta, verifique os dados cadastrados.",
+      });
+
       $(".loading").hide();
     }
-  }
-
-  async handleEditCommission() {
-    const [currentPlanElement, feePercentElements] = [
-      $("#currentPlan"),
-      $(".feePercent"),
-    ];
-
-    const currentPlan = currentPlanElement[0].value;
-    const feePercent = feePercentElements.map((i, el) => {
-      console.log(el);
-      return {
-        plan: el.name,
-        fee: el.value,
-      };
-    });
-
-    console.log(currentPlan, feePercent);
   }
 
   async handleAutoAnticipation() {
@@ -318,25 +336,25 @@ export default class RestaurantDetails extends Component {
 
       console.log(subaccountData);
 
-      const PaymentMethods = subaccountData.PaymentMethods.map((el) => {
+      const MerchantSplit = subaccountData.PaymentMethods.map((el) => {
         if (el.PaymentMethod == "15") {
           return {
-            PaymentMethod: el.PaymentMethod,
-            IsPayTax: el.IsPayTax,
+            PaymentMethodCode: el.PaymentMethod,
+            IsSubaccountTaxPayer: el.IsPayTax,
             Taxes: [
               {
-                TaxType: "Percentual",
+                TaxTypeName: "1",
                 Tax: "2.5",
               },
             ],
           };
         } else {
           return {
-            PaymentMethod: el.PaymentMethod,
-            IsPayTax: el.IsPayTax,
+            PaymentMethodCode: el.PaymentMethod,
+            IsSubaccountTaxPayer: el.IsPayTax,
             Taxes: [
               {
-                TaxType: "Percentual",
+                TaxTypeName: "1",
                 Tax: currentPlanTax,
               },
             ],
@@ -345,17 +363,17 @@ export default class RestaurantDetails extends Component {
       });
 
       subaccountData = {
-        PaymentMethods: PaymentMethods,
+        MerchantSplit: MerchantSplit,
       };
 
-      console.log(subaccountData);
+      console.log(MerchantSplit);
 
       const response = await axios.put(
         `https://api.safe2pay.com.br/v2/Marketplace/Update?id=${this.state.restaurant.acquirer.accountId}`,
         subaccountData,
         {
           headers: {
-            "x-api-token": apiToken,
+            "x-api-key": apiToken,
           },
         }
       );
@@ -365,13 +383,25 @@ export default class RestaurantDetails extends Component {
 
     $(".loading").hide();
 
-    // window.location.reload();
+    window.location.reload();
   }
 
   render() {
     return (
       <main className="restaurantDetails">
         <Menu />
+
+        <Alert
+          variant="danger"
+          id="errorAlert"
+          onClose={() => {
+            this.setState({ showErrorAlert: false });
+          }}
+          show={this.state.showErrorAlert}
+          dismissible
+        >
+          {this.state.errorText}
+        </Alert>
 
         <div className="loading">
           <Spinner className="spinner" animation="border" />
@@ -586,40 +616,79 @@ export default class RestaurantDetails extends Component {
 
                     <Form id="billing">
                       <Form.Group className="accountInfoGroup">
-                        <Form.Label>Nome do banco</Form.Label>
+                        <Form.Label>Operação</Form.Label>
 
-                        <input
-                          name="bank"
-                          type="text"
-                          defaultValue={this.state.restaurant.billing.bank}
+                        <select
+                          name="Operation"
+                          id="operationSelect"
                           onChange={() => {
                             $("#saveAccountBilling").show();
                           }}
-                        />
-                      </Form.Group>
-
-                      <Form.Group className="accountInfoGroup">
-                        <Form.Label>Código do banco</Form.Label>
-
-                        <input
-                          name="bankCode"
-                          type="text"
-                          defaultValue={
-                            this.state.restaurant.billing.bankCode ?? "N/A"
-                          }
-                          onChange={() => {
-                            $("#saveAccountBilling").show();
-                          }}
-                        />
+                        >
+                          <option value="003">
+                            Conta Corrente de Pessoa Jurídica
+                          </option>
+                          <option value="022">
+                            Poupança de Pessoa Jurídica
+                          </option>
+                        </select>
                       </Form.Group>
 
                       <Form.Group className="accountInfoGroup">
                         <Form.Label>Agência</Form.Label>
 
+                        <div className="inputRow">
+                          <input
+                            name="BankAgency"
+                            type="text"
+                            defaultValue={this.state.bankData.Agency}
+                            onChange={() => {
+                              $("#saveAccountBilling").show();
+                            }}
+                          />
+
+                          <input
+                            name="BankAgencyDigit"
+                            type="text"
+                            defaultValue={this.state.bankData.AgencyDigit}
+                            onChange={() => {
+                              $("#saveAccountBilling").show();
+                            }}
+                          />
+                        </div>
+                      </Form.Group>
+
+                      <Form.Group className="accountInfoGroup">
+                        <Form.Label>Conta</Form.Label>
+
+                        <div className="inputRow">
+                          <input
+                            name="BankAccount"
+                            type="text"
+                            defaultValue={this.state.bankData.Account}
+                            onChange={() => {
+                              $("#saveAccountBilling").show();
+                            }}
+                          />
+
+                          <input
+                            name="BankAccountDigit"
+                            type="text"
+                            defaultValue={this.state.bankData.AccountDigit}
+                            onChange={() => {
+                              $("#saveAccountBilling").show();
+                            }}
+                          />
+                        </div>
+                      </Form.Group>
+
+                      <Form.Group className="accountInfoGroup">
+                        <Form.Label>Código do Banco</Form.Label>
+
                         <input
-                          name="agency"
+                          name="Bank"
                           type="text"
-                          defaultValue={this.state.restaurant.billing.agency}
+                          defaultValue={this.state.bankData.Bank}
                           onChange={() => {
                             $("#saveAccountBilling").show();
                           }}
@@ -627,16 +696,18 @@ export default class RestaurantDetails extends Component {
                       </Form.Group>
 
                       <Form.Group className="accountInfoGroup">
-                        <Form.Label>Conta</Form.Label>
+                        <Form.Label>Tipo de Conta</Form.Label>
 
-                        <input
-                          name="account"
-                          type="text"
-                          defaultValue={this.state.restaurant.billing.account}
+                        <select
+                          name="AccountType"
+                          id="accountTypeSelect"
                           onChange={() => {
                             $("#saveAccountBilling").show();
                           }}
-                        />
+                        >
+                          <option value="CC">Conta Corrente</option>
+                          <option value="PP">Poupança</option>
+                        </select>
                       </Form.Group>
                     </Form>
                   </div>
@@ -689,7 +760,15 @@ export default class RestaurantDetails extends Component {
                         onChange={async (e) => {
                           $(".loading").show();
 
+                          let [daily, weekly, monthly] = [
+                            $("#daily")[0].value,
+                            $("#weekly")[0].value,
+                            $("#monthly")[0].value,
+                          ];
+
                           let planCode;
+                          let planTax;
+
                           const restaurantToken =
                             this.state.restaurant.acquirer.apiToken;
 
@@ -703,16 +782,19 @@ export default class RestaurantDetails extends Component {
                           switch (e.target.value) {
                             case "daily":
                               planCode = "7";
+                              planTax = daily;
 
                               break;
 
                             case "weekly":
                               planCode = "6";
+                              planTax = weekly;
 
                               break;
 
                             case "monthly":
                               planCode = "1";
+                              planTax = monthly;
 
                               break;
 
@@ -739,9 +821,141 @@ export default class RestaurantDetails extends Component {
                             }
                           );
 
-                          $(".loading").hide();
+                          let subaccountData = await axios
+                            .get(
+                              `https://api.safe2pay.com.br/v2/Marketplace/Get?id=${this.state.restaurant.acquirer.accountId}`,
+                              {
+                                headers: {
+                                  "x-api-key": apiToken,
+                                },
+                              }
+                            )
+                            .then((response) => {
+                              return response.data.ResponseDetail;
+                            });
 
-                          window.location.reload();
+                          console.log(subaccountData);
+
+                          const MerchantSplit =
+                            subaccountData.PaymentMethods.map((el) => {
+                              if (el.PaymentMethod == "15") {
+                                return {
+                                  PaymentMethodCode: el.PaymentMethod,
+                                  IsSubaccountTaxPayer: el.IsPayTax,
+                                  Taxes: [
+                                    {
+                                      TaxTypeName: "1",
+                                      Tax: "2.5",
+                                    },
+                                  ],
+                                };
+                              } else {
+                                return {
+                                  PaymentMethodCode: el.PaymentMethod,
+                                  IsSubaccountTaxPayer: el.IsPayTax,
+                                  Taxes: [
+                                    {
+                                      TaxTypeName: "1",
+                                      Tax: planTax,
+                                    },
+                                  ],
+                                };
+                              }
+                            });
+
+                          subaccountData = {
+                            MerchantSplit: MerchantSplit,
+                          };
+
+                          console.log(MerchantSplit);
+
+                          const response = await axios.put(
+                            `https://api.safe2pay.com.br/v2/Marketplace/Update?id=${this.state.restaurant.acquirer.accountId}`,
+                            subaccountData,
+                            {
+                              headers: {
+                                "x-api-key": apiToken,
+                              },
+                            }
+                          );
+
+                          console.log(response);
+
+                          if (planCode != "1") {
+                            const currentConfig = await axios
+                              .get(
+                                "https://api.safe2pay.com.br/v2/PaymentMethod/Get?codePaymentMethod=2",
+                                {
+                                  headers: {
+                                    "x-api-key":
+                                      this.state.restaurant.acquirer.apiToken,
+                                  },
+                                }
+                              )
+                              .then((response) => {
+                                return response.data.ResponseDetail;
+                              });
+
+                            const currentAnticipation =
+                              currentConfig.IsImmediateAnticipation;
+
+                            const updatedConfig = {
+                              ...currentConfig,
+                              IsImmediateAnticipation: true,
+                            };
+
+                            await axios.put(
+                              "https://api.safe2pay.com.br/v2/PaymentMethod/Update",
+                              updatedConfig,
+                              {
+                                headers: {
+                                  "x-api-key":
+                                    this.state.restaurant.acquirer.apiToken,
+                                },
+                              }
+                            );
+
+                            $(".loading").hide();
+
+                            window.location.reload();
+                          } else {
+                            const currentConfig = await axios
+                              .get(
+                                "https://api.safe2pay.com.br/v2/PaymentMethod/Get?codePaymentMethod=2",
+                                {
+                                  headers: {
+                                    "x-api-key":
+                                      this.state.restaurant.acquirer.apiToken,
+                                  },
+                                }
+                              )
+                              .then((response) => {
+                                return response.data.ResponseDetail;
+                              });
+
+                            const currentAnticipation =
+                              currentConfig.IsImmediateAnticipation;
+
+                            const updatedConfig = {
+                              ...currentConfig,
+                              IsImmediateAnticipation: false,
+                            };
+
+                            await axios.put(
+                              "https://api.safe2pay.com.br/v2/PaymentMethod/Update",
+                              updatedConfig,
+                              {
+                                headers: {
+                                  "x-api-key":
+                                    this.state.restaurant.acquirer.apiToken,
+                                },
+                              }
+                            );
+
+                            $(".loading").hide();
+
+                            window.location.reload();
+                          }
                         }}
                       >
                         <option
