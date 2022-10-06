@@ -493,3 +493,36 @@
     height: auto;
   }
 }
+
+#timeIntervalFilter {
+  margin: 5rem auto -2rem auto;
+  width: 30rem;
+
+  form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0.5rem;
+
+    input {
+      border: none;
+      box-shadow: base.$shadow;
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
+
+    input:focus {
+      outline: 2px solid base.$color-orange;
+    }
+
+    button {
+      padding: 1rem 3rem;
+      border-radius: 0.5rem;
+      background-color: base.$color-orange;
+      border: none;
+      box-shadow: base.$shadow;
+      color: white;
+    }
+  }
+}

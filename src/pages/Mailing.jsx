@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form } from "react-bootstrap";
+import { Form, Spinner } from "react-bootstrap";
 import Menu from "../components/Menu";
 import { Services } from "../services";
 import Select from "react-select";
@@ -11,6 +11,8 @@ import axios from "axios";
 import Quill from "quill";
 
 const services = new Services();
+
+var editor;
 
 export default class Mailing extends Component {
   constructor(props) {
@@ -103,6 +105,8 @@ export default class Mailing extends Component {
         theme: "snow",
       });
 
+      editor = quill;
+
       this.setState({ usersOptions: usersOptions });
 
       $(".loading").hide();
@@ -118,7 +122,7 @@ export default class Mailing extends Component {
     var subject, title, body, sender;
     var recievers = new Array();
     var allRecievers = new Array();
-    var body = $("textarea").val();
+    var body = editor.getContents();
     let toAllUsers = false;
 
     const allUsers = await services.getAllUsers();
@@ -161,18 +165,24 @@ export default class Mailing extends Component {
       };
     }
 
+    console.log(requestBody);
+
     const response = await services.sendMail(requestBody);
     console.log(response);
 
     $(".loading").hide();
 
-    window.location.reload();
+    // window.location.reload();
   }
 
   render() {
     return (
       <main className="mailing">
         <Menu />
+
+        <div className="loading">
+          <Spinner className="spinner" animation="border" />
+        </div>
 
         <div className="pageHeader">
           <div className="menuToggle" onClick={services.handleMenuToggle}>

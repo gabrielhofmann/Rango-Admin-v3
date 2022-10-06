@@ -9,6 +9,7 @@ import Filter from "../components/Filter";
 import Pagination from "../components/Pagination";
 
 import logo from "../assets/logo.svg";
+import axios from "axios";
 
 const services = new Services();
 
@@ -97,6 +98,7 @@ export default class PowerBi extends Component {
       this.handleNavigation = this.handleNavigation.bind(this);
       this.setOrders = this.setOrders.bind(this);
       this.setRestaurants = this.setRestaurants.bind(this);
+      this.filterPowerBi = this.filterPowerBi.bind(this);
     }
   }
 
@@ -148,6 +150,19 @@ export default class PowerBi extends Component {
     this.setState({
       showRestaurantAlert: true,
       restaurantDetails: restaurant,
+    });
+  }
+
+  async filterPowerBi() {
+    const form = $("#powerBiTimeFilter").serializeArray();
+    const [start, end] = [form[0].value, form[1].value];
+
+    const data = await axios.get(
+      `https://www.api.rangosemfila.com.br/v2/getPowerBIData/${start}/${end}`
+    );
+
+    this.setState({
+      powerBiData: data.data,
     });
   }
 
@@ -365,6 +380,22 @@ export default class PowerBi extends Component {
             </li>
           </ul>
         </nav>
+
+        <div id="timeIntervalFilter">
+          <form
+            id="powerBiTimeFilter"
+            onSubmit={(e) => {
+              e.preventDefault();
+              this.filterPowerBi();
+            }}
+          >
+            <input type="date" name="start" />
+
+            <input type="date" name="end" />
+
+            <button type="submit">Filtrar</button>
+          </form>
+        </div>
 
         <section className="pageContainer powerBiContainer">
           <div className="smallCardsContainer">
