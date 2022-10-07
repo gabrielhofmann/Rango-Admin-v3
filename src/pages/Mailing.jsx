@@ -8,11 +8,57 @@ import $ from "jquery";
 
 import "./Mailing.scss";
 import axios from "axios";
-import Quill from "quill";
+
+import { Editor } from "@tinymce/tinymce-react";
+
+// TinyMCE so the global var exists
+// eslint-disable-next-line no-unused-vars
+import tinymce from "tinymce/tinymce";
+// DOM model
+import "../../public/tinymce/models/dom/model.min.js";
+// Theme
+import "../../public/tinymce/themes/silver/theme.min.js";
+// Toolbar icons
+import "../../public/tinymce/icons/default/icons.min.js";
+// Editor styles
+import "../../public/tinymce/skins/ui/oxide/skin.min.css";
+
+// importing the plugin js.
+// if you use a plugin that is not listed here the editor will fail to load
+import "../../public/tinymce/plugins/advlist/plugin.min.js";
+import "../../public/tinymce/plugins/anchor/plugin.min.js";
+import "../../public/tinymce/plugins/autolink/plugin.min.js";
+import "../../public/tinymce/plugins/autoresize/plugin.min.js";
+import "../../public/tinymce/plugins/autosave/plugin.min.js";
+import "../../public/tinymce/plugins/charmap/plugin.min.js";
+import "../../public/tinymce/plugins/code/plugin.min.js";
+import "../../public/tinymce/plugins/codesample/plugin.min.js";
+import "../../public/tinymce/plugins/directionality/plugin.min.js";
+import "../../public/tinymce/plugins/emoticons/plugin.min.js";
+import "../../public/tinymce/plugins/fullscreen/plugin.min.js";
+import "../../public/tinymce/plugins/help/plugin.min.js";
+import "../../public/tinymce/plugins/image/plugin.min.js";
+import "../../public/tinymce/plugins/importcss/plugin.min.js";
+import "../../public/tinymce/plugins/insertdatetime/plugin.min.js";
+import "../../public/tinymce/plugins/link/plugin.min.js";
+import "../../public/tinymce/plugins/lists/plugin.min.js";
+import "../../public/tinymce/plugins/media/plugin.min.js";
+import "../../public/tinymce/plugins/nonbreaking/plugin.min.js";
+import "../../public/tinymce/plugins/pagebreak/plugin.min.js";
+import "../../public/tinymce/plugins/preview/plugin.min.js";
+import "../../public/tinymce/plugins/quickbars/plugin.min.js";
+import "../../public/tinymce/plugins/save/plugin.min.js";
+import "../../public/tinymce/plugins/searchreplace/plugin.min.js";
+import "../../public/tinymce/plugins/table/plugin.min.js";
+import "../../public/tinymce/plugins/template/plugin.min.js";
+import "../../public/tinymce/plugins/visualblocks/plugin.min.js";
+import "../../public/tinymce/plugins/visualchars/plugin.min.js";
+import "../../public/tinymce/plugins/wordcount/plugin.min.js";
+
+// importing plugin resources
+import "tinymce/plugins/emoticons/js/emojis";
 
 const services = new Services();
-
-var editor;
 
 export default class Mailing extends Component {
   constructor(props) {
@@ -88,25 +134,6 @@ export default class Mailing extends Component {
         }
       });
 
-      var toolbarOptions = [
-        [{ font: [] }, { size: [] }],
-        ["bold", "italic", "underline", "strike"],
-        [{ script: "sub" }, { script: "super" }],
-        [{ header: 1 }, { header: 2 }, "blockquote", "code-block"],
-        [{ list: "ordered" }, { list: "bullet" }],
-        ["link", "image", "video"],
-        ["clean"],
-      ];
-
-      var quill = new Quill("#quill", {
-        modules: {
-          toolbar: toolbarOptions,
-        },
-        theme: "snow",
-      });
-
-      editor = quill;
-
       this.setState({ usersOptions: usersOptions });
 
       $(".loading").hide();
@@ -120,16 +147,22 @@ export default class Mailing extends Component {
 
     const form = $("#mailingForm").serializeArray();
     var subject, title, body, sender;
-    var recievers = new Array();
+    var selectedRecievers = new Array();
     var allRecievers = new Array();
-    var body = editor.getContents();
     let toAllUsers = false;
+    var body = tinyMCE.get("#tiny").getContent();
+
+    console.log(body);
 
     const allUsers = await services.getAllUsers();
 
     allUsers.map((el) => {
-      allRecievers.push(el.email);
+      if (el.email) {
+        allRecievers.push(el.email);
+      }
     });
+
+    console.log(allRecievers);
 
     form.map((e) => {
       if (e.value.trim() != "") {
@@ -138,14 +171,18 @@ export default class Mailing extends Component {
           : e.name == "title"
           ? (title = e.value)
           : e.name == "users"
-          ? recievers.push(e.value)
+          ? selectedRecievers.push(e.value)
           : e.name == "sender"
           ? (sender = e.value)
+          : e.name == "all"
+          ? (toAllUsers = true)
           : null;
       }
     });
 
     let requestBody;
+
+    console.log(form);
 
     if (toAllUsers) {
       requestBody = {
@@ -161,7 +198,7 @@ export default class Mailing extends Component {
         title: title,
         body: body,
         sender: sender,
-        recievers: recievers,
+        recievers: selectedRecievers,
       };
     }
 
@@ -206,61 +243,97 @@ export default class Mailing extends Component {
               this.handleMailing(e);
             }}
           >
-            <Form.Group className="mailingFormGroup">
-              <Form.Label>Assunto:</Form.Label>
+            <div className="formRow">
+              <Form.Group className="mailingFormGroup">
+                <Form.Label>Assunto:</Form.Label>
 
-              <Form.Control name="subject" type="text" required />
+                <Form.Control name="subject" type="text" required />
 
-              <Form.Label>Título:</Form.Label>
+                <Form.Label>Título:</Form.Label>
 
-              <Form.Control name="title" type="text" required />
+                <Form.Control name="title" type="text" required />
 
-              <Form.Label>Remetente:</Form.Label>
+                <Form.Label>Remetente:</Form.Label>
 
-              <Form.Control name="sender" type="text" required />
-            </Form.Group>
+                <Form.Control name="sender" type="text" required />
+              </Form.Group>
 
-            <div id="editor">
-              <Form.Label>Corpo:</Form.Label>
+              <Form.Group id="radioInputs" className="mailingFormGroup">
+                <Form.Label>Enviar para:</Form.Label>
 
-              <div id="quill"></div>
+                <div id="radioOptions">
+                  <Form.Check
+                    name="recievers"
+                    type="radio"
+                    label="Todos"
+                    value="all"
+                    onClick={() => {
+                      $("#mailingUserSelect").hide();
+                    }}
+                    required
+                  />
+
+                  <Form.Check
+                    name="recievers"
+                    type="radio"
+                    label="Selecionar"
+                    value="selected"
+                    onClick={() => {
+                      $("#mailingUserSelect").show();
+                    }}
+                    required
+                  />
+                </div>
+
+                <Select
+                  id="mailingUserSelect"
+                  name="users"
+                  className="basic-single customSelect userSearch"
+                  classNamePrefix="select"
+                  options={this.state.usersOptions}
+                  isSearchable="true"
+                  isMulti
+                ></Select>
+              </Form.Group>
             </div>
 
-            <Form.Group id="radioInputs">
-              <Form.Label>Enviar para:</Form.Label>
-
-              <div id="radioOptions">
-                <Form.Check
-                  name="recievers"
-                  type="radio"
-                  label="Todos"
-                  onClick={() => {
-                    $("#mailingUserSelect").hide();
-                  }}
-                  required
-                />
-
-                <Form.Check
-                  name="recievers"
-                  type="radio"
-                  label="Selecionar"
-                  onClick={() => {
-                    $("#mailingUserSelect").show();
-                  }}
-                  required
-                />
-              </div>
-
-              <Select
-                id="mailingUserSelect"
-                name="users"
-                className="basic-single customSelect userSearch"
-                classNamePrefix="select"
-                options={this.state.usersOptions}
-                isSearchable="true"
-                isMulti
-              ></Select>
-            </Form.Group>
+            <Editor
+              id="#tiny"
+              init={{
+                height: 500,
+                menubar: false,
+                plugins: [
+                  "advlist",
+                  "autolink",
+                  "lists",
+                  "link",
+                  "image",
+                  "charmap",
+                  "print",
+                  "preview",
+                  "anchor",
+                  "searchreplace",
+                  "visualblocks",
+                  "code",
+                  "fullscreen",
+                  "insertdatetime",
+                  "media",
+                  "table",
+                  "paste",
+                  "code",
+                  "help",
+                  "wordcount",
+                ],
+                toolbar:
+                  "undo redo | " +
+                  "bold italic charmap | alignleft aligncenter " +
+                  "alignright alignjustify | outdent indent | " +
+                  "| link image media charmap |" +
+                  "| removeformat | help preview ",
+                content_style:
+                  "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+              }}
+            />
 
             <button id="mailingFormButton" type="submit">
               Enviar

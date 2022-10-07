@@ -299,9 +299,7 @@ class Services {
     }
   }
 
-  async updatePaymentMethods() {
-    
-  }
+  async updatePaymentMethods() {}
 
   // NOTIFICATION
 
@@ -347,6 +345,8 @@ class Services {
         },
       }
     );
+
+    return response;
   }
 }
 

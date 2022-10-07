@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Alert, Form, Spinner, ThemeProvider } from "react-bootstrap";
+import { Alert, Form, Spinner } from "react-bootstrap";
 import Menu from "../components/Menu";
 import { Services } from "../services";
 import $ from "jquery";
@@ -153,19 +153,28 @@ export default class RestaurantDetails extends Component {
       }
     });
 
+    body = {
+      BankData: {
+        ...body,
+      },
+    };
     console.log(body);
 
-    const response = await axios.put(
-      `https://api.safe2pay.com.br/v2/Marketplace/Update?id=${this.state.restaurant.acquirer.accountId}`,
-      body,
-      {
-        headers: {
-          "x-api-key": apiToken,
-        },
-      }
-    );
+    try {
+      const response = await axios.put(
+        `https://api.safe2pay.com.br/v2/Marketplace/Update?id=${this.state.restaurant.acquirer.accountId}`,
+        body,
+        {
+          headers: {
+            "x-api-key": apiToken,
+          },
+        }
+      );
 
-    console.log(response);
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
 
     $(".loading").hide();
 
