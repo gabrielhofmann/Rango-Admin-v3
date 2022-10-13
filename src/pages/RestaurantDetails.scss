@@ -204,29 +204,32 @@
 
   .pageContentWrapper {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-start;
     width: 100%;
     padding: 1rem;
     height: 70vh;
     overflow: visible;
-    margin: 7rem 0 10rem 0;
     font-size: 1.1rem;
+    margin-bottom: 15rem;
 
     .leftContainer {
       display: flex;
       flex-direction: column;
       width: 50%;
-      height: 97vh;
+      height: 50rem;
       box-shadow: base.$shadow;
       border-radius: 0.5rem;
       margin-right: 1rem;
 
-      // .row1,
-      // .row2,
-      // .row3 {
-      //   padding: 1rem;
-      // }
+      .row1,
+      .row2,
+      .row3 {
+        overflow: hidden;
+
+        div {
+          overflow: hidden;
+        }
+      }
 
       .card {
         display: flex;
@@ -288,6 +291,27 @@
           }
 
           form {
+            overflow: visible;
+
+
+            #bankSelect {
+              position: absolute;
+              top: 3rem;
+              left: 0;
+              right: 0;
+              width: calc(100% - 3rem);
+              margin: 0.5rem auto;
+              overflow: visible;
+
+              input {
+                box-shadow: none;
+              }
+
+              .select__menu-list {
+                overflow-y: scroll;
+              }
+            }
+
             .accountInfoGroup {
               display: flex;
               flex-direction: column;
@@ -349,7 +373,7 @@
       width: 50%;
       box-shadow: base.$shadow;
       border-radius: 0.5rem;
-      height: 97vh;
+      height: 50rem;
 
       #commissionRow {
         display: flex;
@@ -574,6 +598,23 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+
+    .radioGroup {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+
+      .radioInput {
+        input {
+          width: 1.5rem;
+          height: 1.5rem;
+          margin: 0.3rem;
+          cursor: pointer;
+        }
+      }
+    }
   }
 }
 

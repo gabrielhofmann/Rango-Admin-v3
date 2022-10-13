@@ -148,21 +148,18 @@ export default class Mailing extends Component {
     const form = $("#mailingForm").serializeArray();
     var subject, title, body, sender;
     var selectedRecievers = new Array();
-    var allRecievers = new Array();
     let toAllUsers = false;
     var body = tinyMCE.get("#tiny").getContent();
 
-    console.log(body);
+    let allUsers = await services.getAllUsers();
 
-    const allUsers = await services.getAllUsers();
-
-    allUsers.map((el) => {
-      if (el.email) {
-        allRecievers.push(el.email);
+    allUsers = allUsers.map((user) => {
+      if (user.email) {
+        return user.email;
       }
     });
 
-    console.log(allRecievers);
+    console.log(allUsers);
 
     form.map((e) => {
       if (e.value.trim() != "") {
@@ -182,15 +179,13 @@ export default class Mailing extends Component {
 
     let requestBody;
 
-    console.log(form);
-
     if (toAllUsers) {
       requestBody = {
         subject: subject,
         title: title,
         body: body,
         sender: sender,
-        recievers: allRecievers,
+        recievers: allUsers,
       };
     } else {
       requestBody = {
@@ -209,7 +204,7 @@ export default class Mailing extends Component {
 
     $(".loading").hide();
 
-    // window.location.reload();
+    window.location.reload();
   }
 
   render() {

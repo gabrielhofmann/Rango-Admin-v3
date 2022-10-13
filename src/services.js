@@ -239,6 +239,8 @@ class Services {
         },
       }
     );
+
+    return response;
   }
 
   async filterRestaurants(input, param) {

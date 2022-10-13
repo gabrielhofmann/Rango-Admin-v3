@@ -4,6 +4,7 @@ import Menu from "../components/Menu";
 import { Services } from "../services";
 import $ from "jquery";
 import logo from "../assets/logo.svg";
+import Select from "react-select";
 
 import "./RestaurantDetails.scss";
 import axios from "axios";
@@ -28,6 +29,129 @@ export default class RestaurantDetails extends Component {
 
       showErrorAlert: false,
       errorText: "",
+
+      bankOptions: [
+        {
+          value: "613",
+          label: "Banco Omni",
+        },
+        {
+          value: "208",
+          label: "Banco BTG Pactual",
+        },
+        {
+          value: "173",
+          label: "BRL Trust DTVM",
+        },
+        {
+          value: "752",
+          label: "BNP Paribas Brasil",
+        },
+        {
+          value: "003",
+          label: "Banco da Amazonia",
+        },
+        {
+          value: "097",
+          label: "Cooperativa Central de Crédito Noroeste Brasileiro",
+        },
+        {
+          value: "477",
+          label: "Citibank",
+        },
+        {
+          value: "004",
+          label: "Banco do Nordeste",
+        },
+        {
+          value: "633",
+          label: "Rendimento",
+        },
+        {
+          value: "707",
+          label: "Banco Daycoval",
+        },
+        {
+          value: "197",
+          label: "Stone",
+        },
+        {
+          value: "084",
+          label: "Uniprime",
+        },
+        {
+          value: "082",
+          label: "Topazio",
+        },
+        {
+          value: "218",
+          label: "BS2",
+        },
+        {
+          value: "488",
+          label: "JP Morgan",
+        },
+        {
+          value: "389",
+          label: "Mercantil do Brasil",
+        },
+        {
+          value: "091",
+          label: "Unicred",
+        },
+        {
+          value: "021",
+          label: "Banestes",
+        },
+        {
+          value: "746",
+          label: "Banco Modal",
+        },
+        {
+          value: "422",
+          label: "Safra",
+        },
+        {
+          value: "079",
+          label: "Banco Original",
+        },
+        {
+          value: "001",
+          label: "Banco do Brasil",
+        },
+        {
+          value: "479",
+          label: "Itaú",
+        },
+        {
+          value: "036",
+          label: "Bradesco",
+        },
+        {
+          value: "104",
+          label: "Caixa Econômica",
+        },
+        {
+          value: "033",
+          label: "Santander",
+        },
+        {
+          value: "748",
+          label: "Sicredi",
+        },
+        {
+          value: "077",
+          label: "Inter",
+        },
+        {
+          value: "655",
+          label: "Votorantim",
+        },
+        {
+          value: "260",
+          label: "Nubank",
+        },
+      ],
     };
 
     this.createsubAccount = this.createsubAccount.bind(this);
@@ -139,37 +263,52 @@ export default class RestaurantDetails extends Component {
   async handleEditBilling() {
     $(".loading").show();
 
-    let body = {};
+    let safe2payBody = {};
 
     const inputs = $("#billing").serializeArray();
 
     inputs.forEach((el) => {
       if (el.name == "Bank" || el.name == "AccountType") {
-        body[el.name] = {
+        safe2payBody[el.name] = {
           Code: el.value,
         };
       } else {
-        body[el.name] = el.value;
+        safe2payBody[el.name] = el.value;
       }
     });
 
-    body = {
+    safe2payBody = {
       BankData: {
-        ...body,
+        ...safe2payBody,
       },
     };
-    console.log(body);
+
+    let rangoBody = {
+      billing: {
+        account: inputs[3].value,
+        accountDigit: inputs[4].value,
+        agency: inputs[1].value,
+        agencyDigit: inputs[2].value,
+        bank: $("#bankSelect")[0].outerText,
+        bankCode: inputs[0].value,
+      },
+    };
+
+    console.log(safe2payBody);
+    console.log(rangoBody);
 
     try {
       const response = await axios.put(
         `https://api.safe2pay.com.br/v2/Marketplace/Update?id=${this.state.restaurant.acquirer.accountId}`,
-        body,
+        safe2payBody,
         {
           headers: {
             "x-api-key": apiToken,
           },
         }
       );
+
+      await services.updateRestaurant(this.state.restaurant.id, rangoBody);
 
       window.location.reload();
     } catch (error) {
@@ -625,25 +764,26 @@ export default class RestaurantDetails extends Component {
 
                     <Form id="billing">
                       <Form.Group className="accountInfoGroup">
-                        <Form.Label>Operação</Form.Label>
+                        <Form.Label>Banco</Form.Label>
 
-                        <select
-                          name="Operation"
-                          id="operationSelect"
+                        <Select
+                          placeholder={this.state.restaurant.billing.bank}
+                          id="bankSelect"
+                          name="Bank"
+                          className="basic-single "
+                          classNamePrefix="select"
+                          options={this.state.bankOptions}
+                          isSearchable="true"
                           onChange={() => {
                             $("#saveAccountBilling").show();
                           }}
-                        >
-                          <option value="003">
-                            Conta Corrente de Pessoa Jurídica
-                          </option>
-                          <option value="022">
-                            Poupança de Pessoa Jurídica
-                          </option>
-                        </select>
+                        ></Select>
                       </Form.Group>
 
-                      <Form.Group className="accountInfoGroup">
+                      <Form.Group
+                        style={{ marginTop: "3rem" }}
+                        className="accountInfoGroup"
+                      >
                         <Form.Label>Agência</Form.Label>
 
                         <div className="inputRow">
@@ -692,19 +832,6 @@ export default class RestaurantDetails extends Component {
                       </Form.Group>
 
                       <Form.Group className="accountInfoGroup">
-                        <Form.Label>Código do Banco</Form.Label>
-
-                        <input
-                          name="Bank"
-                          type="text"
-                          defaultValue={this.state.bankData.Bank}
-                          onChange={() => {
-                            $("#saveAccountBilling").show();
-                          }}
-                        />
-                      </Form.Group>
-
-                      <Form.Group className="accountInfoGroup">
                         <Form.Label>Tipo de Conta</Form.Label>
 
                         <select
@@ -714,8 +841,18 @@ export default class RestaurantDetails extends Component {
                             $("#saveAccountBilling").show();
                           }}
                         >
-                          <option value="CC">Conta Corrente</option>
-                          <option value="PP">Poupança</option>
+                          {this.state.bankData.AccountType ==
+                          "Conta Corrente" ? (
+                            <option value="CC">Conta Corrente</option>
+                          ) : (
+                            <option value="PP">Poupança</option>
+                          )}
+                          {this.state.bankData.AccountType !=
+                          "Conta Corrente" ? (
+                            <option value="CC">Conta Corrente</option>
+                          ) : (
+                            <option value="PP">Poupança</option>
+                          )}
                         </select>
                       </Form.Group>
                     </Form>
@@ -788,10 +925,18 @@ export default class RestaurantDetails extends Component {
                             },
                           };
 
+                          let frequencyBody;
+
                           switch (e.target.value) {
                             case "daily":
                               planCode = "7";
                               planTax = daily;
+
+                              frequencyBody = {
+                                PlanFrequence: {
+                                  Code: planCode,
+                                },
+                              };
 
                               break;
 
@@ -799,11 +944,25 @@ export default class RestaurantDetails extends Component {
                               planCode = "6";
                               planTax = weekly;
 
+                              frequencyBody = {
+                                PlanFrequence: {
+                                  Code: planCode,
+                                },
+                                PaymentDay: 2,
+                              };
+
                               break;
 
                             case "monthly":
                               planCode = "1";
                               planTax = monthly;
+
+                              frequencyBody = {
+                                PlanFrequence: {
+                                  Code: planCode,
+                                },
+                                PaymentDay: 1,
+                              };
 
                               break;
 
@@ -818,11 +977,7 @@ export default class RestaurantDetails extends Component {
 
                           await axios.put(
                             "https://api.safe2pay.com.br/v2/MerchantPaymentDate/Update",
-                            {
-                              PlanFrequence: {
-                                Code: planCode,
-                              },
-                            },
+                            frequencyBody,
                             {
                               headers: {
                                 "x-api-key": restaurantToken,
@@ -1122,6 +1277,25 @@ export default class RestaurantDetails extends Component {
               <h1>Criar subconta</h1>
 
               <Form id="subaccountForm">
+                <Form.Group className="radioGroup">
+                  <Form.Check
+                    className="radioInput"
+                    type="radio"
+                    name="accountType"
+                    value="PF"
+                    label="Pessoa Física"
+                    required
+                  />
+                  <Form.Check
+                    className="radioInput"
+                    type="radio"
+                    name="accountType"
+                    value="PJ"
+                    label="Pessoa Jurídica"
+                    required
+                  />
+                </Form.Group>
+
                 <Form.Group>
                   <Form.Label>Plano</Form.Label>
                   <Form.Select name="currentPlan" required>
