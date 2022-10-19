@@ -123,7 +123,9 @@ export default class PowerBi extends Component {
     if (page == "powerbi" && selector == document.getElementById("infoNav")) {
       $(".noCardDisplay").show();
       $(".powerBiNav").css("marginTop", "0");
+      $("#timeIntervalFilter").show();
     } else {
+      $("#timeIntervalFilter").hide();
       $(".noCardDisplay").hide();
       $(".powerBiNav").css("marginTop", "17vh");
     }
@@ -158,7 +160,12 @@ export default class PowerBi extends Component {
     const [start, end] = [form[0].value, form[1].value];
 
     const data = await axios.get(
-      `https://www.api.rangosemfila.com.br/v2/getPowerBIData/${start}/${end}`
+      `https://www.api.rangosemfila.com.br/v2/getPowerBIData/${start}/${end}`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
     );
 
     this.setState({
@@ -490,8 +497,8 @@ export default class PowerBi extends Component {
               <ul>
                 {this.state.powerBiData.ordersPerRestaurant.map((element) => {
                   return (
-                    <li key={element.restaurant.name}>
-                      <span>{element.restaurant.name}</span>
+                    <li key={element.restaurant}>
+                      <span>{element.restaurant}</span>
                       <span>{element.orders}</span>
                     </li>
                   );
@@ -507,8 +514,8 @@ export default class PowerBi extends Component {
               <ul>
                 {this.state.powerBiData.usersPerRestaurant.map((element) => {
                   return (
-                    <li key={element.restaurant.name}>
-                      <span>{element.restaurant.name}</span>
+                    <li key={element.restaurant}>
+                      <span>{element.restaurant}</span>
                       <span>{element.users}</span>
                     </li>
                   );

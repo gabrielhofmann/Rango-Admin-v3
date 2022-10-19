@@ -151,16 +151,6 @@ export default class Mailing extends Component {
     let toAllUsers = false;
     var body = tinyMCE.get("#tiny").getContent();
 
-    let allUsers = await services.getAllUsers();
-
-    allUsers = allUsers.map((user) => {
-      if (user.email) {
-        return user.email;
-      }
-    });
-
-    console.log(allUsers);
-
     form.map((e) => {
       if (e.value.trim() != "") {
         e.name == "subject"
@@ -180,6 +170,14 @@ export default class Mailing extends Component {
     let requestBody;
 
     if (toAllUsers) {
+      let allUsers = await services.getAllUsers();
+
+      allUsers = allUsers.map((user) => {
+        if (user.email) {
+          return user.email;
+        }
+      });
+
       requestBody = {
         subject: subject,
         title: title,
@@ -199,12 +197,12 @@ export default class Mailing extends Component {
 
     console.log(requestBody);
 
-    const response = await services.sendMail(requestBody);
-    console.log(response);
+    // const response = await services.sendMail(requestBody);
+    // console.log(response);
 
     $(".loading").hide();
 
-    window.location.reload();
+    // window.location.reload();
   }
 
   render() {

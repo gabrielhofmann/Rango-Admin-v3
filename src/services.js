@@ -260,9 +260,14 @@ class Services {
 
   async getCoupons(offset, filters) {
     const response = await axios.get(
-      `https://www.api.rangosemfila.com.br/v2/coupons/${offset}${
+      `https://www.api.rangosemfila.com.br/v2/allCoupons/${offset}${
         filters != undefined ? filters : null
-      }`
+      }`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
     );
 
     return response.data;

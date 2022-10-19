@@ -247,14 +247,19 @@ export default class RestaurantDetails extends Component {
 
       console.log(restaurantOwner.data[0]);
 
-      this.setState({
-        restaurant: restaurant,
-        billing: restaurant.billing,
-        acquirer: restaurant.acqurier,
-        legal: restaurant.legal,
-        timing: restaurant.timing,
-        restaurantOwner: restaurantOwner.data[0],
-      });
+      this.setState(
+        {
+          restaurant: restaurant,
+          billing: restaurant.billing,
+          acquirer: restaurant.acqurier,
+          legal: restaurant.legal,
+          timing: restaurant.timing,
+          restaurantOwner: restaurantOwner.data[0],
+        },
+        () => {
+          console.log(this.state);
+        }
+      );
 
       $(".loading").hide();
     }
@@ -307,6 +312,8 @@ export default class RestaurantDetails extends Component {
           },
         }
       );
+
+      console.log(response);
 
       await services.updateRestaurant(this.state.restaurant.id, rangoBody);
 
@@ -767,7 +774,10 @@ export default class RestaurantDetails extends Component {
                         <Form.Label>Banco</Form.Label>
 
                         <Select
-                          placeholder={this.state.restaurant.billing.bank}
+                          defaultValue={{
+                            label: this.state.restaurant.billing.bank,
+                            value: this.state.bankData.Bank,
+                          }}
                           id="bankSelect"
                           name="Bank"
                           className="basic-single "
@@ -838,6 +848,10 @@ export default class RestaurantDetails extends Component {
                           name="AccountType"
                           id="accountTypeSelect"
                           onChange={() => {
+                            console.log(
+                              this.state.bankData.AccountType ==
+                                "Conta Corrente"
+                            );
                             $("#saveAccountBilling").show();
                           }}
                         >
@@ -847,11 +861,11 @@ export default class RestaurantDetails extends Component {
                           ) : (
                             <option value="PP">Poupança</option>
                           )}
-                          {this.state.bankData.AccountType !=
+                          {this.state.bankData.AccountType ==
                           "Conta Corrente" ? (
-                            <option value="CC">Conta Corrente</option>
-                          ) : (
                             <option value="PP">Poupança</option>
+                          ) : (
+                            <option value="CC">Conta Corrente</option>
                           )}
                         </select>
                       </Form.Group>
