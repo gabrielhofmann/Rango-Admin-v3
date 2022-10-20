@@ -151,6 +151,10 @@ export default class Mailing extends Component {
     let toAllUsers = false;
     var body = tinyMCE.get("#tiny").getContent();
 
+    const radio = $("input[name='recievers']:checked")[0].value;
+
+    radio == "all" ? (toAllUsers = true) : (toAllUsers = false);
+
     form.map((e) => {
       if (e.value.trim() != "") {
         e.name == "subject"
@@ -194,8 +198,6 @@ export default class Mailing extends Component {
         recievers: selectedRecievers,
       };
     }
-
-    console.log(requestBody);
 
     // const response = await services.sendMail(requestBody);
     // console.log(response);
