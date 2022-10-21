@@ -199,12 +199,12 @@ export default class Mailing extends Component {
       };
     }
 
-    // const response = await services.sendMail(requestBody);
-    // console.log(response);
+    const response = await services.sendMail(requestBody);
+    console.log(response);
 
     $(".loading").hide();
 
-    // window.location.reload();
+    window.location.reload();
   }
 
   render() {
