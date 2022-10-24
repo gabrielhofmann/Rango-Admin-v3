@@ -48,6 +48,19 @@ export default class PowerBi extends Component {
       showUserAlert: false,
       restaurantDetails: {},
       showRestaurantAlert: false,
+      filteredData: {
+        newUsers: {
+          month: 0,
+        },
+        revenue: {
+          month: 0,
+        },
+        totalOrders: {
+          month: 0,
+        },
+      },
+      start: "",
+      end: "",
     };
   }
 
@@ -70,7 +83,11 @@ export default class PowerBi extends Component {
       $(".loading").hide();
 
       setInterval(function () {
-        window.location.reload();
+        if (
+          window.location.href == "https://rango-admin-v3.vercel.app/powerBi"
+        ) {
+          window.location.reload();
+        }
       }, 300000);
 
       $("#infoNav").addClass("active");
@@ -157,7 +174,14 @@ export default class PowerBi extends Component {
 
   async filterPowerBi() {
     const form = $("#powerBiTimeFilter").serializeArray();
-    const [start, end] = [form[0].value, form[1].value];
+    const [start, end] = [
+      `${form[0].value.split("-")[0]}-${(
+        parseInt(form[0].value.split("-")[1]) - 1
+      ).toString()}-${form[0].value.split("-")[2]}`,
+      `${form[1].value.split("-")[0]}-${(
+        parseInt(form[1].value.split("-")[1]) - 1
+      ).toString()}-${form[1].value.split("-")[2]}`,
+    ];
 
     const data = await axios.get(
       `https://www.api.rangosemfila.com.br/v2/getPowerBIData/${start}/${end}`,
@@ -168,8 +192,14 @@ export default class PowerBi extends Component {
       }
     );
 
+    $(".smallCard").each((index, el) => {
+      $(el).addClass("active");
+
+      console.log(el);
+    });
+
     this.setState({
-      powerBiData: data.data,
+      filteredData: data.data,
     });
   }
 
@@ -395,10 +425,38 @@ export default class PowerBi extends Component {
               e.preventDefault();
               this.filterPowerBi();
             }}
+            onChange={() => {
+              $("#clear").show();
+            }}
           >
-            <input type="date" name="start" />
+            <button
+              onClick={() => {
+                window.location.reload();
+              }}
+              id="clear"
+            >
+              Limpar
+            </button>
 
-            <input type="date" name="end" />
+            <input
+              onChange={(e) => {
+                this.setState({
+                  start: e.target.value,
+                });
+              }}
+              type="date"
+              name="start"
+            />
+
+            <input
+              onChange={(e) => {
+                this.setState({
+                  end: e.target.value,
+                });
+              }}
+              type="date"
+              name="end"
+            />
 
             <button type="submit">Filtrar</button>
           </form>
@@ -430,6 +488,17 @@ export default class PowerBi extends Component {
                   </li>
                 </ul>
               </div>
+
+              <div className="filteredDataContainer">
+                <strong>
+                  Novos Usuários entre {this.state.start} e {this.state.end}
+                </strong>
+
+                <div className="resultsRow">
+                  <p>Total:</p>
+                  <p>{this.state.filteredData.newUsers.month}</p>
+                </div>
+              </div>
             </div>
 
             <div className="smallCard smallListCard">
@@ -458,6 +527,17 @@ export default class PowerBi extends Component {
                   </li>
                 </ul>
               </div>
+
+              <div className="filteredDataContainer">
+                <strong>
+                  Pedidos entre {this.state.start} e {this.state.end}
+                </strong>
+
+                <div className="resultsRow">
+                  <p>Total:</p>
+                  <p>{this.state.filteredData.totalOrders.month}</p>
+                </div>
+              </div>
             </div>
 
             <div className="smallCard smallListCard">
@@ -484,6 +564,17 @@ export default class PowerBi extends Component {
                     </p>
                   </li>
                 </ul>
+              </div>
+
+              <div className="filteredDataContainer">
+                <strong>
+                  Receita entre {this.state.start} e {this.state.end}
+                </strong>
+
+                <div className="resultsRow">
+                  <p>Total:</p>
+                  <p>R$ {this.state.filteredData.revenue.month}</p>
+                </div>
               </div>
             </div>
           </div>

@@ -137,6 +137,29 @@
     }
   }
 
+  .filteredDataContainer {
+    display: none;
+  }
+
+  .smallCard.active {
+    .filteredDataContainer {
+      display: block;
+      margin: 1rem 0;
+
+      strong {
+        margin-bottom: 1rem;
+      }
+
+      .resultsRow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    
+  }
+
   .smallListCard {
     display: flex;
     justify-content: space-between !important;
@@ -496,7 +519,7 @@
 
 #timeIntervalFilter {
   margin: 5rem auto 0 auto;
-  width: 30rem;
+  width: 40rem;
 
   form {
     display: flex;
@@ -523,6 +546,18 @@
       border: none;
       box-shadow: base.$shadow;
       color: white;
+    }
+
+    #clear {
+      display: none;
+      padding: 0.5rem 1rem;
+      background-color: white;
+      color: base.$color-orange;
+      transition: all ease 0.5s;
+    }
+
+    #clear:hover {
+      background-color: rgba($color: base.$color-orange, $alpha: 0.3);
     }
   }
 }

@@ -78,7 +78,7 @@ export default class Mailing extends Component {
 
     if (!token) {
       $(".loading").hide();
-      $(".powerBi").html("Not Authorized!!");
+      $(".mailing").html("Not Authorized!!");
     } else {
       const users = await services.getUsers(0);
 

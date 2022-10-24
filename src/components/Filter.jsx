@@ -96,7 +96,7 @@ export default class Filter extends Component {
       nameString,
       emailString,
       discountTypeString,
-      couponUserString,
+      couponNameString,
       dateString;
 
     elements.map((index, element) => {
@@ -111,6 +111,12 @@ export default class Filter extends Component {
           case "name":
             nameString = `[name][$containsi]=${element.value}`;
             inputData.push({ name: element.name, value: nameString });
+
+            break;
+
+          case "couponName":
+            nameString = `[name][$eq]=${element.value}`;
+            inputData.push({ name: element.name, value: couponNameString });
 
             break;
 
@@ -250,7 +256,7 @@ export default class Filter extends Component {
       console.log(couponsUrl);
 
       results = await axios.get(
-        `https://www.api.rangosemfila.com.br/v2/coupons/0${couponsUrl}`,
+        `https://www.api.rangosemfila.com.br/v2/allCoupons/0${couponsUrl}`,
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -281,7 +287,7 @@ export default class Filter extends Component {
             ) : this.props.target == "users" ? (
               <input type="text" placeholder="Nome" name="username" />
             ) : this.props.target == "coupons" ? (
-              <input type="text" placeholder="Nome" name="user" />
+              <input type="text" placeholder="Nome" name="name" />
             ) : (
               <input type="text" placeholder="Nome" name="name" />
             )}
