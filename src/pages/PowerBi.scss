@@ -144,20 +144,26 @@
   .smallCard.active {
     .filteredDataContainer {
       display: block;
-      margin: 1rem 0;
+      margin-top: 1.5rem;
 
       strong {
         margin-bottom: 1rem;
+        color: base.$color-orange;
+        font-size: 20px;
       }
 
       .resultsRow {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        font-size: 20px;
+
+        p:last-child {
+          color: base.$color-green;
+          font-weight: bold;
+        }
       }
     }
-
-    
   }
 
   .smallListCard {

@@ -907,6 +907,64 @@ export default class RestaurantDetails extends Component {
               </div>
 
               <div className="rightContainer">
+                <div className="row2">
+                  <strong>
+                    R${this.state.restaurant.minimumOrderValue}
+                    <br />
+                    <p>Pedido Mínimo</p>
+                  </strong>
+
+                  <strong>
+                    {this.state.restaurant.estimatedDeliveryTime} minutos
+                    <br />
+                    <p>Tempo de entrega médio</p>
+                  </strong>
+
+                  <div className="scheduleAvailable">
+                    <div
+                      id="scheduleSwitch"
+                      style={{
+                        backgroundColor: this.state.restaurant.scheduleAvailable
+                          ? "#52e899"
+                          : null,
+                        flexDirection: this.state.restaurant.scheduleAvailable
+                          ? "row-reverse"
+                          : null,
+                      }}
+                      onClick={this.handleScheduleAvailable}
+                      className="switch"
+                    >
+                      <div className="ball"></div>
+                    </div>
+
+                    <p>Aceita Agendamento</p>
+                  </div>
+
+                  <div className="autoAnticipation">
+                    <div
+                      id="anticipationSwitch"
+                      className="switch"
+                      onClick={this.handleAutoAnticipation}
+                      style={{
+                        backgroundColor: this.state.anticipationEnabled
+                          ? "#52e899"
+                          : null,
+                        flexDirection: this.state.anticipationEnabled
+                          ? "row-reverse"
+                          : null,
+                      }}
+                    >
+                      <div className="ball"></div>
+                    </div>
+
+                    <p style={{ textAlign: "center" }}>
+                      <b style={{ color: "grey", textAlign: "center" }}>
+                        Antecipação automática
+                      </b>
+                    </p>
+                  </div>
+                </div>
+
                 <div className="row1">
                   <div id="commissionRow">
                     <div className="currentPlan">
@@ -1190,64 +1248,6 @@ export default class RestaurantDetails extends Component {
                     <strong onClick={this.handleEditTaxes} id="saveTaxes">
                       Salvar
                     </strong>
-                  </div>
-
-                  <div className="autoAnticipation">
-                    <div
-                      id="anticipationSwitch"
-                      className="switch"
-                      onClick={this.handleAutoAnticipation}
-                      style={{
-                        backgroundColor: this.state.anticipationEnabled
-                          ? "#52e899"
-                          : null,
-                        flexDirection: this.state.anticipationEnabled
-                          ? "row-reverse"
-                          : null,
-                      }}
-                    >
-                      <div className="ball"></div>
-                    </div>
-
-                    <p style={{ textAlign: "center" }}>
-                      <b style={{ color: "grey", textAlign: "center" }}>
-                        Antecipação automática
-                      </b>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="row2">
-                  <strong>
-                    R${this.state.restaurant.minimumOrderValue}
-                    <br />
-                    <p>Pedido Mínimo</p>
-                  </strong>
-
-                  <strong>
-                    {this.state.restaurant.estimatedDeliveryTime} minutos
-                    <br />
-                    <p>Tempo de entrega médio</p>
-                  </strong>
-
-                  <div className="scheduleAvailable">
-                    <div
-                      id="scheduleSwitch"
-                      style={{
-                        backgroundColor: this.state.restaurant.scheduleAvailable
-                          ? "#52e899"
-                          : null,
-                        flexDirection: this.state.restaurant.scheduleAvailable
-                          ? "row-reverse"
-                          : null,
-                      }}
-                      onClick={this.handleScheduleAvailable}
-                      className="switch"
-                    >
-                      <div className="ball"></div>
-                    </div>
-
-                    <p>Aceita Agendamento</p>
                   </div>
                 </div>
 
