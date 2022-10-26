@@ -288,8 +288,9 @@ class Services {
   // SUBACCOUNT
 
   async createSubaccount(body, restaurantId) {
-    try {
-      const response = await axios.post(
+    let response;
+
+      response = await axios.post(
         `https://www.api.rangosemfila.com.br/v2/createSubAccount/${restaurantId}`,
         body,
         {
@@ -301,9 +302,7 @@ class Services {
 
       console.log(response);
       return response;
-    } catch (e) {
-      console.error(e);
-    }
+
   }
 
   async updatePaymentMethods() {}

@@ -339,21 +339,28 @@ export default class RestaurantDetails extends Component {
       body[el.name] = el.value;
     });
 
+    let response;
+
     try {
-      const response = await services.createSubaccount(body, id);
+      response = await services.createSubaccount(body, id);
 
-      console.log(response);
-      window.location.reload();
     } catch (error) {
-      console.error(error);
+      console.log(error.response.status);
+      response = error.response;
+    }
 
+    if (response.status != 200) {
+      console.log(response)
+      
       this.setState({
         showErrorAlert: true,
-        errorText: "Erro ao criar subconta, verifique os dados cadastrados.",
+        errorText: response.data.error.message,
       });
-
-      $(".loading").hide();
+    } else {
+      window.location.reload()
     }
+
+    $(".loading").hide();
   }
 
   async handleAutoAnticipation() {
@@ -579,11 +586,10 @@ export default class RestaurantDetails extends Component {
               <div
                 className="image"
                 style={{
-                  backgroundImage: `url(${
-                    this.state.restaurant.thumbnailImageUrl
+                  backgroundImage: `url(${this.state.restaurant.thumbnailImageUrl
                       ? this.state.restaurant.thumbnailImageUrl
                       : logo
-                  })`,
+                    })`,
                 }}
               ></div>
 
@@ -721,7 +727,7 @@ export default class RestaurantDetails extends Component {
           </div>
 
           {this.state.restaurant.status == "operando" &&
-          this.state.restaurant.acquirer != undefined ? (
+            this.state.restaurant.acquirer != undefined ? (
             <div className="pageContentWrapper">
               <div className="leftContainer">
                 <div className="row1">
@@ -850,19 +856,19 @@ export default class RestaurantDetails extends Component {
                           onChange={() => {
                             console.log(
                               this.state.bankData.AccountType ==
-                                "Conta Corrente"
+                              "Conta Corrente"
                             );
                             $("#saveAccountBilling").show();
                           }}
                         >
                           {this.state.bankData.AccountType ==
-                          "Conta Corrente" ? (
+                            "Conta Corrente" ? (
                             <option value="CC">Conta Corrente</option>
                           ) : (
                             <option value="PP">Poupança</option>
                           )}
                           {this.state.bankData.AccountType ==
-                          "Conta Corrente" ? (
+                            "Conta Corrente" ? (
                             <option value="PP">Poupança</option>
                           ) : (
                             <option value="CC">Conta Corrente</option>
