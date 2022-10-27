@@ -194,12 +194,18 @@ export default class PowerBi extends Component {
 
     $(".smallCard").each((index, el) => {
       $(el).addClass("active");
-
-      console.log(el);
     });
+
+    console.log(data.data);
 
     this.setState({
       filteredData: data.data,
+      powerBiData: {
+        ...this.state.powerBiData,
+        mau: data.data.mau,
+        ordersPerRestaurant: data.data.ordersPerRestaurant,
+        usersPerRestaurant: data.data.usersPerRestaurant,
+      },
     });
   }
 
