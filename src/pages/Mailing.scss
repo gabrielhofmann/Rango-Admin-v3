@@ -112,15 +112,13 @@
   }
 }
 
-#tiny {
-  width: 30rem;
-  height: 50rem;
-}
-.tox-toolbar__primary {
-  position: absolute;
-}
+.ck {
+  overflow: visible;
+  box-shadow: rgba(0, 0, 0, 0.023) 0px 4px 12px;
 
-.tox-tinymce-aux {               
-  z-index: 130000000000 !important;
+  .ck-content {
+    min-height: 30rem;
+    
 
+  }
 }
