@@ -26,6 +26,19 @@
     row-gap: 2rem;
     column-gap: 2rem;
 
+    .customLabel {
+      label {
+        margin: 0;
+      }
+
+      input {
+        padding: 0 .8rem;
+        height: 3.5rem;
+        margin: 0.5rem 0;
+        font-size: 22px;
+      }
+    }
+
     .formRow {
       display: flex;
       overflow: visible;
@@ -86,7 +99,8 @@
         }
 
         input {
-          padding: 0.7rem;
+          padding: 0.6rem;
+          cursor: pointer;
           margin: 0.3rem;
         }
       }
@@ -97,7 +111,7 @@
       margin: 1rem auto;
       padding: 1rem 0;
       border: none;
-      border-radius: 1rem;
+      border-radius: .5rem;
       color: base.$color-orange;
       box-shadow: base.$shadow;
       background-color: white;
@@ -118,7 +132,5 @@
 
   .ck-content {
     min-height: 30rem;
-    
-
   }
 }

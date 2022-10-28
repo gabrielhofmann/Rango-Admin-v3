@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Spinner } from "react-bootstrap";
+import { FloatingLabel, Form, Spinner } from "react-bootstrap";
 import Menu from "../components/Menu";
 import { Services } from "../services";
 import Select from "react-select";
@@ -17,6 +17,8 @@ export default class Mailing extends Component {
 
     this.state = {
       usersOptions: [],
+      editorContent: "",
+      selectedUsers: [],
     };
 
     this.handleMailing = this.handleMailing.bind(this);
@@ -324,7 +326,15 @@ export default class Mailing extends Component {
           // from a local file system (file://) - load this site via HTTP server if you enable MathType
           "MathType",
         ],
-      });
+      })
+        .then((editor) => {
+          editor.model.document.on("change:data", () => {
+            this.setState({ editorContent: editor.getData() });
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
       this.setState({ usersOptions: usersOptions });
 
@@ -337,33 +347,27 @@ export default class Mailing extends Component {
 
     $(".loading").show();
 
-    const form = $("#mailingForm").serializeArray();
-    var subject, title, body, sender;
-    var selectedRecievers = new Array();
     let toAllUsers = false;
-    var body = tinyMCE.get("#tiny").getContent();
+
+    const body = this.state.editorContent;
+    const sender = $("#sender")[0].value;
+    const title = $("#title")[0].value;
+    const subject = $("#subject")[0].value;
+    const recievers = this.state.selectedUsers;
 
     const radio = $("input[name='recievers']:checked")[0].value;
 
     radio == "all" ? (toAllUsers = true) : (toAllUsers = false);
 
-    form.map((e) => {
-      if (e.value.trim() != "") {
-        e.name == "subject"
-          ? (subject = e.value)
-          : e.name == "title"
-          ? (title = e.value)
-          : e.name == "users"
-          ? selectedRecievers.push(e.value)
-          : e.name == "sender"
-          ? (sender = e.value)
-          : e.name == "all"
-          ? (toAllUsers = true)
-          : null;
-      }
-    });
+    let requestBody = {
+      subject: subject,
+      title: title,
+      recievers: recievers,
+      sender: sender,
+      body: body,
+    };
 
-    let requestBody;
+    console.log(requestBody);
 
     if (toAllUsers) {
       let allUsers = await services.getAllUsers();
@@ -387,7 +391,7 @@ export default class Mailing extends Component {
         title: title,
         body: body,
         sender: sender,
-        recievers: selectedRecievers,
+        recievers: recievers,
       };
     }
 
@@ -432,17 +436,35 @@ export default class Mailing extends Component {
           >
             <div className="formRow">
               <Form.Group className="mailingFormGroup">
-                <Form.Label>Assunto:</Form.Label>
+                <FloatingLabel label="Assunto" className="customLabel">
+                  <Form.Control
+                    id="subject"
+                    placeholder="assunto"
+                    name="subject"
+                    type="text"
+                    required
+                  />
+                </FloatingLabel>
 
-                <Form.Control name="subject" type="text" required />
+                <FloatingLabel label="Título" className="customLabel">
+                  <Form.Control
+                    id="title"
+                    placeholder="titulo"
+                    name="title"
+                    type="text"
+                    required
+                  />
+                </FloatingLabel>
 
-                <Form.Label>Título:</Form.Label>
-
-                <Form.Control name="title" type="text" required />
-
-                <Form.Label>Remetente:</Form.Label>
-
-                <Form.Control name="sender" type="text" required />
+                <FloatingLabel label="Remetente" className="customLabel">
+                  <Form.Control
+                    id="sender"
+                    placeholder="remetente"
+                    name="sender"
+                    type="text"
+                    required
+                  />
+                </FloatingLabel>
               </Form.Group>
 
               <Form.Group id="radioInputs" className="mailingFormGroup">
@@ -480,6 +502,15 @@ export default class Mailing extends Component {
                   options={this.state.usersOptions}
                   isSearchable="true"
                   isMulti
+                  onChange={(e) => {
+                    let users = e.map((user) => {
+                      return user.value;
+                    });
+
+                    this.setState({
+                      selectedUsers: users,
+                    });
+                  }}
                 ></Select>
               </Form.Group>
             </div>
