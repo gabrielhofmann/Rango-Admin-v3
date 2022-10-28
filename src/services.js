@@ -309,9 +309,9 @@ class Services {
 
   // NOTIFICATION
 
-  async sendPushNotification(id, body) {
+  async sendPushNotification(body) {
     const response = await axios.post(
-      `https://www.api.rangosemfila.com.br/v2/sendPushNotification/${id}`,
+      `https://www.api.rangosemfila.com.br/v2/sendCustomNotification/`,
       body,
       {
         headers: {

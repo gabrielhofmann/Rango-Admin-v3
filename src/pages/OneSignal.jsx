@@ -96,21 +96,30 @@ export default class OneSignal extends Component {
     $(".loading").show();
 
     const message = $("#message")[0].value;
+
+    const title = $("#title")[0].value;
     const user = this.state.selectedUser;
 
-    const body = { message: message };
+    let body = { title: title, message: message };
 
     const selectedRadio = document.querySelector(
       'input[name="oneSignalRadio"]:checked'
     ).value;
 
     if (selectedRadio == "one") {
-      console.log(body);
-
-      await services.sendPushNotification(user, body);
+      body = {
+        ...body,
+        toAll: false,
+        id: user,
+      };
     } else {
-      await services.sendPushNotificationToAll(body);
+      body = {
+        ...body,
+        toAll: true,
+      };
     }
+
+    await services.sendPushNotification(body);
 
     $(".loading").hide();
   }
@@ -188,6 +197,11 @@ export default class OneSignal extends Component {
             ></Select>
 
             <Form.Group>
+              <Form.Label>
+                <strong>Título:</strong>
+              </Form.Label>
+              <Form.Control id="title" name="title" type="text" required />
+
               <Form.Label>
                 <strong>Mensagem:</strong>
               </Form.Label>
