@@ -157,8 +157,8 @@ export default class Coupons extends Component {
         });
 
       this.setState({
-        validCoupons: validCoupons.coupons,
-        expiredCoupons: expiredCoupons.coupons,
+        validCoupons: validCoupons,
+        expiredCoupons: expiredCoupons,
         usersOptions: usersOptions,
         restaurantsOptions: restaurantsOptions,
         filters: filtersValid,
