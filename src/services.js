@@ -290,19 +290,18 @@ class Services {
   async createSubaccount(body, restaurantId) {
     let response;
 
-      response = await axios.post(
-        `https://www.api.rangosemfila.com.br/v2/createSubAccount/${restaurantId}`,
-        body,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }
-      );
+    response = await axios.post(
+      `https://www.api.rangosemfila.com.br/v2/createSubAccount/${restaurantId}`,
+      body,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
 
-      console.log(response);
-      return response;
-
+    console.log(response);
+    return response;
   }
 
   async updatePaymentMethods() {}
@@ -351,6 +350,10 @@ class Services {
         },
       }
     );
+
+    console.log(body);
+
+    console.log(response);
 
     return response;
   }

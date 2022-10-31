@@ -400,7 +400,7 @@ export default class Mailing extends Component {
 
     $(".loading").hide();
 
-    window.location.reload();
+    // window.location.reload();
   }
 
   render() {

@@ -1163,6 +1163,7 @@ export default class RestaurantDetails extends Component {
                         id="currentPlan"
                         onChange={(e) => {
                           this.setState({ currentPlan: e.target.value });
+                          $("#saveTaxes").show();
                         }}
                       >
                         <option
