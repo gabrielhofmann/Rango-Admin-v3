@@ -1,360 +1,244 @@
-import React, { Component } from "react";
-import $ from "jquery";
-
+import React from "react";
 import "./Filter.scss";
-import axios from "axios";
+
+import $ from "jquery";
 import { Services } from "../services";
 
 const services = new Services();
 
-const orderStatusList = [
-  "scheduled",
-  "created",
-  "confirmed",
-  "canceled",
-  "ready",
-  "delivered",
-];
+export default function Filter({ target, callback }) {
+  const restaurantStatus = [
+    "criado",
+    "pendente",
+    "confirmado",
+    "operando",
+    "recusado",
+  ];
 
-const restaurantStatusList = [
-  "criado",
-  "pendente",
-  "confirmado",
-  "operando",
-  "recusado",
-];
+  const categories = [
+    "Açaí",
+    "Africana",
+    "Alemã",
+    "Árabe",
+    "Argentina",
+    "Bebidas",
+    "Brasileira",
+    "Cafeteria",
+    "Carnes",
+    "Casa de Sucos",
+    "Chinesa",
+    "Colombiana",
+    "Congelados",
+    "Conveniência",
+    "Coreana",
+    "Doces e Bolos",
+    "Espanhola",
+    "Francesa",
+    "Frutos do Mar",
+    "Indiana",
+    "Italiana",
+    "Japonesa",
+    "Lanches",
+    "Marmita",
+    "Mediterrânea",
+    "Mexicana",
+    "Padaria",
+    "Pastel",
+    "Peixes",
+    "Peruana",
+    "Pizza",
+    "Portuguesa",
+    "Salgados",
+    "Saudável",
+    "Sorvetes",
+    "Tailandesa",
+    "Vegetariana",
+  ];
 
-const categories = [
-  "Açaí",
-  "Africana",
-  "Alemã",
-  "Árabe",
-  "Argentina",
-  "Bebidas",
-  "Brasileira",
-  "Cafeteria",
-  "Carnes",
-  "Casa de Sucos",
-  "Chinesa",
-  "Colombiana",
-  "Congelados",
-  "Conveniência",
-  "Coreana",
-  "Doces e Bolos",
-  "Espanhola",
-  "Francesa",
-  "Frutos do Mar",
-  "Indiana",
-  "Italiana",
-  "Japonesa",
-  "Lanches",
-  "Marmita",
-  "Mediterrânea",
-  "Mexicana",
-  "Padaria",
-  "Pastel",
-  "Peixes",
-  "Peruana",
-  "Pizza",
-  "Portuguesa",
-  "Salgados",
-  "Saudável",
-  "Sorvetes",
-  "Tailandesa",
-  "Vegetariana",
-];
+  function getFilterContent() {
+    switch (target) {
+      case "coupons":
+        return (
+          <div id="filterContent">
+            <input type="number" id="couponId" name="id" placeholder="ID" />
 
-export default class Filter extends Component {
-  constructor(props) {
-    super(props);
+            <input type="text" id="couponName" name="name" placeholder="Nome" />
 
-    this.handleFilter = this.handleFilter.bind(this);
+            <select name="discountType" id="discountType">
+              <option value="">Tipo de desconto</option>
+              <option value="percentage">Porcentagem</option>
+              <option value="value">Valor</option>
+            </select>
+          </div>
+        );
+
+      case "restaurants":
+        return (
+          <div id="filterContent">
+            <input type="number" id="restaurantId" name="id" placeholder="ID" />
+
+            <input
+              type="text"
+              id="restaurantName"
+              name="name"
+              placeholder="Nome"
+            />
+
+            <select name="category" id="category">
+              <option value="">Categoria</option>
+
+              {categories.map((category) => {
+                return <option value={category}>{category}</option>;
+              })}
+            </select>
+
+            <select name="status" id="status">
+              <option value="">Status</option>
+
+              {restaurantStatus.map((status) => {
+                return <option value={status}>{status}</option>;
+              })}
+            </select>
+          </div>
+        );
+
+      case "users":
+        return (
+          <div id="filterContent">
+            <input type="number" id="userId" name="id" placeholder="ID" />
+
+            <input type="text" id="userName" name="username" placeholder="Nome" />
+
+            <input
+              type="text"
+              id="userEmail"
+              name="email"
+              placeholder="Email"
+            />
+
+            <input type="text" id="userCpf" name="cpf" placeholder="CPF" />
+          </div>
+        );
+
+      default:
+        break;
+    }
   }
 
-  componentDidMount() {
-    $(".cpf").mask("000.000.000-00");
-  }
-
-  async handleFilter(e) {
-    e.preventDefault();
-
-    const date = new Date();
-
+  async function handleFilterAction() {
     let results;
-
-    const elements = $("input");
-    $.merge(elements, $("select"));
-    let inputData = [];
+    let filters = new Array();
     let url = "?filters";
-    let idString,
-      userString,
-      usernameString,
-      totalString,
-      statusString,
-      categoryString,
-      cpfString,
-      nameString,
-      emailString,
-      discountTypeString,
-      couponNameString,
-      dateString;
 
-    elements.map((index, element) => {
-      if (element.value.trim() != "") {
-        switch (element.name) {
-          case "id":
-            idString = `[id][$eq]=${element.value}`;
-            inputData.push({ name: element.name, value: idString });
-
-            break;
-
-          case "name":
-            nameString = `[name][$containsi]=${element.value}`;
-            inputData.push({ name: element.name, value: nameString });
-
-            break;
-
-          case "couponName":
-            nameString = `[name][$eq]=${element.value}`;
-            inputData.push({ name: element.name, value: couponNameString });
-
-            break;
-
-          case "user":
-            userString = `[user][username][$containsi]=${element.value}`;
-            inputData.push({ name: element.name, value: userString });
-
-            break;
-
-          case "username":
-            usernameString = `[username][$containsi]=${element.value}`;
-            inputData.push({ name: element.name, value: usernameString });
-
-            break;
-
-          case "total":
-            totalString = `[payment][total][$eq]=${element.value}`;
-            inputData.push({ name: element.name, value: totalString });
-
-            break;
-
-          case "status":
-            statusString = `[status][$eq]=${element.value}`;
-            inputData.push({ name: element.name, value: statusString });
-
-            break;
-
-          case "category":
-            categoryString = `[category][$eq]=${element.value}`;
-            inputData.push({ name: element.name, value: categoryString });
-
-            break;
-
-          case "cpf":
-            cpfString = `[cpf][$eq]=${element.value}`;
-            inputData.push({ name: element.name, value: cpfString });
-
-            break;
-
-          case "email":
-            emailString = `[email][$eq]=${element.value}`;
-            inputData.push({ name: element.name, value: emailString });
-
-            break;
-
-          case "discountTypeFilter":
-            console.log(element);
-            discountTypeString = `[discountType][$eq]=${element.value}`;
-            inputData.push({ name: element.id, value: discountTypeString });
-
-            break;
-
-          case "createdAt":
-            const start = new Date(
-              element.value.split("-")[0],
-              element.value.split("-")[1] - 1,
-              element.value.split("-")[2],
-              0,
-              0,
-              1
-            );
-
-            const end = new Date(
-              element.value.split("-")[0],
-              element.value.split("-")[1] - 1,
-              element.value.split("-")[2],
-              23,
-              59,
-              0
-            );
-
-            console.log(start, end);
-
-            dateString = `[createdAt][$between]=[${start.toISOString()}, ${end.toISOString()}]`;
-            inputData.push({ name: element.name, value: dateString });
-
-            break;
-
-          default:
-            break;
-        }
+    let form = $("#filter").serializeArray();
+    form.forEach((element) => {
+      if (element.value != "") {
+        filters.push(element);
       }
     });
 
-    if (inputData.length == 1) {
-      url += `${inputData[0].value}`;
-    } else {
-      inputData.map((element, index) => {
-        index == 0
-          ? (url += `[and][0]${element.value}`)
-          : (url += `&filters[and][${index}]${element.value}`);
-      });
-    }
+    console.log(filters);
 
-    if (this.props.target == "orders") {
-      results = await axios.get(
-        `https://www.api.rangosemfila.com.br/v2/findOrders${url}`,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }
-      );
-    } else if (this.props.target == "restaurants") {
-      results = await axios.get(
-        `https://www.api.rangosemfila.com.br/v2/restaurants${url}`,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }
-      );
-    } else if (this.props.target == "users") {
-      results = await axios.get(
-        `https://www.api.rangosemfila.com.br/v2/users${url}`,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }
-      );
-    } else if (this.props.target == "coupons") {
-      let couponsUrl =
-        "?filters[and][0][validThru]" +
-        this.props.filters.split("?filters[validThru]")[1];
+    if (filters.length > 0) {
+      switch (target) {
+        case "coupons":
+          if (filters.length == 1) {
+            url += `[${filters[0].name}][${
+              filters[0].name == "name" ? "$containsi" : "$eq"
+            }]=${filters[0].value}`;
 
-      if (inputData.length == 1) {
-        couponsUrl += `&filters[and][1]${inputData[0].value}`;
-      } else {
-        inputData.map((element, index) => {
-          index == 0
-            ? (couponsUrl += `[and][1]${element.value}`)
-            : (couponsUrl += `&filters[and][${index + 1}]${element.value}`);
-        });
+            console.log(url);
+          } else {
+            url += `[${filters[0].name}][${
+              filters[0].name == "name" ? "$containsi" : "$eq"
+            }][0]=${filters[0].value}`;
+
+            for (var i = 1; i < filters.length; i++) {
+              url += `&filters[${filters[i].name}][${
+                filters[i].name == "name" ? "$containsi" : "$eq"
+              }][${i}]=${filters[i].value}`;
+            }
+          }
+
+          const couponsResponse = await services.filterCoupons(url);
+
+          results = couponsResponse;
+
+          break;
+
+        case "restaurants":
+          if (filters.length == 1) {
+            url += `[${filters[0].name}][${
+              filters[0].name == "name" ? "$containsi" : "$eq"
+            }]=${filters[0].value}`;
+
+            console.log(url);
+          } else {
+            url += `[${filters[0].name}][${
+              filters[0].name == "name" ? "$containsi" : "$eq"
+            }][0]=${filters[0].value}`;
+
+            for (var i = 1; i < filters.length; i++) {
+              url += `&filters[${filters[i].name}][${
+                filters[i].name == "name" ? "$containsi" : "$eq"
+              }][${i}]=${filters[i].value}`;
+            }
+          }
+
+          const restaurantsResponse = await services.getFilteredRestaurants(
+            url
+          );
+
+          results = restaurantsResponse;
+
+          break;
+
+        case "users":
+          if (filters.length == 1) {
+            url += `[${filters[0].name}][${
+              filters[0].name == "username" ? "$containsi" : "$eq"
+            }]=${filters[0].value}`;
+
+            console.log(url);
+          } else {
+            url += `[${filters[0].name}][${
+              filters[0].name == "username" ? "$containsi" : "$eq"
+            }][0]=${filters[0].value}`;
+
+            for (var i = 1; i < filters.length; i++) {
+              url += `&filters[${filters[i].name}][${
+                filters[i].name == "username" ? "$containsi" : "$eq"
+              }][${i}]=${filters[i].value}`;
+            }
+          }
+
+          const usersResponse = await services.getAllUsers(url);
+
+          results = usersResponse;
+
+        default:
+          break;
       }
 
-      console.log(couponsUrl);
+      console.log(url);
 
-      results = await axios.get(
-        `https://www.api.rangosemfila.com.br/v2/allCoupons/0${couponsUrl}`,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }
-      );
+      console.log(results);
+
+      callback(results);
     }
-
-    this.props.callback(results.data);
-
-    $("input").each(function (i, e) {
-      $(e).val("");
-    });
-
-    $("select").each(function (i, e) {
-      $(e).val("");
-    });
   }
-  render() {
-    return (
-      <main className="filterContainer">
-        <div className="filter">
-          <form id="filterForm" onSubmit={this.handleFilter}>
-            <input type="text" placeholder="ID" name="id" />
 
-            {this.props.target == "orders" ? (
-              <input type="text" placeholder="Cliente" name="user" />
-            ) : this.props.target == "users" ? (
-              <input type="text" placeholder="Nome" name="username" />
-            ) : this.props.target == "coupons" ? (
-              <input type="text" placeholder="Nome" name="name" />
-            ) : (
-              <input type="text" placeholder="Nome" name="name" />
-            )}
+  return (
+    <form
+      id="filter"
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleFilterAction();
+      }}
+    >
+      {getFilterContent()}
 
-            {this.props.target == "orders" ? (
-              <input type="text" placeholder="Valor" name="total" />
-            ) : null}
-
-            {this.props.target == "orders" ? (
-              <select name="status" id="status">
-                <option value="">Selecionar status</option>
-                {orderStatusList.map((status) => {
-                  return (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  );
-                })}
-              </select>
-            ) : this.props.target == "users" ? (
-              <input type="text" placeholder="Email" name="email" />
-            ) : this.props.target == "coupons" ? (
-              <select name="discountTypeFilter" id="discountType">
-                <option value="">Tipo de desconto</option>
-                <option key="percentage" value="percentage">
-                  Porcentagem
-                </option>
-                <option key="value" value="value">
-                  Valor
-                </option>
-              </select>
-            ) : (
-              <select name="category" id="category">
-                <option value="">Selecionar categoria</option>
-                {categories.map((category) => {
-                  return (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  );
-                })}
-              </select>
-            )}
-
-            {this.props.target == "users" ? (
-              <input className="cpf" type="text" placeholder="CPF" name="cpf" />
-            ) : this.props.target == "restaurants" ? (
-              <select name="status" id="status">
-                <option value="">Selecionar status</option>
-                {restaurantStatusList.map((status) => {
-                  return (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  );
-                })}
-              </select>
-            ) : this.props.target == "coupons" ? null : (
-              <input type="date" placeholder="Data" name="createdAt" />
-            )}
-
-            <button type="submit">
-              <span className="material-symbols-rounded">search</span>
-            </button>
-          </form>
-        </div>
-      </main>
-    );
-  }
+      <button type="submit">Filtrar</button>
+    </form>
+  );
 }

@@ -77,9 +77,11 @@ class Services {
 
   // USERS
 
-  async getAllUsers() {
+  async getAllUsers(filters) {
     const allUsers = await axios.get(
-      "https://www.api.rangosemfila.com.br/v2/users",
+      `https://www.api.rangosemfila.com.br/v2/users${
+        filters != undefined ? filters : null
+      }`,
       {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -184,6 +186,19 @@ class Services {
 
   // RESTAURANTS
 
+  async getFilteredRestaurants(filters) {
+    const response = await axios.get(
+      `https://www.api.rangosemfila.com.br/v2/restaurants${filters}`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    return response.data;
+  }
+
   async getRestaurants(offset) {
     try {
       const response = await axios.get(
@@ -271,6 +286,19 @@ class Services {
     );
 
     return response.data;
+  }
+
+  async filterCoupons(filters) {
+    const response = await axios.get(
+      `https://www.api.rangosemfila.com.br/v2/coupons${filters}`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    return response.data[0];
   }
 
   async newCoupon(body) {

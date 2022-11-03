@@ -75,7 +75,6 @@ export default class Restaurants extends Component {
         </div>
 
         <Filter
-          id="restaurantsPageFilter"
           target="restaurants"
           callback={this.setRestaurants}
         />

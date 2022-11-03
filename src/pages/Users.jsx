@@ -96,7 +96,7 @@ export default class Users extends Component {
                   <strong>{user.email}</strong>
                   <strong>{user.phoneNumber}</strong>
                   <strong>{user.cpf}</strong>
-                  <strong>{user.role.name}</strong>
+                  {/* <strong>{user.role.name}</strong> */}
                   <strong>{user.blocked ? "SIM" : "NÃO"}</strong>
                   <strong>{user.confirmed ? "SIM" : "NÃO"}</strong>
                   <button
