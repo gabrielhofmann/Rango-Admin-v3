@@ -107,7 +107,12 @@ export default function Filter({ target, callback }) {
           <div id="filterContent">
             <input type="number" id="userId" name="id" placeholder="ID" />
 
-            <input type="text" id="userName" name="username" placeholder="Nome" />
+            <input
+              type="text"
+              id="userName"
+              name="username"
+              placeholder="Nome"
+            />
 
             <input
               type="text"
@@ -225,6 +230,8 @@ export default function Filter({ target, callback }) {
       console.log(results);
 
       callback(results);
+
+      document.getElementById("filter").reset();
     }
   }
 

@@ -124,6 +124,7 @@ export default class PowerBi extends Component {
   };
 
   setRestaurants = (results) => {
+    console.log(results);
     this.setState({ restaurants: results });
   };
 
@@ -645,8 +646,6 @@ export default class PowerBi extends Component {
           style={{ display: "none" }}
           className="pageContainer ordersContainer"
         >
-          <Filter target="orders" callback={this.setOrders} />
-
           <Pagination target="orders" callback={this.setOrders} />
 
           <div className="orderCardsContainer">
@@ -704,8 +703,6 @@ export default class PowerBi extends Component {
           style={{ display: "none" }}
           className="pageContainer restaurantsContainer"
         >
-          <Filter target="restaurants" callback={this.setRestaurants} />
-
           <Pagination target="restaurants" callback={this.setRestaurants} />
 
           <div className="restaurantCardsContainer">
