@@ -5,6 +5,7 @@ import $ from "jquery";
 import "./OneSignal.scss";
 import Menu from "../components/Menu";
 import Select from "react-select";
+import EmojiPicker from "emoji-picker-react";
 
 const services = new Services();
 
@@ -15,6 +16,8 @@ export default class OneSignal extends Component {
     this.state = {
       selectedUser: "",
       usersOptions: [],
+      showTitleEmoji: false,
+      showMessageEmoji: false,
     };
 
     this.sendNotification = this.sendNotification.bind(this);
@@ -155,11 +158,7 @@ export default class OneSignal extends Component {
               this.sendNotification(e);
             }}
           >
-            <Form.Group>
-              <Form.Label>
-                <strong>Enviar para:</strong>
-              </Form.Label>
-
+            <Form.Group id="checkboxContainer">
               <Form.Check
                 id="one"
                 name="oneSignalRadio"
@@ -196,16 +195,69 @@ export default class OneSignal extends Component {
               }}
             ></Select>
 
-            <Form.Group>
+            <Form.Group style={{ overflow: "visible" }}>
               <Form.Label>
                 <strong>Título:</strong>
-              </Form.Label>
-              <Form.Control id="title" name="title" type="text" required />
 
-              <Form.Label>
-                <strong>Mensagem:</strong>
+                {this.state.showTitleEmoji ? (
+                  <EmojiPicker
+                    height="20rem"
+                    className="emojiPicker"
+                    onEmojiClick={(emoji) => {
+                      $("#title").val(`${$("#title")[0].value}${emoji.emoji}`);
+                    }}
+                  />
+                ) : null}
+
+                <p
+                  onClick={() => {
+                    this.setState({
+                      showTitleEmoji: !this.state.showTitleEmoji,
+                    });
+                  }}
+                >
+                  &#128512;
+                </p>
               </Form.Label>
-              <Form.Control id="message" name="message" type="text" required />
+              <Form.Control
+                id="title"
+                name="title"
+                type="text"
+                placeholder="Título incrível aqui"
+                required
+              />
+              <Form.Label style={{ overflow: "visible" }}>
+                <strong>Mensagem:</strong>
+
+                {this.state.showMessageEmoji ? (
+                  <EmojiPicker
+                    height="20rem"
+                    className="emojiPicker"
+                    onEmojiClick={(emoji) => {
+                      $("#message").val(
+                        `${$("#message")[0].value}${emoji.emoji}`
+                      );
+                    }}
+                  />
+                ) : null}
+
+                <p
+                  onClick={() => {
+                    this.setState({
+                      showMessageEmoji: !this.state.showMessageEmoji,
+                    });
+                  }}
+                >
+                  &#128512;
+                </p>
+              </Form.Label>
+              <Form.Control
+                id="message"
+                name="message"
+                type="text"
+                placeholder="Mensagem incrível aqui"
+                required
+              />
             </Form.Group>
 
             <button type="submit">Enviar</button>
