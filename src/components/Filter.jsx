@@ -102,6 +102,36 @@ export default function Filter({ target, callback }) {
           </div>
         );
 
+      case "powerBiRestaurants":
+        return (
+          <div id="filterContent">
+            <input type="number" id="restaurantId" name="id" placeholder="ID" />
+
+            <input
+              type="text"
+              id="restaurantName"
+              name="name"
+              placeholder="Nome"
+            />
+
+            <select name="category" id="category">
+              <option value="">Categoria</option>
+
+              {categories.map((category) => {
+                return <option value={category}>{category}</option>;
+              })}
+            </select>
+
+            <select name="status" id="status">
+              <option value="">Status</option>
+
+              {restaurantStatus.map((status) => {
+                return <option value={status}>{status}</option>;
+              })}
+            </select>
+          </div>
+        );
+
       case "users":
         return (
           <div id="filterContent">
@@ -142,7 +172,7 @@ export default function Filter({ target, callback }) {
       }
     });
 
-    console.log(filters);
+    console.log(form);
 
     if (filters.length > 0) {
       switch (target) {
@@ -151,8 +181,6 @@ export default function Filter({ target, callback }) {
             url += `[${filters[0].name}][${
               filters[0].name == "name" ? "$containsi" : "$eq"
             }]=${filters[0].value}`;
-
-            console.log(url);
           } else {
             url += `[${filters[0].name}][${
               filters[0].name == "name" ? "$containsi" : "$eq"
@@ -171,13 +199,20 @@ export default function Filter({ target, callback }) {
 
           break;
 
-        case "restaurants":
+        case "powerBiRestaurants":
+          let form = $("#powerBiRestaurantsFilter").serializeArray();
+          form.forEach((element) => {
+            if (element.value != "") {
+              filters.push(element);
+            }
+          });
+
           if (filters.length == 1) {
             url += `[${filters[0].name}][${
               filters[0].name == "name" ? "$containsi" : "$eq"
             }]=${filters[0].value}`;
 
-            console.log(url);
+            console.log("aqui");
           } else {
             url += `[${filters[0].name}][${
               filters[0].name == "name" ? "$containsi" : "$eq"
@@ -189,6 +224,8 @@ export default function Filter({ target, callback }) {
               }][${i}]=${filters[i].value}`;
             }
           }
+
+          console.log(url);
 
           const restaurantsResponse = await services.getFilteredRestaurants(
             url
@@ -203,8 +240,6 @@ export default function Filter({ target, callback }) {
             url += `[${filters[0].name}][${
               filters[0].name == "username" ? "$containsi" : "$eq"
             }]=${filters[0].value}`;
-
-            console.log(url);
           } else {
             url += `[${filters[0].name}][${
               filters[0].name == "username" ? "$containsi" : "$eq"
@@ -225,10 +260,6 @@ export default function Filter({ target, callback }) {
           break;
       }
 
-      console.log(url);
-
-      console.log(results);
-
       callback(results);
 
       document.getElementById("filter").reset();
@@ -240,6 +271,7 @@ export default function Filter({ target, callback }) {
       id="filter"
       onSubmit={(e) => {
         e.preventDefault();
+        console.log("teste");
         handleFilterAction();
       }}
     >
