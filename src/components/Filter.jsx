@@ -3,6 +3,7 @@ import "./Filter.scss";
 
 import $ from "jquery";
 import { Services } from "../services";
+import axios from "axios";
 
 const services = new Services();
 
@@ -132,6 +133,34 @@ export default function Filter({ target, callback }) {
           </div>
         );
 
+      case "powerBiOrders":
+        return (
+          <div id="filterContent">
+            <input type="number" id="orderId" name="id" placeholder="ID" />
+
+            <input
+              type="text"
+              id="clientName"
+              name="client"
+              placeholder="Cliente"
+            />
+
+            <input
+              type="text"
+              id="restaurantName"
+              name="restaurant"
+              placeholder="Restaurante"
+            />
+
+            <input
+              type="text"
+              id="orderValue"
+              name="subtotal"
+              placeholder="Valor"
+            />
+          </div>
+        );
+
       case "users":
         return (
           <div id="filterContent">
@@ -211,8 +240,6 @@ export default function Filter({ target, callback }) {
             url += `[${filters[0].name}][${
               filters[0].name == "name" ? "$containsi" : "$eq"
             }]=${filters[0].value}`;
-
-            console.log("aqui");
           } else {
             url += `[${filters[0].name}][${
               filters[0].name == "name" ? "$containsi" : "$eq"
@@ -232,6 +259,78 @@ export default function Filter({ target, callback }) {
           );
 
           results = restaurantsResponse;
+
+          break;
+
+        case "powerBiOrders":
+          const ordersForm = $("#powerBiRestaurantsFilter").serializeArray();
+          ordersForm.forEach((element) => {
+            if (element.value != "") {
+              filters.push(element);
+            }
+          });
+
+          if (filters.length == 1) {
+            if (filters[0].name == "client") {
+              url += `[user][username][$containsi]=${filters[0].value}`;
+            } else if (filters[0].name == "restaurant") {
+              url += `[restaurant][name][$containsi]=${filters[0].value}`;
+            } else if (filters[0].name == "subtotal") {
+              url += `&filters[payment][subtotal][$eq]=${filters[0].value}`;
+            } else {
+              url += `[${filters[0].name}][${
+                filters[0].name == "name" ? "$containsi" : "$eq"
+              }]=${filters[0].value}`;
+            }
+          } else {
+            if (filters[0].name == "client") {
+              url += `[user][username][$containsi][0]=${filters[0].value}`;
+            } else if (filters[0].name == "restaurant") {
+              url += `[restaurant][name][$containsi][0]=${filters[0].value}`;
+            } else if (filters[0].name == "subtotal") {
+              url += `&filters[payment][subtotal][$eq][0]=${filters[0].value}`;
+            } else {
+              url += `[${filters[0].name}][${
+                filters[0].name == "name" ? "$containsi" : "$eq"
+              }][0]=${filters[0].value}`;
+            }
+
+            for (var i = 1; i < filters.length; i++) {
+              if (filters[i].name == "client") {
+                url += `&filters[user][username][$containsi][${i}]=${filters[i].value}`;
+              } else if (filters[i].name == "restaurant") {
+                url += `&filters[restaurant][name][$containsi][${i}]=${filters[i].value}`;
+              } else if (filters[i].name == "subtotal") {
+                url += `&filters[payment][subtotal][$eq][${i}]=${filters[i].value}`;
+              } else {
+                url += `&filters[${filters[i].name}][${
+                  filters[i].name == "name" ? "$containsi" : "$eq"
+                }][${i}]=${filters[i].value}`;
+              }
+            }
+          }
+
+          console.log(url);
+
+          const ordersResponse = await axios.get(
+            `https://api.rangosemfila.com.br/v2/orders${url}&populate=%2A`,
+            {
+              headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+              },
+            }
+          );
+
+          results = ordersResponse.data.data.map((order) => {
+            let obj = order.attributes;
+            obj.id = order.id;
+            obj.user = obj.user.data.attributes;
+            obj.restaurant = obj.restaurant.data.attributes;
+
+            return obj;
+          });
+
+          console.log(results);
 
           break;
 

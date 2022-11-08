@@ -648,7 +648,7 @@ export default class PowerBi extends Component {
         >
           <Pagination target="orders" callback={this.setOrders} />
 
-          {/* <Filter target="orders" /> */}
+          <Filter id="powerBiOrdersFilter" target="powerBiOrders" callback={this.setOrders} />
 
           <div className="orderCardsContainer">
             <strong style={{ marginLeft: "2.7rem" }}>ID</strong>
