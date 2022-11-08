@@ -76,7 +76,17 @@ export default class Users extends Component {
         <Pagination target="users" callback={this.setUsers} />
 
         <section className="pageContainer usersContainer">
-          <Filter target="users" callback={this.setUsers} />
+          <div className="usersFilter">
+            <p
+              onClick={() => {
+                window.location.reload();
+              }}
+            >
+              Limpar
+            </p>
+
+            <Filter target="users" callback={this.setUsers} />
+          </div>
 
           <div className="userCardsContainer">
             <strong>ID</strong>

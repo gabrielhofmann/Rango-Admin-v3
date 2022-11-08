@@ -74,10 +74,17 @@ export default class Restaurants extends Component {
           </div>
         </div>
 
-        <Filter
-          target="restaurants"
-          callback={this.setRestaurants}
-        />
+        <div className="restaurantsFilter">
+          <p
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            Limpar
+          </p>
+
+          <Filter target="powerBiRestaurants" callback={this.setRestaurants} />
+        </div>
 
         <section className="pageContainer restaurantsContainer">
           <ul>

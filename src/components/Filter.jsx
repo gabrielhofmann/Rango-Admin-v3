@@ -360,8 +360,7 @@ export default function Filter({ target, callback }) {
       }
 
       callback(results);
-
-      document.getElementById("filter").reset();
+      $(".pagination").hide();
     }
   }
 

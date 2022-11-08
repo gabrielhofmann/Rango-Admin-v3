@@ -648,7 +648,26 @@ export default class PowerBi extends Component {
         >
           <Pagination target="orders" callback={this.setOrders} />
 
-          <Filter id="powerBiOrdersFilter" target="powerBiOrders" callback={this.setOrders} />
+          <div className="ordersFilter">
+            <p
+              onClick={async () => {
+                const orders = await services.getOrders(0);
+
+                document.getElementById("filter").reset();
+                $(".pagination").show();
+
+                this.setState({ orders: orders.orders });
+              }}
+            >
+              Limpar
+            </p>
+
+            <Filter
+              id="powerBiOrdersFilter"
+              target="powerBiOrders"
+              callback={this.setOrders}
+            />
+          </div>
 
           <div className="orderCardsContainer">
             <strong style={{ marginLeft: "2.7rem" }}>ID</strong>
@@ -707,11 +726,26 @@ export default class PowerBi extends Component {
         >
           <Pagination target="restaurants" callback={this.setRestaurants} />
 
-          <Filter
-            id="powerBiRestaurants"
-            target="powerBiRestaurants"
-            callback={this.setRestaurants}
-          />
+          <div className="ordersFilter">
+            <p
+              onClick={async () => {
+                const orders = await services.getOrders(0);
+
+                document.getElementById("filter").reset();
+                $(".pagination").show();
+
+                this.setState({ orders: orders.orders });
+              }}
+            >
+              Limpar
+            </p>
+
+            <Filter
+              id="powerBiRestaurants"
+              target="powerBiRestaurants"
+              callback={this.setRestaurants}
+            />
+          </div>
 
           <div className="restaurantCardsContainer">
             <strong></strong>

@@ -1,5 +1,26 @@
 @use "../base.scss";
 
+.usersFilter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  p {
+    box-shadow: base.$shadow;
+    padding: 0.5rem 2rem;
+    color: base.$color-orange;
+    font-size: 16px;
+    border-radius: 0.2rem;
+    margin: 0;
+    cursor: pointer;
+    margin-top: 5rem;
+  }
+
+  #filter {
+    margin: 7rem 2rem 2rem 2rem;
+  }
+}
+
 .users {
   .usersContainer {
     padding-bottom: 5rem;

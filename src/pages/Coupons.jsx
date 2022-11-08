@@ -258,12 +258,6 @@ export default class Coupons extends Component {
           </div>
         </div>
 
-        <Filter
-          target="coupons"
-          callback={this.setCoupons}
-          filters={this.state.filters}
-        />
-
         <nav className="couponsNav">
           <ul>
             <li
@@ -309,6 +303,22 @@ export default class Coupons extends Component {
             </li>
           </ul>
         </nav>
+
+        <div className="couponsFilter">
+          <p
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            Limpar
+          </p>
+
+          <Filter
+            target="coupons"
+            callback={this.setCoupons}
+            filters={this.state.filters}
+          />
+        </div>
 
         <section className="availableCoupons">
           <div className="couponsNameplates">

@@ -392,9 +392,25 @@
 
 .ordersContainer {
   padding-bottom: 5rem;
+}
+
+.ordersFilter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  p {
+    box-shadow: base.$shadow;
+    padding: 0.5rem 2rem;
+    color: base.$color-orange;
+    font-size: 16px;
+    border-radius: 0.2rem;
+    margin: 0;
+    cursor: pointer;
+  }
 
   #filter {
-    margin: 2rem auto;
+    margin: 2rem;
   }
 }
 
