@@ -201,8 +201,6 @@ export default function Filter({ target, callback }) {
       }
     });
 
-    console.log(form);
-
     if (filters.length > 0) {
       switch (target) {
         case "coupons":
@@ -229,7 +227,44 @@ export default function Filter({ target, callback }) {
           break;
 
         case "powerBiRestaurants":
-          let form = $("#powerBiRestaurantsFilter").serializeArray();
+          let powerBiRestaurantsForm = $(
+            "#powerBiRestaurants"
+          ).serializeArray();
+          powerBiRestaurantsForm.forEach((element) => {
+            if (element.value != "") {
+              filters.push(element);
+            }
+          });
+
+          if (filters.length == 1) {
+            url += `[${filters[0].name}][${
+              filters[0].name == "name" ? "$containsi" : "$eq"
+            }]=${filters[0].value}`;
+          } else {
+            url += `[${filters[0].name}][${
+              filters[0].name == "name" ? "$containsi" : "$eq"
+            }][0]=${filters[0].value}`;
+
+            for (var i = 1; i < filters.length; i++) {
+              url += `&filters[${filters[i].name}][${
+                filters[i].name == "name" ? "$containsi" : "$eq"
+              }][${i}]=${filters[i].value}`;
+            }
+          }
+
+          console.log(url);
+
+          const powerBiRestaurantsResponse =
+            await services.getFilteredRestaurants(url);
+
+          results = powerBiRestaurantsResponse;
+
+          console.log(results);
+
+          break;
+
+        case "restaurants":
+          let form = $("#restaurantsFilter").serializeArray();
           form.forEach((element) => {
             if (element.value != "") {
               filters.push(element);
@@ -260,10 +295,12 @@ export default function Filter({ target, callback }) {
 
           results = restaurantsResponse;
 
+          console.log(results);
+
           break;
 
         case "powerBiOrders":
-          const ordersForm = $("#powerBiRestaurantsFilter").serializeArray();
+          const ordersForm = $("#powerBiOrdersFilter").serializeArray();
           ordersForm.forEach((element) => {
             if (element.value != "") {
               filters.push(element);
@@ -369,7 +406,6 @@ export default function Filter({ target, callback }) {
       id="filter"
       onSubmit={(e) => {
         e.preventDefault();
-        console.log("teste");
         handleFilterAction();
       }}
     >

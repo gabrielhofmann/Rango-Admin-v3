@@ -83,7 +83,11 @@ export default class Restaurants extends Component {
             Limpar
           </p>
 
-          <Filter target="powerBiRestaurants" callback={this.setRestaurants} />
+          <Filter
+            id="powerBiRestaurants"
+            target="powerBiRestaurants"
+            callback={this.setRestaurants}
+          />
         </div>
 
         <section className="pageContainer restaurantsContainer">

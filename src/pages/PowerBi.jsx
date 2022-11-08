@@ -663,8 +663,8 @@ export default class PowerBi extends Component {
             </p>
 
             <Filter
-              id="powerBiOrdersFilter"
               target="powerBiOrders"
+              id="powerBiOrders"
               callback={this.setOrders}
             />
           </div>
@@ -741,8 +741,8 @@ export default class PowerBi extends Component {
             </p>
 
             <Filter
-              id="powerBiRestaurants"
               target="powerBiRestaurants"
+              id="powerBiRestaurants"
               callback={this.setRestaurants}
             />
           </div>
