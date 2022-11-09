@@ -194,7 +194,7 @@ export default function Filter({ target, callback }) {
     let filters = new Array();
     let url = "?filters";
 
-    let form = $("#filter").serializeArray();
+    let form = $(".filter").serializeArray();
     form.forEach((element) => {
       if (element.value != "") {
         filters.push(element);
@@ -403,7 +403,7 @@ export default function Filter({ target, callback }) {
 
   return (
     <form
-      id="filter"
+      className="filter"
       onSubmit={(e) => {
         e.preventDefault();
         handleFilterAction();

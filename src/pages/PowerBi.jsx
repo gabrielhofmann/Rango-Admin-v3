@@ -653,7 +653,7 @@ export default class PowerBi extends Component {
               onClick={async () => {
                 const orders = await services.getOrders(0);
 
-                document.getElementById("filter").reset();
+                $(".filter")[0].reset();
                 $(".pagination").show();
 
                 this.setState({ orders: orders.orders });
@@ -729,12 +729,12 @@ export default class PowerBi extends Component {
           <div className="ordersFilter">
             <p
               onClick={async () => {
-                const orders = await services.getOrders(0);
+                const restaurants = await services.getRestaurants(0);
 
-                document.getElementById("filter").reset();
+                $(".filter")[1].reset();
                 $(".pagination").show();
 
-                this.setState({ orders: orders.orders });
+                this.setState({ restaurants: restaurants.restaurants });
               }}
             >
               Limpar
