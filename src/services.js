@@ -273,6 +273,20 @@ class Services {
 
   // COUPONS
 
+  async getCouponsBi(start, end) {
+    const response = await axios.get(
+      `https://www.api.rangosemfila.com.br/v2/getCouponsBi/${
+        start != undefined ? start + "/" : null
+      }${end ?? null}`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    console.log(response);
+  }
+
   async getCoupons(offset, filters) {
     const response = await axios.get(
       `https://www.api.rangosemfila.com.br/v2/allCoupons/${offset}${

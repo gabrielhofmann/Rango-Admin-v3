@@ -258,6 +258,94 @@ export default class Coupons extends Component {
           </div>
         </div>
 
+        <section className="mt-40 mx-32">
+          <div className="flex items-center justify-between w-full">
+            <h1 style={{ fontSize: "2.5rem" }} className="pl-44">
+              <span style={{ color: "#f18a33" }}>{">"}</span> Coupons BI
+            </h1>
+
+            <form
+              className="p-10"
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <input
+                className="w-36 p-3 mx-3 rounded shadow-md h-14"
+                type="date"
+              />
+
+              <input
+                className="w-36 p-3 mx-3 rounded shadow-md h-14"
+                type="date"
+              />
+
+              <button
+                className="w-36 text-white h-14 rounded shadow-md ml-3"
+                style={{ backgroundColor: "#f18a33" }}
+                type="submit"
+              >
+                Filtrar
+              </button>
+            </form>
+          </div>
+
+          <hr className="w-full border-b-2 mx-16" />
+
+          <div className="flex items-center gap-5 justify-between p-6 my-10">
+            <div
+              style={{ height: "35rem" }}
+              className="w-1/3 shadow-md rounded"
+            >
+              <h2 className="font-lg mx-auto w-fit mt-5">Total de Cupons</h2>
+
+              <div className="h-4/5 -mt-5 px-20 flex flex-col items-center justify-center">
+                <div className="w-full">
+                  <p
+                    style={{ fontSize: "1.5rem" }}
+                    className="w-full flex items-center justify-between py-3 border-b-2"
+                  >
+                    <span>Cupons Utilizados:</span>
+                    <span>XXX</span>
+                  </p>
+
+                  <p
+                    style={{ fontSize: "1.5rem" }}
+                    className="w-full flex items-center justify-between py-3"
+                  >
+                    <span>Valor:</span>
+                    <span>R$ XXX</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{ height: "35rem" }}
+              className="w-1/3 shadow-md rounded"
+            >
+              <h2 className="font-lg mx-auto w-fit mt-5">
+                Cupons por Restaurante
+              </h2>
+
+              <div className="h-4/5 mt-3 px-10"></div>
+            </div>
+
+            <div
+              style={{ height: "35rem" }}
+              className="w-1/3 shadow-md rounded"
+            >
+              <h2 className="font-lg mx-auto w-fit mt-5">
+                Informações sobre Cupons
+              </h2>
+
+              <div className="h-4/5 mt-3 px-10"></div>
+            </div>
+          </div>
+
+          <hr className="w-full border-b-2 mx-16" />
+        </section>
+
         <nav className="couponsNav">
           <ul>
             <li
