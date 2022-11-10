@@ -16,6 +16,8 @@ export default class Coupons extends Component {
     super(props);
 
     this.state = {
+      couponsBi: {},
+
       validCoupons: [],
       expiredCoupons: [],
 
@@ -25,6 +27,9 @@ export default class Coupons extends Component {
       restaurantsOptions: [],
       restaurants: [],
       showPagination: true,
+
+      start: "",
+      end: "",
     };
 
     this.handleNewCoupon = this.handleNewCoupon.bind(this);
@@ -49,6 +54,8 @@ export default class Coupons extends Component {
 
       const validCoupons = await services.getCoupons(0, filtersValid);
       const expiredCoupons = await services.getCoupons(0, filtersExpired);
+
+      // const couponsBi = await services.getCouponsBi();
 
       console.log(validCoupons);
 
@@ -164,10 +171,19 @@ export default class Coupons extends Component {
         filters: filtersValid,
         filtersValid: filtersValid,
         filtersExpired: filtersExpired,
+        // couponsBi: couponsBi,
       });
 
       $(".loading").hide();
     }
+  }
+
+  async handleBiFilter() {
+    const [start, end] = [this.state.start, this.state.end];
+
+    const response = await services.getCouponsBi(start, end);
+
+    console.log(response);
   }
 
   handleNavigation(page, element, selector) {
@@ -273,11 +289,23 @@ export default class Coupons extends Component {
               <input
                 className="w-36 p-3 mx-3 rounded shadow-md h-14"
                 type="date"
+                onChange={(e) => {
+                  this.setState({
+                    start: e.target.value,
+                  });
+                }}
+                required
               />
 
               <input
                 className="w-36 p-3 mx-3 rounded shadow-md h-14"
                 type="date"
+                onChange={(e) => {
+                  this.setState({
+                    end: e.target.value,
+                  });
+                }}
+                required
               />
 
               <button

@@ -284,7 +284,8 @@ class Services {
         },
       }
     );
-    console.log(response);
+
+    return response;
   }
 
   async getCoupons(offset, filters) {
