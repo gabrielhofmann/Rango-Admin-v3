@@ -6,6 +6,12 @@
   align-items: center;
 }
 
+#timeIntervalFilter {
+  :focus {
+    outline-color: base.$color-orange;
+  }
+}
+
 .noCardDisplay {
   display: flex;
   align-items: center;
@@ -106,7 +112,7 @@
     min-height: 8rem;
     width: 30%;
     min-width: 24rem;
-    padding: 1rem 2rem;
+    padding: 1rem 3rem;
     margin: 1rem;
 
     border-radius: 1rem;
@@ -117,8 +123,31 @@
 
     transition: all ease 0.5s;
 
+    ul {
+      width: 85%;
+      margin: auto !important;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+
+      span {
+        font-weight: bold;
+      }
+
+      li {
+        min-width: 7rem;
+        margin: auto;
+      }
+    }
+
     h1 {
       color: base.$color-orange;
+      border-bottom: 1px solid grey;
+      padding-bottom: 0.5rem;
+      width: 90%;
+      text-align: center;
     }
 
     p {
@@ -139,8 +168,12 @@
 
       strong {
         margin-bottom: 1rem;
-        color: base.$color-orange;
+        color: black;
         font-size: 20px;
+
+        span {
+          color: base.$color-orange;
+        }
       }
 
       .resultsRow {
@@ -149,9 +182,12 @@
         justify-content: space-between;
         font-size: 20px;
 
-        p:last-child {
-          color: base.$color-green;
+        p {
           font-weight: bold;
+        }
+
+        p:last-child {
+          color: base.$color-orange !important;
         }
       }
     }
@@ -242,6 +278,10 @@
     h1 {
       color: base.$color-orange;
       text-align: center;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid grey;
+      width: 90%;
     }
 
     input {
@@ -257,7 +297,7 @@
 
     ul {
       width: 90%;
-      height: 22.5rem;
+      height: 27rem;
       margin: 0;
       padding: 0;
 

@@ -199,6 +199,7 @@ export default class PowerBi extends Component {
 
     this.setState({
       filteredData: data.data,
+      numberOfOrders: data.data.totalOrders.month,
       powerBiData: {
         ...this.state.powerBiData,
         mau: data.data.mau,
@@ -423,7 +424,7 @@ export default class PowerBi extends Component {
           </ul>
         </nav>
 
-        <div id="timeIntervalFilter" className="mx-auto mt-14 w-1/4">
+        <div id="timeIntervalFilter" className="mx-auto mt-14">
           <form
             id="powerBiTimeFilter"
             onSubmit={(e) => {
@@ -467,7 +468,12 @@ export default class PowerBi extends Component {
               className="h-14 w-32 px-3 rounded shadow-md cursor-pointer hover:shadow-lg"
             />
 
-            <button type="submit" className="h-14 w-24 rounded shadow-md hover:shadow-lg bg-rango-orange text-white">Filtrar</button>
+            <button
+              type="submit"
+              className="h-14 w-24 rounded shadow-md hover:shadow-lg bg-rango-orange text-white"
+            >
+              Filtrar
+            </button>
           </form>
         </div>
 
@@ -500,7 +506,8 @@ export default class PowerBi extends Component {
 
               <div className="filteredDataContainer">
                 <strong>
-                  Novos Usuários entre {this.state.start} e {this.state.end}
+                  Novos Usuários entre <span>{this.state.start}</span> e{" "}
+                  <span>{this.state.end}</span>
                 </strong>
 
                 <div className="resultsRow">
@@ -539,7 +546,8 @@ export default class PowerBi extends Component {
 
               <div className="filteredDataContainer">
                 <strong>
-                  Pedidos entre {this.state.start} e {this.state.end}
+                  Pedidos entre <span>{this.state.start}</span> e{" "}
+                  <span>{this.state.end}</span>
                 </strong>
 
                 <div className="resultsRow">
@@ -577,7 +585,8 @@ export default class PowerBi extends Component {
 
               <div className="filteredDataContainer">
                 <strong>
-                  Receita entre {this.state.start} e {this.state.end}
+                  Receita entre <span>{this.state.start}</span> e{" "}
+                  <span>{this.state.end}</span>
                 </strong>
 
                 <div className="resultsRow">
