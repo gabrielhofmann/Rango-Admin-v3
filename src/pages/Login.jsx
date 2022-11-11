@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Spinner } from "react-bootstrap";
+import { Button, FloatingLabel, Form, Spinner } from "react-bootstrap";
 import { Services } from "../services";
 import $ from "jquery";
 
@@ -24,53 +24,65 @@ export default function Login() {
     if (login.message == "200") {
       sessionStorage.setItem("token", login.jwt);
 
-      $(".loginInput").each(function (index, element) {
-        $(element).css("border", "3px solid green");
-      });
-
       window.location = "/#/powerBi";
-    } else {
-      $(".loginInput").each(function (index, element) {
-        $(element).css("border", "3px solid red");
-      });
     }
-
     $(".loading").hide();
   }
 
   return (
-    <main className="login">
-      <img src={logo} alt="Logo" />
+    <main className="w-screen h-screen flex flex-col items-center justify-center">
+      <Form
+        style={{
+          width: "50rem",
+        }}
+        onSubmit={handleLogin}
+        className="rounded shadow-lg m-auto flex flex-col items-center p-5"
+      >
+        <img src={logo} alt="Logo" className="w-52 mt-5" />
 
-      <Form onSubmit={handleLogin} className="loginForm">
-        <Form.Group>
-          <Form.Label htmlFor="loginEmail">Email</Form.Label>
+        <hr className="w-3/5 border-b-2 border-grey-400 my-10" />
+
+        <FloatingLabel
+          label="Usuário"
+          className="w-1/2 h-20 p-1 focus:shadow-black"
+        >
           <Form.Control
-            className="loginInput"
-            type="email"
-            placeholder="parana@parana.com"
-            name="loginEmail"
+            className="shadow-md border-none"
+            type="text"
+            placeholder="Login"
             onChange={(e) => {
               setIdentifier(e.target.value);
             }}
+            required
           />
+        </FloatingLabel>
 
-          <Form.Label htmlFor="loginPassword">Senha</Form.Label>
+        <FloatingLabel
+          label="Senha"
+          className="w-1/2 h-20 p-1 focus:shadow-black"
+        >
           <Form.Control
-            className="loginInput"
+            className="shadow-md border-none"
             type="password"
-            placeholder="parana"
-            name="loginPassword"
+            placeholder="Password"
             onChange={(e) => {
               setPassword(e.target.value);
             }}
+            required
           />
+        </FloatingLabel>
 
-          <Button type="submit">Entrar</Button>
-        </Form.Group>
+        <a className="text-lg text-rango-orange my-4 hover:text-rango-orange" href="/#/register">
+          Criar Conta
+        </a>
+
+        <Button
+          type="submit"
+          className="w-1/2 h-14 mb-5 text-white bg-rango-orange border-none shadow-md hover:bg-rango-orange hover:shadow-lg"
+        >
+          Entrar
+        </Button>
       </Form>
-
-      <a href="/#/register">Criar conta</a>
 
       <div className="loading">
         <Spinner className="spinner" animation="border" />
