@@ -19,6 +19,7 @@ export default class PowerBi extends Component {
 
     this.state = {
       powerBiData: {
+        mau: 0,
         newUsers: {
           today: 0,
           week: 0,
@@ -67,14 +68,11 @@ export default class PowerBi extends Component {
   async componentDidMount() {
     sessionStorage.setItem("isMenuActive", false);
     const token = sessionStorage.getItem("token");
-    $(".loading").show();
 
     if (!token) {
       $(".loading").hide();
       $(".powerBi").html("Not Authorized!!");
     } else {
-      $(".loading").show();
-
       const data = await services.getPowerBiData();
       const users = await services.getUsers(0);
       const orders = await services.getOrders(0);
@@ -425,7 +423,7 @@ export default class PowerBi extends Component {
           </ul>
         </nav>
 
-        <div id="timeIntervalFilter">
+        <div id="timeIntervalFilter" className="mx-auto mt-14 w-1/4">
           <form
             id="powerBiTimeFilter"
             onSubmit={(e) => {
@@ -435,12 +433,14 @@ export default class PowerBi extends Component {
             onChange={() => {
               $("#clear").show();
             }}
+            className="flex items-center justify-center gap-5 p-5"
           >
             <button
               onClick={() => {
                 window.location.reload();
               }}
               id="clear"
+              className="h-14 w-24 rounded shadow-md hover:shadow-lg text-rango-orange bg-white"
             >
               Limpar
             </button>
@@ -453,6 +453,7 @@ export default class PowerBi extends Component {
               }}
               type="date"
               name="start"
+              className="h-14 w-32 px-3 rounded shadow-md cursor-pointer hover:shadow-lg"
             />
 
             <input
@@ -463,9 +464,10 @@ export default class PowerBi extends Component {
               }}
               type="date"
               name="end"
+              className="h-14 w-32 px-3 rounded shadow-md cursor-pointer hover:shadow-lg"
             />
 
-            <button type="submit">Filtrar</button>
+            <button type="submit" className="h-14 w-24 rounded shadow-md hover:shadow-lg bg-rango-orange text-white">Filtrar</button>
           </form>
         </div>
 
@@ -590,8 +592,6 @@ export default class PowerBi extends Component {
             <div className="bigCard">
               <h1>Pedidos por restaurante</h1>
 
-              <input type="text" placeholder="Buscar" />
-
               <ul>
                 {this.state.powerBiData.ordersPerRestaurant.map((element) => {
                   return (
@@ -607,8 +607,6 @@ export default class PowerBi extends Component {
             <div className="bigCard">
               <h1>Usuários por restaurante</h1>
 
-              <input type="text" placeholder="Buscar" />
-
               <ul>
                 {this.state.powerBiData.usersPerRestaurant.map((element) => {
                   return (
@@ -623,8 +621,6 @@ export default class PowerBi extends Component {
 
             <div className="bigCard">
               <h1>Tempo médio de espera por restaurante</h1>
-
-              <input type="text" placeholder="Buscar" />
 
               <ul>
                 {this.state.powerBiData.deliveryTimePerRestaurant.map(

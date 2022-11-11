@@ -19,6 +19,7 @@ export default class Mailing extends Component {
       usersOptions: [],
       editorContent: "",
       selectedUsers: [],
+      confirmationMessage: "",
     };
 
     this.handleMailing = this.handleMailing.bind(this);
@@ -27,7 +28,6 @@ export default class Mailing extends Component {
   async componentDidMount() {
     sessionStorage.setItem("isMenuActive", false);
     const token = sessionStorage.getItem("token");
-    $(".loading").show();
 
     if (!token) {
       $(".loading").hide();
@@ -400,13 +400,33 @@ export default class Mailing extends Component {
 
     $(".loading").hide();
 
-    // window.location.reload();
+    document.getElementById("mailingForm").reset();
+    $(window).scrollTop(0);
+    $("#confirmationAlert").removeClass("opacity-0");
+
+    this.setState({
+      confirmationMessage: response.message,
+      editorContent: "",
+    });
+
+    setTimeout(() => {
+      $("#confirmationAlert").addClass("opacity-0");
+    }, 3000);
   }
 
   render() {
     return (
       <main className="mailing">
         <Menu />
+
+        <div
+          id="confirmationAlert"
+          className="flex items-center justify-center px-10 h-16 background-white rounded shadow-md absolute top-32 right-32 transition-opacity ease-in duration-500 opacity-0"
+        >
+          <p className="font-lg">
+            {this.state.confirmationMessage ?? "Email enviado!"}
+          </p>
+        </div>
 
         <div className="loading">
           <Spinner className="spinner" animation="border" />
