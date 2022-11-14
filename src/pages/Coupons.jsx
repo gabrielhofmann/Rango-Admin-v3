@@ -377,7 +377,7 @@ export default class Coupons extends Component {
               <ul className="p-4 mt-3">
                 {this.state.couponsBi.couponsPerRestaurant.map((element) => {
                   return (
-                    <li className="flex items-center justify-between">
+                    <li className="flex items-center justify-between font-bold">
                       <span className="w-1/3 text-lg border-b-2 py-2 text-start">
                         {element.restaurant}
                       </span>
@@ -406,7 +406,7 @@ export default class Coupons extends Component {
               <ul className="p-4 mt-3">
                 {this.state.couponsBi.couponsData.map((element) => {
                   return (
-                    <li className="flex items-center justify-between">
+                    <li className="flex items-center justify-between font-bold">
                       <span className="w-1/3 text-lg border-b-2 py-2 text-start">
                         {element.coupon}
                       </span>
