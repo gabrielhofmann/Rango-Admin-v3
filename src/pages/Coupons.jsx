@@ -38,6 +38,7 @@ export default class Coupons extends Component {
     this.handleNewCoupon = this.handleNewCoupon.bind(this);
     this.handleNavigation = this.handleNavigation.bind(this);
     this.setCoupons = this.setCoupons.bind(this);
+    this.handleTimeFilter = this.handleTimeFilter.bind(this);
   }
 
   async componentDidMount() {
@@ -254,6 +255,32 @@ export default class Coupons extends Component {
     window.location.reload();
   }
 
+  async handleTimeFilter() {
+    const response = await services.getCouponsBi(
+      this.state.start,
+      this.state.end
+    );
+
+    response.totalCouponsValue = response.totalCouponsValue.toFixed(2);
+    response.couponsPerRestaurant.map((element) => {
+      element.couponsValue = element.couponsValue.toFixed(2);
+    });
+    response.couponsData.map((element) => {
+      element.totalValue = element.totalValue.toFixed(2);
+    });
+
+    response.couponsPerRestaurant.sort(
+      (a, b) => parseFloat(b.coupons) - parseFloat(a.coupons)
+    );
+    response.couponsData.sort(
+      (a, b) => parseFloat(b.totalUses) - parseFloat(a.totalUses)
+    );
+
+    this.setState({
+      couponsBi: response,
+    });
+  }
+
   setCoupons = (results) => {
     this.setState({
       validCoupons: results,
@@ -300,10 +327,20 @@ export default class Coupons extends Component {
               className="p-10"
               onSubmit={(e) => {
                 e.preventDefault();
+                this.handleTimeFilter();
               }}
             >
+              <button
+                className="bg-white rounded px-4 py-2 mr-2 shadow-md text-rango-orange"
+                onClick={() => {
+                  window.location.reload();
+                }}
+              >
+                Limpar
+              </button>
+
               <input
-                className="w-36 p-3 mx-3 rounded shadow-md h-14"
+                className="w-36 p-3 mx-3 rounded shadow-md h-14 cursor-pointer"
                 type="date"
                 onChange={(e) => {
                   this.setState({
@@ -314,7 +351,7 @@ export default class Coupons extends Component {
               />
 
               <input
-                className="w-36 p-3 mx-3 rounded shadow-md h-14"
+                className="w-36 p-3 mx-3 rounded shadow-md h-14 cursor-pointer"
                 type="date"
                 onChange={(e) => {
                   this.setState({

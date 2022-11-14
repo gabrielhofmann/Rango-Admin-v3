@@ -274,14 +274,19 @@ class Services {
   // COUPONS
 
   async getCouponsBi(start, end) {
-    const response = await axios.get(
-      `https://www.api.rangosemfila.com.br/v2/getCouponsBi`,
-      {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      }
-    );
+    let url;
+
+    if (start == null) {
+      url = `https://www.api.rangosemfila.com.br/v2/getCouponsBi`;
+    } else {
+      url = `https://www.api.rangosemfila.com.br/v2/getCouponsBi/${start}/${end}`;
+    }
+
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
 
     return response.data;
   }
