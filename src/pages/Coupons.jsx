@@ -68,6 +68,13 @@ export default class Coupons extends Component {
         element.totalValue = element.totalValue.toFixed(2);
       });
 
+      couponsBi.couponsPerRestaurant.sort(
+        (a, b) => parseFloat(b.coupons) - parseFloat(a.coupons)
+      );
+      couponsBi.couponsData.sort(
+        (a, b) => parseFloat(b.totalUses) - parseFloat(a.totalUses)
+      );
+
       $("#availableNav").addClass("active");
       sessionStorage.setItem("coupons", ".availableCoupons");
 
