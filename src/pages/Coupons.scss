@@ -43,7 +43,6 @@
   margin: auto;
   margin-top: 3rem;
 
-
   ul {
     display: flex;
     align-items: center;
@@ -231,4 +230,8 @@
   -webkit-overflow-scrolling: none !important;
   overflow: visible !important;
   margin-bottom: 1rem;
+}
+
+.hideScrollBar::-webkit-scrollbar {
+  display: none;
 }

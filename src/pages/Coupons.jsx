@@ -16,7 +16,10 @@ export default class Coupons extends Component {
     super(props);
 
     this.state = {
-      couponsBi: {},
+      couponsBi: {
+        couponsPerRestaurant: [],
+        couponsData: [],
+      },
 
       validCoupons: [],
       expiredCoupons: [],
@@ -40,7 +43,6 @@ export default class Coupons extends Component {
   async componentDidMount() {
     sessionStorage.setItem("isMenuActive", false);
     const token = sessionStorage.getItem("token");
-    $(".loading").show();
 
     if (!token) {
       $(".loading").hide();
@@ -55,9 +57,16 @@ export default class Coupons extends Component {
       const validCoupons = await services.getCoupons(0, filtersValid);
       const expiredCoupons = await services.getCoupons(0, filtersExpired);
 
-      // const couponsBi = await services.getCouponsBi();
+      const couponsBi = await services.getCouponsBi();
+      console.log(couponsBi);
 
-      console.log(validCoupons);
+      couponsBi.totalCouponsValue = couponsBi.totalCouponsValue.toFixed(2);
+      couponsBi.couponsPerRestaurant.map((element) => {
+        element.couponsValue = element.couponsValue.toFixed(2);
+      });
+      couponsBi.couponsData.map((element) => {
+        element.totalValue = element.totalValue.toFixed(2);
+      });
 
       $("#availableNav").addClass("active");
       sessionStorage.setItem("coupons", ".availableCoupons");
@@ -171,7 +180,7 @@ export default class Coupons extends Component {
         filters: filtersValid,
         filtersValid: filtersValid,
         filtersExpired: filtersExpired,
-        // couponsBi: couponsBi,
+        couponsBi: couponsBi,
       });
 
       $(".loading").hide();
@@ -325,7 +334,9 @@ export default class Coupons extends Component {
               style={{ height: "35rem" }}
               className="w-1/3 shadow-md rounded"
             >
-              <h2 className="font-lg mx-auto w-fit mt-5">Total de Cupons</h2>
+              <h2 className="font-lg mx-auto mt-5 border-b-2 w-3/4 pb-2 text-center">
+                Total de Cupons
+              </h2>
 
               <div className="h-4/5 -mt-5 px-20 flex flex-col items-center justify-center">
                 <div className="w-full">
@@ -334,7 +345,7 @@ export default class Coupons extends Component {
                     className="w-full flex items-center justify-between py-3 border-b-2"
                   >
                     <span>Cupons Utilizados:</span>
-                    <span>XXX</span>
+                    <span>{this.state.couponsBi.totalCoupons}</span>
                   </p>
 
                   <p
@@ -342,7 +353,7 @@ export default class Coupons extends Component {
                     className="w-full flex items-center justify-between py-3"
                   >
                     <span>Valor:</span>
-                    <span>R$ XXX</span>
+                    <span>R$ {this.state.couponsBi.totalCouponsValue}</span>
                   </p>
                 </div>
               </div>
@@ -350,24 +361,60 @@ export default class Coupons extends Component {
 
             <div
               style={{ height: "35rem" }}
-              className="w-1/3 shadow-md rounded"
+              className="hideScrollBar w-1/3 shadow-md rounded"
             >
-              <h2 className="font-lg mx-auto w-fit mt-5">
+              <h2 className="font-lg mx-auto mt-5 border-b-2 w-3/4 pb-2 text-center">
                 Cupons por Restaurante
               </h2>
 
-              <div className="h-4/5 mt-3 px-10"></div>
+              <ul className="p-4 mt-3">
+                {this.state.couponsBi.couponsPerRestaurant.map((element) => {
+                  return (
+                    <li className="flex items-center justify-between">
+                      <span className="w-1/3 text-lg border-b-2 py-2 text-start">
+                        {element.restaurant}
+                      </span>
+
+                      <span className="w-1/3 text-lg border-b-2 py-2 text-center">
+                        {element.coupons}
+                      </span>
+
+                      <span className="w-1/3 text-lg border-b-2 py-2 text-center">
+                        R$ {element.couponsValue}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
 
             <div
               style={{ height: "35rem" }}
-              className="w-1/3 shadow-md rounded"
+              className="hideScrollBar w-1/3 shadow-md rounded"
             >
-              <h2 className="font-lg mx-auto w-fit mt-5">
+              <h2 className="font-lg mx-auto mt-5 border-b-2 w-3/4 pb-2 text-center">
                 Informações sobre Cupons
               </h2>
 
-              <div className="h-4/5 mt-3 px-10"></div>
+              <ul className="p-4 mt-3">
+                {this.state.couponsBi.couponsData.map((element) => {
+                  return (
+                    <li className="flex items-center justify-between">
+                      <span className="w-1/3 text-lg border-b-2 py-2 text-start">
+                        {element.coupon}
+                      </span>
+
+                      <span className="w-1/3 text-lg border-b-2 py-2 text-center">
+                        {element.totalUses}
+                      </span>
+
+                      <span className="w-1/3 text-lg border-b-2 py-2 text-center">
+                        R$ {element.totalValue}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           </div>
 
