@@ -247,10 +247,8 @@ export default class RestaurantDetails extends Component {
         }
       );
 
-      console.log(restaurantOwner.data[0]);
-
-      this.setState(
-        {
+      if (restaurant.acquirer) {
+        this.setState({
           restaurant: restaurant,
           billing: restaurant.billing,
           acquirer: restaurant.acqurier,
@@ -258,11 +256,20 @@ export default class RestaurantDetails extends Component {
           timing: restaurant.timing,
           restaurantOwner: restaurantOwner.data[0],
           currentPlan: restaurant.acquirer.currentPlan,
-        },
-        () => {
-          console.log(this.state);
-        }
-      );
+        });
+      } else {
+        this.setState({
+          restaurant: restaurant,
+          billing: restaurant.billing,
+          acquirer: restaurant.acqurier,
+          legal: restaurant.legal,
+          timing: restaurant.timing,
+          restaurantOwner: restaurantOwner.data[0],
+        });
+      }
+      () => {
+        console.log(this.state);
+      };
 
       $(".loading").hide();
     }
