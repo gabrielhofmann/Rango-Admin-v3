@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Spinner } from "react-bootstrap";
+import { FloatingLabel, Form, Spinner } from "react-bootstrap";
 import { Services } from "../services";
 import $ from "jquery";
 import "./OneSignal.scss";
@@ -14,10 +14,14 @@ export default class OneSignal extends Component {
     super(props);
 
     this.state = {
+      title: "",
+      message: "",
       selectedUser: "",
+      selectedZone: "",
       usersOptions: [],
       showTitleEmoji: false,
       showMessageEmoji: false,
+      zones: [],
     };
 
     this.sendNotification = this.sendNotification.bind(this);
@@ -26,14 +30,19 @@ export default class OneSignal extends Component {
   async componentDidMount() {
     sessionStorage.setItem("isMenuActive", false);
     const token = sessionStorage.getItem("token");
-    $(".loading").show();
 
     if (!token) {
-      $(".loading").hide();
       $(".coupons").html("Not Authorized!!");
     } else {
       const users = await services.getUsers(0);
-      $("#oneSignalSelect").hide();
+      let zones = await services.getZones();
+
+      zones = zones.data.map((zone) => {
+        return {
+          label: zone.attributes.name,
+          value: zone.attributes.name,
+        };
+      });
 
       const usersOptions = users.users.map((user) => {
         return {
@@ -43,7 +52,7 @@ export default class OneSignal extends Component {
       });
 
       document
-        .getElementById("oneSignalSelect")
+        .getElementById("userSelect")
         .querySelector(".select__input")
         .addEventListener("keyup", async (e) => {
           const input = e.target.value;
@@ -79,6 +88,7 @@ export default class OneSignal extends Component {
 
       this.setState({
         usersOptions: usersOptions,
+        zones: zones,
       });
 
       $(".oneSignal").on("click", () => {
@@ -94,37 +104,83 @@ export default class OneSignal extends Component {
   }
 
   async sendNotification(e) {
-    e.preventDefault();
+    // e.preventDefault();
 
-    $(".loading").show();
+    // $(".loading").show();
 
-    const message = $("#message")[0].value;
+    // const message = $("#message")[0].value;
 
-    const title = $("#title")[0].value;
-    const user = this.state.selectedUser;
+    // const title = $("#title")[0].value;
+    // const user = this.state.selectedUser;
 
-    let body = { title: title, message: message };
+    // let body = { title: title, message: message };
 
-    const selectedRadio = document.querySelector(
-      'input[name="oneSignalRadio"]:checked'
-    ).value;
+    // const selectedRadio = document.querySelector(
+    //   'input[name="oneSignalRadio"]:checked'
+    // ).value;
 
-    if (selectedRadio == "one") {
-      body = {
-        ...body,
-        toAll: false,
-        id: user,
-      };
-    } else {
-      body = {
-        ...body,
-        toAll: true,
-      };
+    // if (selectedRadio == "one") {
+    //   body = {
+    //     ...body,
+    //     toAll: false,
+    //     id: user,
+    //   };
+    // } else {
+    //   body = {
+    //     ...body,
+    //     toAll: true,
+    //   };
+    // }
+
+    // await services.sendPushNotification(body);
+
+    // $(".loading").hide();
+
+    let body;
+    const { title, message, selectedZone, selectedUser } = this.state;
+    const selection = $("input[name='recieversOption']:checked").val();
+    let response;
+
+    switch (selection) {
+      case "all":
+        body = {
+          toAll: true,
+          title: title,
+          message: message,
+        };
+
+        response = await services.sendPushNotification(body);
+
+        break;
+
+      case "selection":
+        body = {
+          toAll: false,
+          title: title,
+          message: message,
+          id: selectedUser,
+        };
+
+        response = await services.sendPushNotification(body);
+
+        break;
+
+      case "zone":
+        body = {
+          title: title,
+          message: message,
+          zone: selectedZone,
+        };
+
+        response = await services.sendPushToZone(body);
+
+        break;
+
+      default:
+        break;
     }
 
-    await services.sendPushNotification(body);
-
-    $(".loading").hide();
+    console.log(response);
   }
 
   render() {
@@ -149,119 +205,142 @@ export default class OneSignal extends Component {
           </div>
         </div>
 
-        <h1>Envie notificações para UM ou TODOS os usuários</h1>
-
-        <div className="oneSignalContainer">
-          <Form
-            id="oneSignalForm"
+        <div className="w-fit mx-auto mb-28 rounded shadow-lg p-5 mt-40 overflow-visible">
+          <form
+            className="mx-auto overflow-visible flex flex-col items-center"
+            style={{ width: "50rem" }}
             onSubmit={(e) => {
-              this.sendNotification(e);
+              e.preventDefault();
+
+              this.sendNotification();
             }}
           >
-            <Form.Group id="checkboxContainer">
-              <Form.Check
-                id="one"
-                name="oneSignalRadio"
-                type="radio"
-                label="UM usuário"
-                value="one"
-                onClick={() => {
-                  $("#oneSignalSelect").show();
-                }}
-                required
-              />
+            <section className="p-2 w-full">
+              <div className="flex items-center text-lg rounded shadow-md h-20 px-5 my-3 relative">
+                <Form.Check
+                  className="m-0 p-3"
+                  type="radio"
+                  name="recieversOption"
+                  value="all"
+                  onClick={() => {
+                    $("#userSelect").addClass("hidden");
+                    $("#zoneSelect").addClass("hidden");
+                  }}
+                />
 
-              <Form.Check
-                id="all"
-                name="oneSignalRadio"
-                type="radio"
-                label="TODOS os usuários"
-                value="all"
-                onClick={() => {
-                  $("#oneSignalSelect").hide();
-                }}
-                required
-              />
-            </Form.Group>
+                <p>
+                  Enviar para <b className="text-rango-orange">Todos</b>
+                </p>
+              </div>
+
+              <div className="flex items-center text-lg rounded shadow-md h-20 px-5 my-3 transition-all">
+                <Form.Check
+                  className="m-0 p-3"
+                  type="radio"
+                  name="recieversOption"
+                  value="selection"
+                  onClick={() => {
+                    $("#userSelect").removeClass("hidden");
+                    $("#zoneSelect").addClass("hidden");
+                  }}
+                />
+
+                <p>
+                  Enviar para <b className="text-rango-orange">Usuário</b>
+                </p>
+              </div>
+
+              <div className="flex items-center text-lg rounded shadow-md h-20 px-5 my-3">
+                <Form.Check
+                  className="m-0 p-3"
+                  type="radio"
+                  name="recieversOption"
+                  value="zone"
+                  onClick={() => {
+                    $("#userSelect").addClass("hidden");
+                    $("#zoneSelect").removeClass("hidden");
+                  }}
+                />
+
+                <p>
+                  Enviar para <b className="text-rango-orange">Zona</b>
+                </p>
+              </div>
+            </section>
 
             <Select
-              className="basic-single"
-              id="oneSignalSelect"
+              placeholder="Selecionar usuário"
+              id="userSelect"
+              name="recievers"
+              className="basic-single overflow-visible shadow-sm rounded hidden"
               classNamePrefix="select"
               options={this.state.usersOptions}
               isSearchable="true"
               onChange={(e) => {
-                this.setState({ selectedUser: e.value });
+                this.setState({
+                  selectedUser: e.value,
+                });
               }}
             ></Select>
 
-            <Form.Group style={{ overflow: "visible" }}>
-              <Form.Label>
-                <strong>Título:</strong>
+            <Select
+              placeholder="Selecionar zona"
+              id="zoneSelect"
+              name="recievers"
+              className="basic-single overflow-visible shadow-sm rounded hidden"
+              classNamePrefix="select"
+              options={this.state.zones}
+              isSearchable="true"
+              onChange={(e) => {
+                this.setState({
+                  selectedZone: e.value,
+                });
+              }}
+            ></Select>
 
-                {this.state.showTitleEmoji ? (
-                  <EmojiPicker
-                    height="20rem"
-                    className="emojiPicker"
-                    onEmojiClick={(emoji) => {
-                      $("#title").val(`${$("#title")[0].value}${emoji.emoji}`);
-                    }}
-                  />
-                ) : null}
+            <section className="w-full">
+              <div className="w-full p-2 mt-3 mb-6">
+                <label htmlFor="" className="ml-3 text-lg font-bold">
+                  Título:
+                </label>
 
-                <p
-                  onClick={() => {
+                <input
+                  type="text"
+                  placeholder="Título incrível aqui"
+                  className="rounded shadow-md w-full h-16 px-3 focus:outline-rango-orange"
+                  onChange={(e) => {
                     this.setState({
-                      showTitleEmoji: !this.state.showTitleEmoji,
+                      title: e.target.value,
                     });
                   }}
-                >
-                  &#128512;
-                </p>
-              </Form.Label>
-              <Form.Control
-                id="title"
-                name="title"
-                type="text"
-                placeholder="Título incrível aqui"
-                required
-              />
-              <Form.Label style={{ overflow: "visible" }}>
-                <strong>Mensagem:</strong>
+                />
+              </div>
 
-                {this.state.showMessageEmoji ? (
-                  <EmojiPicker
-                    height="20rem"
-                    className="emojiPicker"
-                    onEmojiClick={(emoji) => {
-                      $("#message").val(
-                        `${$("#message")[0].value}${emoji.emoji}`
-                      );
-                    }}
-                  />
-                ) : null}
+              <div className="w-full p-2 mt-3 mb-6">
+                <label htmlFor="" className="ml-3 text-lg font-bold">
+                  Mensagem:
+                </label>
 
-                <p
-                  onClick={() => {
+                <input
+                  type="text"
+                  placeholder="Mensagem incrível aqui"
+                  className="rounded shadow-md w-full h-16 px-3 focus:outline-rango-orange"
+                  onChange={(e) => {
                     this.setState({
-                      showMessageEmoji: !this.state.showMessageEmoji,
+                      message: e.target.value,
                     });
                   }}
-                >
-                  &#128512;
-                </p>
-              </Form.Label>
-              <Form.Control
-                id="message"
-                name="message"
-                type="text"
-                placeholder="Mensagem incrível aqui"
-                required
-              />
-            </Form.Group>
+                />
+              </div>
+            </section>
 
-            <button type="submit">Enviar</button>
-          </Form>
+            <button
+              style={{ width: "calc(100% - .5rem)" }}
+              className="rounded shadow-md h-16 text-rango-orange text-lg transition-all hover:bg-orange-100 hover:shadow-md mt-3"
+            >
+              Enviar
+            </button>
+          </form>
         </div>
       </main>
     );

@@ -30,8 +30,6 @@ export default class Restaurants extends Component {
       $(".loading").hide();
       $(".restaurants").html("Not Authorized!!");
     } else {
-      $(".loading").show();
-
       $(".restaurants").on("click", () => {
         let active = sessionStorage.getItem("isMenuActive");
 

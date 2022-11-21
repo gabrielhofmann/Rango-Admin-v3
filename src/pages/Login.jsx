@@ -48,7 +48,7 @@ export default function Login() {
         >
           <Form.Control
             className="shadow-md border-none"
-            type="text"
+            type="email"
             placeholder="Login"
             onChange={(e) => {
               setIdentifier(e.target.value);

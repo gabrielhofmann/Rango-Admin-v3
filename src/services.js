@@ -369,9 +369,9 @@ class Services {
     return response;
   }
 
-  async sendPushNotificationToAll(body) {
+  async sendPushToZone(body) {
     const response = await axios.post(
-      `https://www.api.rangosemfila.com.br/v2/sendPushNotificationToAll`,
+      `https://www.api.rangosemfila.com.br/v2/sendPushToZone/`,
       body,
       {
         headers: {
@@ -402,6 +402,16 @@ class Services {
     console.log(response);
 
     return response;
+  }
+
+  // ZONES
+
+  async getZones() {
+    const response = await axios.get(
+      "http://www.api.rangosemfila.com.br/v2/zones"
+    );
+
+    return response.data;
   }
 }
 
