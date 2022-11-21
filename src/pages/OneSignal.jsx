@@ -194,6 +194,7 @@ export default class OneSignal extends Component {
                     $("#userSelect").addClass("hidden");
                     $("#zoneSelect").addClass("hidden");
                   }}
+                  required
                 />
 
                 <p>
@@ -211,6 +212,7 @@ export default class OneSignal extends Component {
                     $("#userSelect").removeClass("hidden");
                     $("#zoneSelect").addClass("hidden");
                   }}
+                  required
                 />
 
                 <p>
@@ -228,6 +230,7 @@ export default class OneSignal extends Component {
                     $("#userSelect").addClass("hidden");
                     $("#zoneSelect").removeClass("hidden");
                   }}
+                  required
                 />
 
                 <p>
@@ -305,6 +308,7 @@ export default class OneSignal extends Component {
                       title: e.target.value,
                     });
                   }}
+                  required
                 />
               </div>
 
@@ -346,6 +350,7 @@ export default class OneSignal extends Component {
                       message: e.target.value,
                     });
                   }}
+                  required
                 />
               </div>
             </section>

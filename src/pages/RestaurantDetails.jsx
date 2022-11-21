@@ -326,8 +326,6 @@ export default class RestaurantDetails extends Component {
       console.log(response);
 
       await services.updateRestaurant(this.state.restaurant.id, rangoBody);
-
-      window.location.reload();
     } catch (error) {
       console.error(error);
     }
