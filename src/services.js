@@ -408,7 +408,7 @@ class Services {
 
   async getZones() {
     const response = await axios.get(
-      "http://www.api.rangosemfila.com.br/v2/zones"
+      "https://www.api.rangosemfila.com.br/v2/zones"
     );
 
     return response.data;
