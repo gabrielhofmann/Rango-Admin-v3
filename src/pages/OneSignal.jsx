@@ -104,38 +104,6 @@ export default class OneSignal extends Component {
   }
 
   async sendNotification(e) {
-    // e.preventDefault();
-
-    // $(".loading").show();
-
-    // const message = $("#message")[0].value;
-
-    // const title = $("#title")[0].value;
-    // const user = this.state.selectedUser;
-
-    // let body = { title: title, message: message };
-
-    // const selectedRadio = document.querySelector(
-    //   'input[name="oneSignalRadio"]:checked'
-    // ).value;
-
-    // if (selectedRadio == "one") {
-    //   body = {
-    //     ...body,
-    //     toAll: false,
-    //     id: user,
-    //   };
-    // } else {
-    //   body = {
-    //     ...body,
-    //     toAll: true,
-    //   };
-    // }
-
-    // await services.sendPushNotification(body);
-
-    // $(".loading").hide();
-
     let body;
     const { title, message, selectedZone, selectedUser } = this.state;
     const selection = $("input[name='recieversOption']:checked").val();
