@@ -183,7 +183,7 @@ export default class OneSignal extends Component {
               this.sendNotification();
             }}
           >
-            <section className="p-2 w-full">
+            <section className="p-2 w-full overflow-visible">
               <div className="flex items-center text-lg rounded shadow-md h-20 px-5 my-3 relative">
                 <Form.Check
                   className="m-0 p-3"
@@ -266,13 +266,37 @@ export default class OneSignal extends Component {
               }}
             ></Select>
 
-            <section className="w-full">
-              <div className="w-full p-2 mt-3 mb-6">
-                <label htmlFor="" className="ml-3 text-lg font-bold">
-                  Título:
+            <section className="w-full overflow-visible">
+              <div className="w-full p-2 mt-3 mb-6 overflow-visible">
+                <label
+                  htmlFor=""
+                  className="w-full h-20 flex items-center justify-between overflow-visible ml-3 text-lg font-bold relative"
+                >
+                  <strong>Título:</strong>
+
+                  <p
+                    className="cursor-pointer m-auto shadow-md p-2 rounded absolute right-5"
+                    onClick={() => {
+                      this.setState({
+                        showTitleEmoji: !this.state.showTitleEmoji,
+                      });
+                    }}
+                  >
+                    &#128515;
+                  </p>
+
+                  {this.state.showTitleEmoji ? (
+                    <EmojiPicker
+                      height={"400px"}
+                      onEmojiClick={(e) => {
+                        $("#title").val($("#title").val() + e.emoji);
+                      }}
+                    />
+                  ) : null}
                 </label>
 
                 <input
+                  id="title"
                   type="text"
                   placeholder="Título incrível aqui"
                   className="rounded shadow-md w-full h-16 px-3 focus:outline-rango-orange"
@@ -284,12 +308,36 @@ export default class OneSignal extends Component {
                 />
               </div>
 
-              <div className="w-full p-2 mt-3 mb-6">
-                <label htmlFor="" className="ml-3 text-lg font-bold">
-                  Mensagem:
+              <div className="w-full p-2 mt-3 mb-6 overflow-visible">
+                <label
+                  htmlFor=""
+                  className="w-full h-20 flex items-center justify-between overflow-visible ml-3 text-lg font-bold relative"
+                >
+                  <strong>Mensagem:</strong>
+
+                  <p
+                    className="cursor-pointer m-auto shadow-md p-2 rounded absolute right-5"
+                    onClick={() => {
+                      this.setState({
+                        showMessageEmoji: !this.state.showMessageEmoji,
+                      });
+                    }}
+                  >
+                    &#128515;
+                  </p>
+
+                  {this.state.showMessageEmoji ? (
+                    <EmojiPicker
+                      height={"400px"}
+                      onEmojiClick={(e) => {
+                        $("#message").val($("#message").val() + e.emoji);
+                      }}
+                    />
+                  ) : null}
                 </label>
 
                 <input
+                  id="message"
                   type="text"
                   placeholder="Mensagem incrível aqui"
                   className="rounded shadow-md w-full h-16 px-3 focus:outline-rango-orange"
