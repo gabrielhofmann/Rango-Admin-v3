@@ -22,6 +22,7 @@ export default class OneSignal extends Component {
       showTitleEmoji: false,
       showMessageEmoji: false,
       zones: [],
+      alertText: "",
     };
 
     this.sendNotification = this.sendNotification.bind(this);
@@ -104,57 +105,85 @@ export default class OneSignal extends Component {
   }
 
   async sendNotification(e) {
-    let body;
-    const { title, message, selectedZone, selectedUser } = this.state;
-    const selection = $("input[name='recieversOption']:checked").val();
-    let response;
+    // let body;
+    // const { title, message, selectedZone, selectedUser } = this.state;
+    // const selection = $("input[name='recieversOption']:checked").val();
+    // let response;
 
-    switch (selection) {
-      case "all":
-        body = {
-          toAll: true,
-          title: title,
-          message: message,
-        };
+    // switch (selection) {
+    //   case "all":
+    //     body = {
+    //       toAll: true,
+    //       title: title,
+    //       message: message,
+    //     };
 
-        response = await services.sendPushNotification(body);
+    //     response = await services.sendPushNotification(body);
 
-        break;
+    //     break;
 
-      case "selection":
-        body = {
-          toAll: false,
-          title: title,
-          message: message,
-          id: selectedUser,
-        };
+    //   case "selection":
+    //     body = {
+    //       toAll: false,
+    //       title: title,
+    //       message: message,
+    //       id: selectedUser,
+    //     };
 
-        response = await services.sendPushNotification(body);
+    //     response = await services.sendPushNotification(body);
 
-        break;
+    //     break;
 
-      case "zone":
-        body = {
-          title: title,
-          message: message,
-          zone: selectedZone,
-        };
+    //   case "zone":
+    //     body = {
+    //       title: title,
+    //       message: message,
+    //       zone: selectedZone,
+    //     };
 
-        response = await services.sendPushToZone(body);
+    //     response = await services.sendPushToZone(body);
 
-        break;
+    //     break;
 
-      default:
-        break;
+    //   default:
+    //     break;
+    // }
+
+    // console.log(response);
+
+    $(window).scrollTop(0);
+    document.getElementById("pushForm").reset();
+
+    if (response) {
+      $("#alert").removeClass("opacity-0");
+
+      this.setState({
+        alertText: "PUSH enviado.",
+      });
+    } else {
+      $("#alert").removeClass("opacity-0");
+
+      this.setState({
+        alertText: "Falha ao enviar PUSH.",
+      });
     }
 
-    console.log(response);
+    setTimeout(() => {
+      $("#alert").addClass("opacity-0");
+    }, 3000);
   }
 
   render() {
     return (
       <main className="oneSignal">
         <Menu />
+
+        <div
+          id="alert"
+          className="absolute right-32 top-40 bg-white shadow-lg rounded px-5 py-3 opacity-0 transition-all"
+        >
+          <p className="text-rango-orange text-lg">{this.state.alertText}</p>
+        </div>
 
         <div className="loading">
           <Spinner className="spinner" animation="border" />
@@ -175,6 +204,7 @@ export default class OneSignal extends Component {
 
         <div className="w-fit mx-auto mb-28 rounded shadow-lg p-5 mt-40 overflow-visible">
           <form
+            id="pushForm"
             className="mx-auto overflow-visible flex flex-col items-center"
             style={{ width: "50rem" }}
             onSubmit={(e) => {
