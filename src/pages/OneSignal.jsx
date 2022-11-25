@@ -105,51 +105,51 @@ export default class OneSignal extends Component {
   }
 
   async sendNotification(e) {
-    // let body;
-    // const { title, message, selectedZone, selectedUser } = this.state;
-    // const selection = $("input[name='recieversOption']:checked").val();
-    // let response;
+    let body;
+    const { title, message, selectedZone, selectedUser } = this.state;
+    const selection = $("input[name='recieversOption']:checked").val();
+    let response;
 
-    // switch (selection) {
-    //   case "all":
-    //     body = {
-    //       toAll: true,
-    //       title: title,
-    //       message: message,
-    //     };
+    switch (selection) {
+      case "all":
+        body = {
+          toAll: true,
+          title: title,
+          message: message,
+        };
 
-    //     response = await services.sendPushNotification(body);
+        response = await services.sendPushNotification(body);
 
-    //     break;
+        break;
 
-    //   case "selection":
-    //     body = {
-    //       toAll: false,
-    //       title: title,
-    //       message: message,
-    //       id: selectedUser,
-    //     };
+      case "selection":
+        body = {
+          toAll: false,
+          title: title,
+          message: message,
+          id: selectedUser,
+        };
 
-    //     response = await services.sendPushNotification(body);
+        response = await services.sendPushNotification(body);
 
-    //     break;
+        break;
 
-    //   case "zone":
-    //     body = {
-    //       title: title,
-    //       message: message,
-    //       zone: selectedZone,
-    //     };
+      case "zone":
+        body = {
+          title: title,
+          message: message,
+          zone: selectedZone,
+        };
 
-    //     response = await services.sendPushToZone(body);
+        response = await services.sendPushToZone(body);
 
-    //     break;
+        break;
 
-    //   default:
-    //     break;
-    // }
+      default:
+        break;
+    }
 
-    // console.log(response);
+    console.log(response);
 
     $(window).scrollTop(0);
     document.getElementById("pushForm").reset();
