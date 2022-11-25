@@ -154,6 +154,9 @@ export default class RestaurantDetails extends Component {
       ],
 
       currentPlan: "",
+
+      targetRestaurant: "",
+      restaurantsOptions: [],
     };
 
     this.createsubAccount = this.createsubAccount.bind(this);
@@ -176,7 +179,21 @@ export default class RestaurantDetails extends Component {
         sessionStorage.getItem("restaurantId")
       );
 
-      console.log(restaurant);
+      const allRestaurants = await axios.get(
+        "https://www.api.rangosemfila.com.br/v2/restaurants",
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      const restaurantsOptions = allRestaurants.data.map((restaurant) => {
+        return {
+          label: restaurant.name,
+          value: restaurant.id,
+        };
+      });
 
       const data = await services.getPowerBiData();
 
@@ -256,6 +273,7 @@ export default class RestaurantDetails extends Component {
           timing: restaurant.timing,
           restaurantOwner: restaurantOwner.data[0],
           currentPlan: restaurant.acquirer.currentPlan,
+          restaurantsOptions: restaurantsOptions,
         });
       } else {
         this.setState({
@@ -265,6 +283,7 @@ export default class RestaurantDetails extends Component {
           legal: restaurant.legal,
           timing: restaurant.timing,
           restaurantOwner: restaurantOwner.data[0],
+          restaurantsOptions: restaurantsOptions,
         });
       }
       () => {
@@ -910,6 +929,52 @@ export default class RestaurantDetails extends Component {
               )}
             </div>
           </div>
+
+          <section className="overflow-visible text-center mb-5">
+            <strong className="text-lg text-rango-orange">
+              Importar Cardápio
+            </strong>
+            <Select
+              className="basic-single w-60 overflow-visible my-3 cursor-pointer text-start"
+              id="menuImportSelect"
+              name="restaurant"
+              classNamePrefix="select"
+              options={this.state.restaurantsOptions}
+              isSearchable="true"
+              onChange={(e) => {
+                console.log(e);
+                this.setState({
+                  targetRestaurant: e.value,
+                });
+              }}
+            ></Select>
+
+            <button
+              className="py-2 px-10 rounded text-center shadow-md text-rango-orange transition-all hover:bg-rango-orange hover:bg-opacity-10"
+              onClick={async () => {
+                if (this.state.targetRestaurant != "") {
+                  const response = await axios.post(
+                    "https://api.rangosemfila.com.br/v2/importMenu",
+                    {
+                      headers: {
+                        Authorization: `Bearer ${sessionStorage.getItem(
+                          "token"
+                        )}`,
+                      },
+                    },
+                    {
+                      restaurantID: this.state.restaurant.id,
+                      targetID: this.state.targetRestaurant,
+                    }
+                  );
+
+                  console.log(response);
+                }
+              }}
+            >
+              Importar
+            </button>
+          </section>
 
           {this.state.restaurant.status == "operando" &&
           this.state.restaurant.acquirer != undefined ? (
