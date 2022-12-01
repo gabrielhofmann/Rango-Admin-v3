@@ -367,8 +367,6 @@ export default class Mailing extends Component {
       body: body,
     };
 
-    console.log(requestBody);
-
     if (toAllUsers) {
       let allUsers = await services.getAllUsers();
 

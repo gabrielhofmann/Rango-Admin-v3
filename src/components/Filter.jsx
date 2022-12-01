@@ -158,6 +158,20 @@ export default function Filter({ target, callback }) {
               name="subtotal"
               placeholder="Valor"
             />
+
+            <select name="status">
+              <option value="">Status</option>
+              <option value="scheduled">Agendado</option>
+              <option value="created">Criado</option>
+              <option value="confirmed">Confirmado</option>
+              <option value="ready">Pronto</option>
+              <option value="delivered">Entregue</option>
+              <option value="canceled">Cancelado</option>
+            </select>
+
+            <input type="date" name="dateStart" className="date" />
+
+            <input type="date" name="dateEnd" className="date" />
           </div>
         );
 
@@ -313,7 +327,25 @@ export default function Filter({ target, callback }) {
             } else if (filters[0].name == "restaurant") {
               url += `[restaurant][name][$containsi]=${filters[0].value}`;
             } else if (filters[0].name == "subtotal") {
-              url += `&filters[payment][subtotal][$eq]=${filters[0].value}`;
+              url += `[payment][subtotal][$eq]=${filters[0].value}`;
+            } else if (filters[0].name == "dateStart") {
+              const split = filters[0].value.split("-");
+              const start = new Date(
+                split[0],
+                split[1] - 1,
+                split[2]
+              ).toISOString();
+
+              url += `[createdAt][$gte]=${start}`;
+            } else if (filters[0].name == "dateEnd") {
+              const split = filters[0].value.split("-");
+              const end = new Date(
+                split[0],
+                split[1] - 1,
+                split[2]
+              ).toISOString();
+
+              url += `[createdAt][$lte]=${end}`;
             } else {
               url += `[${filters[0].name}][${
                 filters[0].name == "name" ? "$containsi" : "$eq"
@@ -325,7 +357,25 @@ export default function Filter({ target, callback }) {
             } else if (filters[0].name == "restaurant") {
               url += `[restaurant][name][$containsi][0]=${filters[0].value}`;
             } else if (filters[0].name == "subtotal") {
-              url += `&filters[payment][subtotal][$eq][0]=${filters[0].value}`;
+              url += `[payment][subtotal][$eq][0]=${filters[0].value}`;
+            } else if (filters[0].name == "dateStart") {
+              const split = filters[0].value.split("-");
+              const start = new Date(
+                split[0],
+                split[1] - 1,
+                split[2]
+              ).toISOString();
+
+              url += `[createdAt][$gte][0]=${start}`;
+            } else if (filters[0].name == "dateEnd") {
+              const split = filters[0].value.split("-");
+              const end = new Date(
+                split[0],
+                split[1] - 1,
+                split[2]
+              ).toISOString();
+
+              url += `[createdAt][$lte][0]=${end}`;
             } else {
               url += `[${filters[0].name}][${
                 filters[0].name == "name" ? "$containsi" : "$eq"
@@ -339,6 +389,24 @@ export default function Filter({ target, callback }) {
                 url += `&filters[restaurant][name][$containsi][${i}]=${filters[i].value}`;
               } else if (filters[i].name == "subtotal") {
                 url += `&filters[payment][subtotal][$eq][${i}]=${filters[i].value}`;
+              } else if (filters[i].name == "dateStart") {
+                const split = filters[i].value.split("-");
+                const start = new Date(
+                  split[0],
+                  split[1] - 1,
+                  split[2]
+                ).toISOString();
+
+                url += `&filters[createdAt][$gte][${i}]=${start}`;
+              } else if (filters[i].name == "dateEnd") {
+                const split = filters[i].value.split("-");
+                const end = new Date(
+                  split[0],
+                  split[1] - 1,
+                  split[2]
+                ).toISOString();
+
+                url += `&filters[createdAt][$lte][${i}]=${end}`;
               } else {
                 url += `&filters[${filters[i].name}][${
                   filters[i].name == "name" ? "$containsi" : "$eq"
@@ -358,10 +426,12 @@ export default function Filter({ target, callback }) {
             }
           );
 
+          console.log(ordersResponse);
+
           results = ordersResponse.data.data.map((order) => {
             let obj = order.attributes;
             obj.id = order.id;
-            obj.user = obj.user.data.attributes;
+            obj.user = obj.user.data == null ? "N/A" : obj.user.data.attributes;
             obj.restaurant = obj.restaurant.data.attributes;
 
             return obj;

@@ -80,7 +80,7 @@ class Services {
   async getAllUsers(filters) {
     const allUsers = await axios.get(
       `https://www.api.rangosemfila.com.br/v2/users${
-        filters != undefined ? filters : null
+        filters != undefined ? filters : ""
       }`,
       {
         headers: {
