@@ -23,6 +23,12 @@ export default class OneSignal extends Component {
       showMessageEmoji: false,
       zones: [],
       alertText: "",
+      scheduled: false,
+      scheduleTime: {
+        date: "",
+        hours: "",
+        minutes: "",
+      },
     };
 
     this.sendNotification = this.sendNotification.bind(this);
@@ -110,36 +116,78 @@ export default class OneSignal extends Component {
     const selection = $("input[name='recieversOption']:checked").val();
     let response;
 
+    let { date, hours, minutes } = this.state.scheduleTime;
+    const scheduled = this.state.scheduled;
+
+    let scheduleDate = new Date(
+      date.split("-")[0],
+      date.split("-")[1] - 1,
+      date.split("-")[2],
+      hours,
+      minutes
+    ).toUTCString();
+
     switch (selection) {
       case "all":
-        body = {
-          toAll: true,
-          title: title,
-          message: message,
-        };
+        if (scheduled) {
+          body = {
+            toAll: true,
+            title: title,
+            message: message,
+            scheduled: true,
+            scheduleDate: scheduleDate,
+          };
+        } else {
+          body = {
+            toAll: true,
+            title: title,
+            message: message,
+          };
+        }
 
         response = await services.sendPushNotification(body);
 
         break;
 
       case "selection":
-        body = {
-          toAll: false,
-          title: title,
-          message: message,
-          id: selectedUser,
-        };
+        if (scheduled) {
+          body = {
+            toAll: false,
+            title: title,
+            message: message,
+            id: selectedUser,
+            scheduled: true,
+            scheduleDate: scheduleDate,
+          };
+        } else {
+          body = {
+            toAll: false,
+            title: title,
+            message: message,
+            id: selectedUser,
+          };
+        }
 
         response = await services.sendPushNotification(body);
 
         break;
 
       case "zone":
-        body = {
-          title: title,
-          message: message,
-          zone: selectedZone,
-        };
+        if (scheduled) {
+          body = {
+            title: title,
+            message: message,
+            zone: selectedZone,
+            scheduled: true,
+            scheduleDate: scheduleDate,
+          };
+        } else {
+          body = {
+            title: title,
+            message: message,
+            zone: selectedZone,
+          };
+        }
 
         response = await services.sendPushToZone(body);
 
@@ -148,8 +196,6 @@ export default class OneSignal extends Component {
       default:
         break;
     }
-
-    console.log(response);
 
     $(window).scrollTop(0);
     document.getElementById("pushForm").reset();
@@ -298,6 +344,83 @@ export default class OneSignal extends Component {
                 });
               }}
             ></Select>
+
+            <div
+              className="w-full py-3 rounded shadow-md flex items-center justify-center cursor-pointer transition-all hover:bg-rango-orange hover:bg-opacity-30 mb-4"
+              onClick={() => {
+                $("#scheduleContainer").removeClass("hidden");
+                $("#scheduleContainer").addClass("flex");
+
+                this.setState({
+                  scheduled: true,
+                });
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="#f18a33"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+
+              <p className="text-rango-orange text-md pl-3">Agendar</p>
+            </div>
+
+            <div
+              id="scheduleContainer"
+              className="hidden w-full items-center justify-center py-2"
+            >
+              <input
+                type="date"
+                className="shadow-md rounded mx-2 p-2 focus:outline-rango-orange"
+                onChange={(e) => {
+                  this.setState({
+                    scheduleTime: {
+                      ...this.state.scheduleTime,
+                      date: e.target.value,
+                    },
+                  });
+                }}
+              />
+
+              <input
+                type="text"
+                maxLength={2}
+                className="shadow-md rounded mx-2 p-2 text-center focus:outline-rango-orange"
+                placeholder="HH"
+                onChange={(e) => {
+                  this.setState({
+                    scheduleTime: {
+                      ...this.state.scheduleTime,
+                      hours: e.target.value,
+                    },
+                  });
+                }}
+              />
+
+              <input
+                type="text"
+                maxLength={2}
+                className="shadow-md rounded mx-2 p-2 text-center focus:outline-rango-orange"
+                placeholder="MM"
+                onChange={(e) => {
+                  this.setState({
+                    scheduleTime: {
+                      ...this.state.scheduleTime,
+                      minutes: e.target.value,
+                    },
+                  });
+                }}
+              />
+            </div>
 
             <section className="w-full overflow-visible">
               <div className="w-full p-2 mt-3 mb-6 overflow-visible">
