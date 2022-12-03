@@ -351,7 +351,6 @@ export default class Mailing extends Component {
 
     const body = this.state.editorContent;
     const sender = $("#sender")[0].value;
-    const title = $("#title")[0].value;
     const subject = $("#subject")[0].value;
     const recievers = this.state.selectedUsers;
 
@@ -359,13 +358,7 @@ export default class Mailing extends Component {
 
     radio == "all" ? (toAllUsers = true) : (toAllUsers = false);
 
-    let requestBody = {
-      subject: subject,
-      title: title,
-      recievers: recievers,
-      sender: sender,
-      body: body,
-    };
+    let requestBody;
 
     if (toAllUsers) {
       let allUsers = await services.getAllUsers();
@@ -378,7 +371,6 @@ export default class Mailing extends Component {
 
       requestBody = {
         subject: subject,
-        title: title,
         body: body,
         sender: sender,
         recievers: allUsers,
@@ -386,7 +378,6 @@ export default class Mailing extends Component {
     } else {
       requestBody = {
         subject: subject,
-        title: title,
         body: body,
         sender: sender,
         recievers: recievers,
@@ -464,7 +455,7 @@ export default class Mailing extends Component {
                   />
                 </FloatingLabel>
 
-                <FloatingLabel label="Título" className="customLabel">
+                {/* <FloatingLabel label="Título" className="customLabel">
                   <Form.Control
                     id="title"
                     placeholder="titulo"
@@ -472,7 +463,7 @@ export default class Mailing extends Component {
                     type="text"
                     required
                   />
-                </FloatingLabel>
+                </FloatingLabel> */}
 
                 <FloatingLabel label="Remetente" className="customLabel">
                   <Form.Control
