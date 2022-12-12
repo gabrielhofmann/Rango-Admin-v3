@@ -963,8 +963,8 @@ export default class RestaurantDetails extends Component {
                       },
                     },
                     {
-                      restaurantID: this.state.restaurant.id,
-                      targetID: this.state.targetRestaurant,
+                      restaurantId: this.state.restaurant.id,
+                      targetId: this.state.targetRestaurant,
                     }
                   );
 
