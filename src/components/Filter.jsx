@@ -333,7 +333,9 @@ export default function Filter({ target, callback }) {
               const start = new Date(
                 split[0],
                 split[1] - 1,
-                split[2]
+                split[2],
+                "21",
+                "01"
               ).toISOString();
 
               url += `[createdAt][$gte]=${start}`;
@@ -342,7 +344,9 @@ export default function Filter({ target, callback }) {
               const end = new Date(
                 split[0],
                 split[1] - 1,
-                split[2]
+                split[2],
+                "20",
+                "59"
               ).toISOString();
 
               url += `[createdAt][$lte]=${end}`;
@@ -363,7 +367,9 @@ export default function Filter({ target, callback }) {
               const start = new Date(
                 split[0],
                 split[1] - 1,
-                split[2]
+                split[2],
+                "21",
+                "01"
               ).toISOString();
 
               url += `[createdAt][$gte][0]=${start}`;
@@ -372,7 +378,9 @@ export default function Filter({ target, callback }) {
               const end = new Date(
                 split[0],
                 split[1] - 1,
-                split[2]
+                split[2],
+                "20",
+                "59"
               ).toISOString();
 
               url += `[createdAt][$lte][0]=${end}`;
@@ -394,7 +402,9 @@ export default function Filter({ target, callback }) {
                 const start = new Date(
                   split[0],
                   split[1] - 1,
-                  split[2]
+                  split[2],
+                  "21",
+                  "01"
                 ).toISOString();
 
                 url += `&filters[createdAt][$gte][${i}]=${start}`;
@@ -403,7 +413,9 @@ export default function Filter({ target, callback }) {
                 const end = new Date(
                   split[0],
                   split[1] - 1,
-                  split[2]
+                  split[2],
+                  "20",
+                  "59"
                 ).toISOString();
 
                 url += `&filters[createdAt][$lte][${i}]=${end}`;
