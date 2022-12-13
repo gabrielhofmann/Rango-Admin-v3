@@ -198,6 +198,8 @@ export default class Coupons extends Component {
   async handleBiFilter() {
     const [start, end] = [this.state.start, this.state.end];
 
+    console.log(start, end);
+
     const response = await services.getCouponsBi(start, end);
 
     console.log(response);
@@ -260,6 +262,8 @@ export default class Coupons extends Component {
       this.state.start,
       this.state.end
     );
+
+    console.log(this.state.start, this.state.end);
 
     response.totalCouponsValue = response.totalCouponsValue.toFixed(2);
     response.couponsPerRestaurant.map((element) => {
@@ -416,7 +420,7 @@ export default class Coupons extends Component {
                   return (
                     <li className="flex items-center justify-between font-bold">
                       <span className="w-1/3 text-lg border-b-2 py-2 text-start">
-                        {element.restaurant}
+                        {element.name}
                       </span>
 
                       <span className="w-1/3 text-lg border-b-2 py-2 text-center">
@@ -445,7 +449,7 @@ export default class Coupons extends Component {
                   return (
                     <li className="flex items-center justify-between font-bold">
                       <span className="w-1/3 text-lg border-b-2 py-2 text-start">
-                        {element.coupon}
+                        {element.name}
                       </span>
 
                       <span className="w-1/3 text-lg border-b-2 py-2 text-center">
