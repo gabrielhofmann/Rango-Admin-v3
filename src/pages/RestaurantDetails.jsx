@@ -956,15 +956,15 @@ export default class RestaurantDetails extends Component {
                   const response = await axios.post(
                     "https://api.rangosemfila.com.br/v2/importMenu",
                     {
+                      restaurantId: this.state.restaurant.id,
+                      targetId: this.state.targetRestaurant,
+                    },
+                    {
                       headers: {
                         Authorization: `Bearer ${sessionStorage.getItem(
                           "token"
                         )}`,
                       },
-                    },
-                    {
-                      restaurantId: this.state.restaurant.id,
-                      targetId: this.state.targetRestaurant,
                     }
                   );
 
